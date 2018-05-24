@@ -336,7 +336,7 @@ def runGame():
             if not isValidPosition(board, fallingPiece, adjY=1):
                 # falling piece has landed, set it on the board
                 addToBoard(board, fallingPiece)
-                score += removeCompleteLines(board)
+                score += remove_complete_lines(board)
                 level, fallFreq = calculateLevelAndFallFreq(score)
                 fallingPiece = None
             else:
@@ -486,7 +486,7 @@ def isCompleteLine(board, y) -> bool:
     return True
 
 
-def removeCompleteLines(board) -> int:
+def remove_complete_lines(board) -> int:
     """Remove completed lines on the board.
 
     Args:
