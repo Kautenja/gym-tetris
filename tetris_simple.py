@@ -314,6 +314,144 @@ class Tetris():
         self.last_move_side_time = time.time()
         self.last_fall_time = time.time()
 
+    def _draw_box(
+        self,
+        box_x: int,
+        box_y: int,
+        color: int,
+        pixel_x: int = None,
+        pixel_y: int = None,
+    ) -> None:
+        """
+        Draw a single box of a piece at given coordinates.
+
+        Args:
+            box_x: the x coordinate in the Tetris grid
+            box_y: the y coordinate in the Tetris grid
+            color: the color of the box (as an index)
+            pixel_x: optional x pixel coordinate to override the box coordinate
+            pixel_y: optional y pixel coordinate to override the box coordinate
+
+        Returns:
+            None
+
+        """
+        # don't draw empty boxes
+        if color == BLANK:
+            return
+        # convert the box coordinates to pixel coordinates if none are given
+        if pixel_x is None and pixel_y is None:
+            pixel_x, pixel_y = to_pixel_coordinate(box_x, box_y)
+        # draw the main background box
+        main_rect = (pixel_x + 1, pixel_y + 1, BOXSIZE - 1, BOXSIZE - 1)
+        pygame.draw.rect(self._display, COLORS[color], main_rect)
+        # draw the smaller depth perspective effect box
+        depth_rect = (pixel_x + 1, pixel_y + 1, BOXSIZE - 4, BOXSIZE - 4)
+        pygame.draw.rect(self._display, LIGHTCOLORS[color], depth_rect)
+
+    def _draw_board(self, board: list) -> None:
+        """
+        Draw the board.
+
+        Args:
+            board: the board of boxes to draw
+
+        Returns:
+            None
+
+        """
+        # draw the border
+        pygame.draw.rect(self._display, BORDERCOLOR, BORDER_DIMS, 3)
+        # fill the background of the board
+        pygame.draw.rect(self._display, BGCOLOR, BG_DIMS)
+        # draw the individual boxes on the board
+        for x in range(BOARDWIDTH):
+            for y in range(BOARDHEIGHT):
+                self._draw_box(x, y, board[x][y])
+
+    def _draw_status(self, score: int, level: int) -> None:
+        """
+        Draw the status information for the player
+
+        Args:
+            score: the score of the game
+            level: the current level the player is on
+
+        Returns:
+            None
+
+        """
+        # draw the score label
+        score_label_surf = self._font.render(SCORE_LABEL, True, TEXTCOLOR)
+        score_label_rect = score_label_surf.get_rect()
+        score_label_rect.topleft = (STATUS_X, SCORE_LABEL_Y)
+        self._display.blit(score_label_surf, score_label_rect)
+        # draw the score
+        score_surf = self._font.render(str(score), True, TEXTCOLOR)
+        score_rect = score_surf.get_rect()
+        score_rect.topleft = (STATUS_X, SCORE_Y)
+        self._display.blit(score_surf, score_rect)
+        # draw the level label
+        level_label_surf = self._font.render(LEVEL_LABEL, True, TEXTCOLOR)
+        level_label_rect = level_label_surf.get_rect()
+        level_label_rect.topleft = (STATUS_X, LEVEL_LABEL_Y)
+        self._display.blit(level_label_surf, level_label_rect)
+        # draw the level
+        level_surf = self._font.render(str(level), True, TEXTCOLOR)
+        level_rect = level_surf.get_rect()
+        level_rect.topleft = (STATUS_X, LEVEL_Y)
+        self._display.blit(level_surf, level_rect)
+
+    def _draw_piece(
+        self,
+        piece: dict,
+        pixel_x: int = None,
+        pixel_y: int = None,
+    ) -> None:
+        """
+        draw a piece on the board.
+
+        Args:
+            piece: the piece to draw as a dictionary
+            pixel_x: the optional x pixel to draw the piece at
+            pixel_y: the optional y pixel to draw the piece at
+
+        Returns:
+            None
+
+        """
+        # get the template of the piece based on shape and rotation
+        shapeToDraw = PIECES[piece['shape']][piece['rotation']]
+        # if pixel_x & pixel_y are None, use the pieces internal location
+        if pixel_x is None and pixel_y is None:
+            pixel_x, pixel_y = to_pixel_coordinate(piece['x'], piece['y'])
+        # draw each of the boxes that make up the piece
+        for box_x in range(TEMPLATEWIDTH):
+            for box_y in range(TEMPLATEHEIGHT):
+                if shapeToDraw[box_y][box_x] != BLANK:
+                    x = pixel_x + (box_x * BOXSIZE)
+                    y = pixel_y + (box_y * BOXSIZE)
+                    self._draw_box(None, None, piece['color'], x, y)
+
+    def _draw_next_piece(self, piece: dict) -> None:
+        """
+        Draw the next piece that is coming to the player.
+
+        Args:
+            piece: the piece to draw as a dictionary
+
+        Returns:
+            None
+
+        """
+        # draw the "next" label
+        next_surf = self._font.render(NEXT_LABEL, True, TEXTCOLOR)
+        next_rect = next_surf.get_rect()
+        next_rect.topleft = (STATUS_X, NEXT_LABEL_Y)
+        self._display.blit(next_surf, next_rect)
+        # draw the "next" piece preview
+        self._draw_piece(piece, pixel_x=STATUS_X, pixel_y=NEXT_Y)
+
     def _left(self) -> None:
         """Move the falling piece left on the board."""
         if is_valid_position(self.board, self.falling_piece, adj_x=-1):
@@ -386,11 +524,11 @@ class Tetris():
 
         # draw everything on the screen
         self._display.fill(BGCOLOR)
-        draw_board(self.board)
-        draw_status(self.score, self.level)
-        draw_next_piece(self.next_piece)
+        self._draw_board(self.board)
+        self._draw_status(self.score, self.level)
+        self._draw_next_piece(self.next_piece)
         if self.falling_piece is not None:
-            draw_piece(self.falling_piece)
+            self._draw_piece(self.falling_piece)
         # update the pygame display
         pygame.display.update()
 
