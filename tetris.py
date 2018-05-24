@@ -441,8 +441,18 @@ def getNewPiece() -> dict:
     }
 
 
-def addToBoard(board, piece) -> None:
-    """Fill in the board based on piece's location, shape, and rotation."""
+def addToBoard(board: list, piece: dict) -> None:
+    """
+    Fill in the board based on piece's location, shape, and rotation.
+
+    Args:
+        board: the board to add the piece to
+        piece: the piece to add to the board
+
+    Returns:
+        None
+
+    """
     for x in range(TEMPLATEWIDTH):
         for y in range(TEMPLATEHEIGHT):
             if PIECES[piece['shape']][piece['rotation']][y][x] != BLANK:
