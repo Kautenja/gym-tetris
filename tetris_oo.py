@@ -299,7 +299,7 @@ class Tetris():
         # initialize pygame
         pygame.init()
         pygame.display.set_caption(GAME_NAME_LABEL)
-        self._display = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self._screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self._font = pygame.font.Font('freesansbold.ttf', 18)
         # set the board as a blank board
         self.board = new_board()
@@ -344,10 +344,10 @@ class Tetris():
             pixel_x, pixel_y = to_pixel_coordinate(box_x, box_y)
         # draw the main background box
         main_rect = (pixel_x + 1, pixel_y + 1, BOXSIZE - 1, BOXSIZE - 1)
-        pygame.draw.rect(self._display, COLORS[color], main_rect)
+        pygame.draw.rect(self._screen, COLORS[color], main_rect)
         # draw the smaller depth perspective effect box
         depth_rect = (pixel_x + 1, pixel_y + 1, BOXSIZE - 4, BOXSIZE - 4)
-        pygame.draw.rect(self._display, LIGHTCOLORS[color], depth_rect)
+        pygame.draw.rect(self._screen, LIGHTCOLORS[color], depth_rect)
 
     def _draw_board(self, board: list) -> None:
         """
@@ -361,9 +361,9 @@ class Tetris():
 
         """
         # draw the border
-        pygame.draw.rect(self._display, BORDERCOLOR, BORDER_DIMS, 3)
+        pygame.draw.rect(self._screen, BORDERCOLOR, BORDER_DIMS, 3)
         # fill the background of the board
-        pygame.draw.rect(self._display, BGCOLOR, BG_DIMS)
+        pygame.draw.rect(self._screen, BGCOLOR, BG_DIMS)
         # draw the individual boxes on the board
         for x in range(BOARDWIDTH):
             for y in range(BOARDHEIGHT):
@@ -385,22 +385,22 @@ class Tetris():
         score_label_surf = self._font.render(SCORE_LABEL, True, TEXTCOLOR)
         score_label_rect = score_label_surf.get_rect()
         score_label_rect.topleft = (STATUS_X, SCORE_LABEL_Y)
-        self._display.blit(score_label_surf, score_label_rect)
+        self._screen.blit(score_label_surf, score_label_rect)
         # draw the score
         score_surf = self._font.render(str(score), True, TEXTCOLOR)
         score_rect = score_surf.get_rect()
         score_rect.topleft = (STATUS_X, SCORE_Y)
-        self._display.blit(score_surf, score_rect)
+        self._screen.blit(score_surf, score_rect)
         # draw the level label
         level_label_surf = self._font.render(LEVEL_LABEL, True, TEXTCOLOR)
         level_label_rect = level_label_surf.get_rect()
         level_label_rect.topleft = (STATUS_X, LEVEL_LABEL_Y)
-        self._display.blit(level_label_surf, level_label_rect)
+        self._screen.blit(level_label_surf, level_label_rect)
         # draw the level
         level_surf = self._font.render(str(level), True, TEXTCOLOR)
         level_rect = level_surf.get_rect()
         level_rect.topleft = (STATUS_X, LEVEL_Y)
-        self._display.blit(level_surf, level_rect)
+        self._screen.blit(level_surf, level_rect)
 
     def _draw_piece(
         self,
@@ -448,7 +448,7 @@ class Tetris():
         next_surf = self._font.render(NEXT_LABEL, True, TEXTCOLOR)
         next_rect = next_surf.get_rect()
         next_rect.topleft = (STATUS_X, NEXT_LABEL_Y)
-        self._display.blit(next_surf, next_rect)
+        self._screen.blit(next_surf, next_rect)
         # draw the "next" piece preview
         self._draw_piece(piece, pixel_x=STATUS_X, pixel_y=NEXT_Y)
 
@@ -524,15 +524,14 @@ class Tetris():
             self._fall()
 
         # draw everything on the screen
-        self._display.fill(BGCOLOR)
+        self._screen.fill(BGCOLOR)
         self._draw_board(self.board)
         self._draw_status(self.score, self.level)
         self._draw_next_piece(self.next_piece)
         if self.falling_piece is not None:
             self._draw_piece(self.falling_piece)
         # update the pygame display
-        # pygame.display.update()
-        self._display.update()
+        pygame.display.update()
 
     def __del__(self) -> None:
         """Close the pygame environment before deleting this object."""
