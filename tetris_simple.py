@@ -280,7 +280,34 @@ PIECES = {
 }
 
 
+class Tetris():
+    """An object oriented design of Tetris."""
+
+    def __init__(self) -> None:
+        """Initialize a new Tetris game."""
+        # initialize pygame
+        pygame.init()
+        pygame.display.set_caption(GAME_NAME_LABEL)
+        self._display = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.font = pygame.font.Font('freesansbold.ttf', 18)
+        # set the board as a blank board
+        self.board = get_blank_board()
+        # set the score to 0 and get the corresponding level and fall rate
+        self.score = 0
+        self.level, self.fall_freq = level_and_fall_frequency(self.score)
+        # setup the initial pieces
+        self.falling_piece = new_piece()
+        self.next_piece = new_piece()
+
+    def __del__(self) -> None:
+        """Close the pygame environment before deleting this object."""
+        pygame.quit()
+
+
 def main():
+    a = Tetris()
+    del a
+
     global DISPLAYSURF, BASICFONT
     pygame.init()
     DISPLAYSURF = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
