@@ -249,8 +249,8 @@ def main():
 def run_game():
     # setup variables for the start of the game
     board = get_blank_board()
-    lastMoveDownTime = time.time()
-    lastMoveSidewaysTime = time.time()
+    last_move_down_time = time.time()
+    last_move_side_time = time.time()
     lastFallTime = time.time()
     movingDown = False
     movingLeft = False
@@ -284,8 +284,8 @@ def run_game():
                     # pause until a key press
                     show_text_screen('Paused')
                     lastFallTime = time.time()
-                    lastMoveDownTime = time.time()
-                    lastMoveSidewaysTime = time.time()
+                    last_move_down_time = time.time()
+                    last_move_side_time = time.time()
                 elif event.key == K_LEFT or event.key == K_a:
                     movingLeft = False
                 elif event.key == K_RIGHT or event.key == K_d:
@@ -299,13 +299,13 @@ def run_game():
                     fallingPiece['x'] -= 1
                     movingLeft = True
                     movingRight = False
-                    lastMoveSidewaysTime = time.time()
+                    last_move_side_time = time.time()
 
                 elif (event.key == K_RIGHT or event.key == K_d) and is_valid_position(board, fallingPiece, adj_x=1):
                     fallingPiece['x'] += 1
                     movingRight = True
                     movingLeft = False
-                    lastMoveSidewaysTime = time.time()
+                    last_move_side_time = time.time()
 
                 # rotating the piece (if there is room to rotate)
                 elif event.key == K_UP or event.key == K_w:
@@ -322,7 +322,7 @@ def run_game():
                     movingDown = True
                     if is_valid_position(board, fallingPiece, adj_y=1):
                         fallingPiece['y'] += 1
-                    lastMoveDownTime = time.time()
+                    last_move_down_time = time.time()
 
                 # move the current piece all the way down
                 elif event.key == K_SPACE:
@@ -335,16 +335,16 @@ def run_game():
                     fallingPiece['y'] += i - 1
 
         # handle moving the piece because of user input
-        if (movingLeft or movingRight) and time.time() - lastMoveSidewaysTime > MOVESIDEWAYSFREQ:
+        if (movingLeft or movingRight) and time.time() - last_move_side_time > MOVESIDEWAYSFREQ:
             if movingLeft and is_valid_position(board, fallingPiece, adj_x=-1):
                 fallingPiece['x'] -= 1
             elif movingRight and is_valid_position(board, fallingPiece, adj_x=1):
                 fallingPiece['x'] += 1
-            lastMoveSidewaysTime = time.time()
+            last_move_side_time = time.time()
 
-        if movingDown and time.time() - lastMoveDownTime > MOVEDOWNFREQ and is_valid_position(board, fallingPiece, adj_y=1):
+        if movingDown and time.time() - last_move_down_time > MOVEDOWNFREQ and is_valid_position(board, fallingPiece, adj_y=1):
             fallingPiece['y'] += 1
-            lastMoveDownTime = time.time()
+            last_move_down_time = time.time()
 
         # let the piece fall if it is time to fall
         if time.time() - lastFallTime > fallFreq:
