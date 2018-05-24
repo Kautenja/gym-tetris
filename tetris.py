@@ -242,15 +242,15 @@ def runGame():
     score = 0
     level, fallFreq = calculateLevelAndFallFreq(score)
 
-    fallingPiece = getNewPiece()
-    nextPiece = getNewPiece()
+    fallingPiece = new_piece()
+    nextPiece = new_piece()
 
     # game loop
     while True:
         if fallingPiece is None:
             # No falling piece in play, so start a new piece at the top
             fallingPiece = nextPiece
-            nextPiece = getNewPiece()
+            nextPiece = new_piece()
             # reset lastFallTime
             lastFallTime = time.time()
 
@@ -427,7 +427,7 @@ def calculateLevelAndFallFreq(score: float) -> tuple:
     return level, fall_freq
 
 
-def getNewPiece() -> dict:
+def new_piece() -> dict:
     """Return a random new piece in a random rotation."""
     shape = random.choice(list(PIECES.keys()))
     # start the new piece above the board (i.e. y < 0)
