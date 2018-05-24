@@ -1,24 +1,34 @@
-# Tetromino (a Tetris clone)
-# By Al Sweigart al@inventwithpython.com
-# http://inventwithpython.com/pygame
-# Released under a "Simplified BSD" license
-
+"""An implementation of Tetris for OpenAI Gym using Pygame."""
 import random, time, pygame, sys
 from pygame.locals import *
+# TODO: numpy randomness
 
+
+# the framerate to maintain during gameplay
 FPS = 144
+# the width of the main game window
 WINDOWWIDTH = 640
+# the height of the main game window
 WINDOWHEIGHT = 430
+# the number of pixels to use for a box
 BOXSIZE = 20
+# the number of horizontal boxes on the board (classic Tetris uses 10)
 BOARDWIDTH = 10
+# the number of vertical boxes on the board (classic Tetris uses 20)
 BOARDHEIGHT = 20
+# the value denoting a blank pixel in a template
 BLANK = '.'
+
 
 MOVESIDEWAYSFREQ = 0.15
 MOVEDOWNFREQ = 0.1
 
+
+# the number of pixels to pad the game from the right border of the screen
 XMARGIN = 10
+# the number of pixels to pad the game from the top border of the screen
 TOPMARGIN = 20
+
 
 # TODO: use a csv and numpy to remove this nastiness
 #               R    G    B
@@ -182,9 +192,9 @@ def main():
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
     BIGFONT = pygame.font.Font('freesansbold.ttf', 100)
-    pygame.display.set_caption('Tetromino')
+    pygame.display.set_caption('Tetris')
 
-    showTextScreen('Tetromino')
+    showTextScreen('Tetris')
     while True:
         runGame()
         showTextScreen('Game Over')
@@ -205,33 +215,36 @@ def runGame():
     fallingPiece = getNewPiece()
     nextPiece = getNewPiece()
 
-    while True: # game loop
-        if fallingPiece == None:
+    # game loop
+    while True:
+        if fallingPiece is None:
             # No falling piece in play, so start a new piece at the top
             fallingPiece = nextPiece
             nextPiece = getNewPiece()
-            lastFallTime = time.time() # reset lastFallTime
+            # reset lastFallTime
+            lastFallTime = time.time()
 
+            # can't fit a new piece on the board, so game over
             if not isValidPosition(board, fallingPiece):
-                return # can't fit a new piece on the board, so game over
+                return
 
         checkForQuit()
-        for event in pygame.event.get(): # event handling loop
+        # event handling loop
+        for event in pygame.event.get():
             if event.type == KEYUP:
-                if (event.key == K_p):
+                if event.key == K_p:
                     # Pausing the game
                     DISPLAYSURF.fill(BGCOLOR)
-                    pygame.mixer.music.stop()
-                    showTextScreen('Paused') # pause until a key press
-                    pygame.mixer.music.play(-1, 0.0)
+                    # pause until a key press
+                    showTextScreen('Paused')
                     lastFallTime = time.time()
                     lastMoveDownTime = time.time()
                     lastMoveSidewaysTime = time.time()
-                elif (event.key == K_LEFT or event.key == K_a):
+                elif event.key == K_LEFT or event.key == K_a:
                     movingLeft = False
-                elif (event.key == K_RIGHT or event.key == K_d):
+                elif event.key == K_RIGHT or event.key == K_d:
                     movingRight = False
-                elif (event.key == K_DOWN or event.key == K_s):
+                elif event.key == K_DOWN or event.key == K_s:
                     movingDown = False
 
             elif event.type == KEYDOWN:
@@ -249,17 +262,17 @@ def runGame():
                     lastMoveSidewaysTime = time.time()
 
                 # rotating the piece (if there is room to rotate)
-                elif (event.key == K_UP or event.key == K_w):
+                elif event.key == K_UP or event.key == K_w:
                     fallingPiece['rotation'] = (fallingPiece['rotation'] + 1) % len(PIECES[fallingPiece['shape']])
                     if not isValidPosition(board, fallingPiece):
                         fallingPiece['rotation'] = (fallingPiece['rotation'] - 1) % len(PIECES[fallingPiece['shape']])
-                elif (event.key == K_q): # rotate the other direction
+                elif event.key == K_q: # rotate the other direction
                     fallingPiece['rotation'] = (fallingPiece['rotation'] - 1) % len(PIECES[fallingPiece['shape']])
                     if not isValidPosition(board, fallingPiece):
                         fallingPiece['rotation'] = (fallingPiece['rotation'] + 1) % len(PIECES[fallingPiece['shape']])
 
                 # making the piece fall faster with the down key
-                elif (event.key == K_DOWN or event.key == K_s):
+                elif event.key == K_DOWN or event.key == K_s:
                     movingDown = True
                     if isValidPosition(board, fallingPiece, adjY=1):
                         fallingPiece['y'] += 1
@@ -306,7 +319,7 @@ def runGame():
         drawBoard(board)
         drawStatus(score, level)
         drawNextPiece(nextPiece)
-        if fallingPiece != None:
+        if fallingPiece is not None:
             drawPiece(fallingPiece)
 
         pygame.display.update()
@@ -353,18 +366,23 @@ def showTextScreen(text):
     pressKeyRect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2) + 100)
     DISPLAYSURF.blit(pressKeySurf, pressKeyRect)
 
-    while checkForKeyPress() == None:
+    while checkForKeyPress() is None:
         pygame.display.update()
         FPSCLOCK.tick()
 
 
 def checkForQuit():
-    for event in pygame.event.get(QUIT): # get all the QUIT events
-        terminate() # terminate if any QUIT events are present
-    for event in pygame.event.get(KEYUP): # get all the KEYUP events
+    # get all the QUIT events
+    for event in pygame.event.get(QUIT):
+        # terminate if any QUIT events are present
+        terminate()
+    # get all the KEYUP events
+    for event in pygame.event.get(KEYUP):
+        # terminate if the KEYUP event was for the Esc key
         if event.key == K_ESCAPE:
-            terminate() # terminate if the KEYUP event was for the Esc key
-        pygame.event.post(event) # put the other KEYUP event objects back
+            terminate()
+        # put the other KEYUP event objects back
+        pygame.event.post(event)
 
 
 def calculateLevelAndFallFreq(score):
@@ -374,15 +392,19 @@ def calculateLevelAndFallFreq(score):
     fallFreq = 0.27 - (level * 0.02)
     return level, fallFreq
 
+
 def getNewPiece():
     # return a random new piece in a random rotation and color
     shape = random.choice(list(PIECES.keys()))
-    newPiece = {'shape': shape,
-                'rotation': random.randint(0, len(PIECES[shape]) - 1),
-                'x': int(BOARDWIDTH / 2) - int(TEMPLATEWIDTH / 2),
-                'y': -2, # start it above the board (i.e. less than 0)
-                'color': random.randint(0, len(COLORS)-1)}
-    return newPiece
+    # start the new piece above the board (i.e. y < 0)
+    # TODO: no random color assignment? standard colors for shapes
+    return {
+        'shape': shape,
+        'rotation': random.randint(0, len(PIECES[shape]) - 1),
+        'x': int(BOARDWIDTH / 2) - int(TEMPLATEWIDTH / 2),
+        'y': -2,
+        'color': random.randint(0, len(COLORS)-1)
+    }
 
 
 def addToBoard(board, piece):
@@ -393,8 +415,8 @@ def addToBoard(board, piece):
                 board[x + piece['x']][y + piece['y']] = piece['color']
 
 
-def getBlankBoard():
-    # create and return a new blank board data structure
+def getBlankBoard() -> list:
+    """Return a new blank board data structure."""
     board = []
     for i in range(BOARDWIDTH):
         board.append([BLANK] * BOARDHEIGHT)
@@ -409,8 +431,9 @@ def isValidPosition(board, piece, adjX=0, adjY=0):
     # Return True if the piece is within the board and not colliding
     for x in range(TEMPLATEWIDTH):
         for y in range(TEMPLATEHEIGHT):
-            isAboveBoard = y + piece['y'] + adjY < 0
-            if isAboveBoard or PIECES[piece['shape']][piece['rotation']][y][x] == BLANK:
+            is_above_board = y + piece['y'] + adjY < 0
+            is_blank = PIECES[piece['shape']][piece['rotation']][y][x] == BLANK
+            if is_above_board or is_blank:
                 continue
             if not isOnBoard(x + piece['x'] + adjX, y + piece['y'] + adjY):
                 return False
