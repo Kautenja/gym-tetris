@@ -3,7 +3,7 @@ from tqdm import tqdm
 import gym_tetris
 
 
-env = gym_tetris.make('Tetris-v1')
+env = gym_tetris.make('Tetris-v0')
 
 
 try:
