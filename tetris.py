@@ -379,7 +379,7 @@ def terminate():
     sys.exit()
 
 
-def checkForKeyPress():
+def check_for_key_press():
     """Look for a KEYUP event in the event queue and remove KEYDOWN events."""
     # Go through event queue looking for a KEYUP event.
     # Grab KEYDOWN events to remove them from the event queue.
@@ -417,7 +417,7 @@ def show_text_screen(text: str) -> None:
     press_rect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2) + 100)
     DISPLAYSURF.blit(press_surf, press_rect)
     # lock until a key press event
-    while checkForKeyPress() is None:
+    while check_for_key_press() is None:
         pygame.display.update()
         FPSCLOCK.tick()
 
