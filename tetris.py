@@ -477,7 +477,7 @@ def isValidPosition(board, piece, adjX=0, adjY=0) -> bool:
     return True
 
 
-def isCompleteLine(board, y) -> bool:
+def is_complete_line(board, y) -> bool:
     # Return True if the line filled with boxes with no gaps.
     for x in range(BOARDWIDTH):
         if board[x][y] == BLANK:
@@ -503,7 +503,7 @@ def remove_complete_lines(board) -> int:
     # start y at the bottom of the board
     y = BOARDHEIGHT - 1
     while y >= 0:
-        if isCompleteLine(board, y):
+        if is_complete_line(board, y):
             # Remove the line and pull boxes down by one line.
             for pull_down_y in range(y, 0, -1):
                 for x in range(BOARDWIDTH):
