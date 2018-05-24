@@ -550,6 +550,18 @@ BG_DIMS = (
 )
 
 
+# the x position for status items
+STATUS_X = BORDER_DIMS[2] + 15
+# the Y position for the score status
+SCORE_Y = BORDER_DIMS[0] + 15
+# the Y position for the level status
+LEVEL_Y = SCORE_Y + 30
+# the Y position for the "next" label
+NEXT_LABEL_Y = LEVEL_Y + 30
+# the Y position for the next piece preview
+NEXT_Y = NEXT_LABEL_Y + 30
+
+
 def drawBoard(board) -> None:
     """Draw the board."""
     # draw the border
@@ -560,33 +572,6 @@ def drawBoard(board) -> None:
     for x in range(BOARDWIDTH):
         for y in range(BOARDHEIGHT):
             drawBox(x, y, board[x][y])
-
-
-def drawStatus(
-    score: int,
-    level: int,
-) -> None:
-    """
-    Draw the status information for the player
-
-    Args:
-        score: the score of the game
-        level: the current level the player is on
-
-    Returns:
-        None
-
-    """
-    # draw the score text
-    score_surf = BASICFONT.render('Score: %s' % score, True, TEXTCOLOR)
-    score_rect = score_surf.get_rect()
-    score_rect.topleft = (BORDER_DIMS[2] + 15, BORDER_DIMS[0] + 15)
-    DISPLAYSURF.blit(score_surf, score_rect)
-    # draw the level text
-    level_surf = BASICFONT.render('Level: %s' % level, True, TEXTCOLOR)
-    level_rect = level_surf.get_rect()
-    level_rect.topleft = (BORDER_DIMS[2] + 15, BORDER_DIMS[0] + 45)
-    DISPLAYSURF.blit(level_surf, level_rect)
 
 
 def drawPiece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
@@ -615,12 +600,31 @@ def drawPiece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
                 drawBox(None, None, piece['color'], pixel_x + (x * BOXSIZE), pixel_y + (y * BOXSIZE))
 
 
-def drawNextPiece(
-    piece: dict,
-    _right_margin_pad: int = 120,
-    _label_top_pad: int = 80,
-    _piece_top_y: int = 100,
-) -> None:
+def drawStatus(score: int, level: int) -> None:
+    """
+    Draw the status information for the player
+
+    Args:
+        score: the score of the game
+        level: the current level the player is on
+
+    Returns:
+        None
+
+    """
+    # draw the score text
+    score_surf = BASICFONT.render('Score: %s' % score, True, TEXTCOLOR)
+    score_rect = score_surf.get_rect()
+    score_rect.topleft = (STATUS_X, SCORE_Y)
+    DISPLAYSURF.blit(score_surf, score_rect)
+    # draw the level text
+    level_surf = BASICFONT.render('Level: %s' % level, True, TEXTCOLOR)
+    level_rect = level_surf.get_rect()
+    level_rect.topleft = (STATUS_X, LEVEL_Y)
+    DISPLAYSURF.blit(level_surf, level_rect)
+
+
+def drawNextPiece(piece: dict) -> None:
     """
     Draw the next piece that is coming to the player.
 
@@ -631,17 +635,13 @@ def drawNextPiece(
         None
 
     """
-    # draw the "next" text
-    nextSurf = BASICFONT.render('Next:', True, TEXTCOLOR)
+    # draw the "next" label
+    nextSurf = BASICFONT.render('Next', True, TEXTCOLOR)
     nextRect = nextSurf.get_rect()
-    nextRect.topleft = (WINDOWWIDTH - _right_margin_pad, _label_top_pad)
+    nextRect.topleft = (STATUS_X, NEXT_LABEL_Y)
     DISPLAYSURF.blit(nextSurf, nextRect)
-    # draw the "next" piece
-    drawPiece(
-        piece,
-        pixel_x=WINDOWWIDTH - _right_margin_pad,
-        pixel_y=_piece_top_y
-    )
+    # draw the "next" piece preview
+    drawPiece(piece, pixel_x=STATUS_X, pixel_y=NEXT_Y)
 
 
 if __name__ == '__main__':
