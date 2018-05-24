@@ -147,6 +147,8 @@ TEMPLATEWIDTH = 5
 TEMPLATEHEIGHT = 5
 
 
+# TODO: move to templates.py
+
 S_SHAPE_TEMPLATE = [
     ['.....',
      '.....',
