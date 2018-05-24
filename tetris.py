@@ -367,7 +367,7 @@ def runGame():
         FPSCLOCK.tick(FPS)
 
 
-def makeTextObjs(text, font, color):
+def make_text(text, font, color):
     surf = font.render(text, True, color)
     return surf, surf.get_rect()
 
@@ -405,15 +405,15 @@ def show_text_screen(text: str) -> None:
 
     """
     # Draw the text drop shadow
-    title_surf, title_rect = makeTextObjs(text, BIGFONT, TEXTSHADOWCOLOR)
+    title_surf, title_rect = make_text(text, BIGFONT, TEXTSHADOWCOLOR)
     title_rect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2))
     DISPLAYSURF.blit(title_surf, title_rect)
     # Draw the text
-    title_surf, title_rect = makeTextObjs(text, BIGFONT, TEXTCOLOR)
+    title_surf, title_rect = make_text(text, BIGFONT, TEXTCOLOR)
     title_rect.center = (int(WINDOWWIDTH / 2) - 3, int(WINDOWHEIGHT / 2) - 3)
     DISPLAYSURF.blit(title_surf, title_rect)
     # Draw the additional press key text.
-    pressKeySurf, pressKeyRect = makeTextObjs(PRESS_KEY_LABEL, BASICFONT, TEXTCOLOR)
+    pressKeySurf, pressKeyRect = make_text(PRESS_KEY_LABEL, BASICFONT, TEXTCOLOR)
     pressKeyRect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2) + 100)
     DISPLAYSURF.blit(pressKeySurf, pressKeyRect)
     # lock until a key press event
