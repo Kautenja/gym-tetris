@@ -22,7 +22,7 @@ from pygame.locals import (
 # the framerate to maintain during gameplay
 FPS = 144
 # the width of the main game window
-WINDOWWIDTH = 640
+WINDOWWIDTH = 340
 # the height of the main game window
 WINDOWHEIGHT = 430
 # the number of pixels to use for a box
@@ -755,6 +755,7 @@ def draw_piece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
                 draw_box(None, None, piece['color'], x, y)
 
 
+# TODO: put score and level below the static label to conserve horizontal space
 def draw_status(score: int, level: int) -> None:
     """
     Draw the status information for the player
