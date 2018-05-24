@@ -594,10 +594,12 @@ def draw_piece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
         pixel_x, pixel_y = convertToPixelCoords(piece['x'], piece['y'])
 
     # draw each of the boxes that make up the piece
-    for x in range(TEMPLATEWIDTH):
-        for y in range(TEMPLATEHEIGHT):
-            if shapeToDraw[y][x] != BLANK:
-                drawBox(None, None, piece['color'], pixel_x + (x * BOXSIZE), pixel_y + (y * BOXSIZE))
+    for box_x in range(TEMPLATEWIDTH):
+        for box_y in range(TEMPLATEHEIGHT):
+            if shapeToDraw[box_y][box_x] != BLANK:
+                x = pixel_x + (box_x * BOXSIZE)
+                y = pixel_y + (box_y * BOXSIZE)
+                drawBox(None, None, piece['color'], x, y)
 
 
 def draw_status(score: int, level: int) -> None:
