@@ -67,6 +67,8 @@ NEXT_LABEL = 'Next'
 LEVEL_LABEL = 'Level: {}'
 # the label for the current score status
 SCORE_LABEL = 'Score: {}'
+# the label for the press key
+PRESS_KEY_LABEL = 'Press a key to play.'
 
 
 # TODO: use a csv and numpy to remove this nastiness
@@ -411,7 +413,7 @@ def showTextScreen(text: str) -> None:
     titleRect.center = (int(WINDOWWIDTH / 2) - 3, int(WINDOWHEIGHT / 2) - 3)
     DISPLAYSURF.blit(titleSurf, titleRect)
     # Draw the additional "Press a key to play." text.
-    pressKeySurf, pressKeyRect = makeTextObjs('Press a key to play.', BASICFONT, TEXTCOLOR)
+    pressKeySurf, pressKeyRect = makeTextObjs(PRESS_KEY_LABEL, BASICFONT, TEXTCOLOR)
     pressKeyRect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2) + 100)
     DISPLAYSURF.blit(pressKeySurf, pressKeyRect)
     # lock until a key press event
