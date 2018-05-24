@@ -492,8 +492,20 @@ def removeCompleteLines(board) -> int:
     return num_lines_removed
 
 
-def convertToPixelCoords(box_x, box_y) -> tuple:
-    """Convert x, y coordinates of tetris board to pixel coordinates."""
+def convertToPixelCoords(box_x: int, box_y: int) -> tuple:
+    """
+    Convert x, y coordinates of the board to pixel coordinates.
+
+    Args:
+        box_x: the x coordinate of the box on the board
+        box_y: the y coordinate of the box on the board
+
+    Returns:
+        a tuple of:
+        - the x coordinate as a pixel
+        - the y coordinate as a pixel
+
+    """
     return (XMARGIN + (box_x * BOXSIZE)), (TOPMARGIN + (box_y * BOXSIZE))
 
 
