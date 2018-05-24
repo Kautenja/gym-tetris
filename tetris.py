@@ -332,11 +332,14 @@ def makeTextObjs(text, font, color):
 
 
 def terminate():
+    """Terminate the game and exit."""
     pygame.quit()
+    # TODO: sys.exit not necessary in gym env
     sys.exit()
 
 
 def checkForKeyPress():
+    """Look for a KEYUP event in the event queue and remove KEYDOWN events."""
     # Go through event queue looking for a KEYUP event.
     # Grab KEYDOWN events to remove them from the event queue.
     checkForQuit()
@@ -345,33 +348,32 @@ def checkForKeyPress():
         if event.type == KEYDOWN:
             continue
         return event.key
+
     return None
 
 
-def showTextScreen(text):
-    # This function displays large text in the
-    # center of the screen until a key is pressed.
+def showTextScreen(text: str) -> None:
+    """Display a string in the center of the screen until a key press."""
     # Draw the text drop shadow
     titleSurf, titleRect = makeTextObjs(text, BIGFONT, TEXTSHADOWCOLOR)
     titleRect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2))
     DISPLAYSURF.blit(titleSurf, titleRect)
-
     # Draw the text
     titleSurf, titleRect = makeTextObjs(text, BIGFONT, TEXTCOLOR)
     titleRect.center = (int(WINDOWWIDTH / 2) - 3, int(WINDOWHEIGHT / 2) - 3)
     DISPLAYSURF.blit(titleSurf, titleRect)
-
     # Draw the additional "Press a key to play." text.
     pressKeySurf, pressKeyRect = makeTextObjs('Press a key to play.', BASICFONT, TEXTCOLOR)
     pressKeyRect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2) + 100)
     DISPLAYSURF.blit(pressKeySurf, pressKeyRect)
-
+    # lock until a key press event
     while checkForKeyPress() is None:
         pygame.display.update()
         FPSCLOCK.tick()
 
 
-def checkForQuit():
+def checkForQuit() -> None:
+    """Check if the game has quit and terminate if so."""
     # get all the QUIT events
     for event in pygame.event.get(QUIT):
         # terminate if any QUIT events are present
@@ -385,16 +387,18 @@ def checkForQuit():
         pygame.event.post(event)
 
 
-def calculateLevelAndFallFreq(score):
-    # Based on the score, return the level the player is on and
-    # how many seconds pass until a falling piece falls one space.
+def calculateLevelAndFallFreq(score: float) -> tuple:
+    """Return the level the player is on based on score and the fall speed."""
+    # get the level that the player is on
     level = int(score / 10) + 1
-    fallFreq = 0.27 - (level * 0.02)
-    return level, fallFreq
+    # get the frequency with which to move pieces down
+    fall_freq = 0.27 - (level * 0.02)
+
+    return level, fall_freq
 
 
-def getNewPiece():
-    # return a random new piece in a random rotation and color
+def getNewPiece() -> dict:
+    """Return a random new piece in a random rotation."""
     shape = random.choice(list(PIECES.keys()))
     # start the new piece above the board (i.e. y < 0)
     # TODO: no random color assignment? standard colors for shapes
@@ -403,12 +407,12 @@ def getNewPiece():
         'rotation': random.randint(0, len(PIECES[shape]) - 1),
         'x': int(BOARDWIDTH / 2) - int(TEMPLATEWIDTH / 2),
         'y': -2,
-        'color': random.randint(0, len(COLORS)-1)
+        'color': random.randint(0, len(COLORS) - 1)
     }
 
 
-def addToBoard(board, piece):
-    # fill in the board based on piece's location, shape, and rotation
+def addToBoard(board, piece) -> None:
+    """Fill in the board based on piece's location, shape, and rotation."""
     for x in range(TEMPLATEWIDTH):
         for y in range(TEMPLATEHEIGHT):
             if PIECES[piece['shape']][piece['rotation']][y][x] != BLANK:
@@ -418,17 +422,17 @@ def addToBoard(board, piece):
 def getBlankBoard() -> list:
     """Return a new blank board data structure."""
     board = []
-    for i in range(BOARDWIDTH):
+    for _ in range(BOARDWIDTH):
         board.append([BLANK] * BOARDHEIGHT)
     return board
 
 
-def isOnBoard(x, y):
+def isOnBoard(x, y) -> bool:
     return x >= 0 and x < BOARDWIDTH and y < BOARDHEIGHT
 
 
-def isValidPosition(board, piece, adjX=0, adjY=0):
-    # Return True if the piece is within the board and not colliding
+def isValidPosition(board, piece, adjX=0, adjY=0) -> bool:
+    """Return True if the piece is within the board and not colliding."""
     for x in range(TEMPLATEWIDTH):
         for y in range(TEMPLATEHEIGHT):
             is_above_board = y + piece['y'] + adjY < 0
@@ -439,20 +443,35 @@ def isValidPosition(board, piece, adjX=0, adjY=0):
                 return False
             if board[x + piece['x'] + adjX][y + piece['y'] + adjY] != BLANK:
                 return False
+
     return True
 
-def isCompleteLine(board, y):
+
+def isCompleteLine(board, y) -> bool:
     # Return True if the line filled with boxes with no gaps.
     for x in range(BOARDWIDTH):
         if board[x][y] == BLANK:
             return False
+
     return True
 
 
-def removeCompleteLines(board):
-    # Remove any completed lines on the board, move everything above them down, and return the number of complete lines.
+def removeCompleteLines(board) -> int:
+    """Remove completed lines on the board.
+
+    Args:
+        board: the board to remove completed lines from
+
+    Returns:
+        The number of completed lines removed from the board
+
+    Note:
+        - lines are moved down after complete ones are removed
+
+    """
     numLinesRemoved = 0
-    y = BOARDHEIGHT - 1 # start y at the bottom of the board
+    # start y at the bottom of the board
+    y = BOARDHEIGHT - 1
     while y >= 0:
         if isCompleteLine(board, y):
             # Remove the line and pull boxes down by one line.
@@ -467,7 +486,9 @@ def removeCompleteLines(board):
             # This is so that if the line that was pulled down is also
             # complete, it will be removed.
         else:
-            y -= 1 # move on to check next row up
+            # move on to check next row up
+            y -= 1
+
     return numLinesRemoved
 
 
