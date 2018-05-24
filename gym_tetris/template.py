@@ -130,6 +130,7 @@ T_SHAPE_TEMPLATE = [
 ]
 
 
+# a dictionary of piece names to templates
 PIECES = {
     'S': S_SHAPE_TEMPLATE,
     'Z': Z_SHAPE_TEMPLATE,
