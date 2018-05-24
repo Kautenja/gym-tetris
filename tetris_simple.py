@@ -354,23 +354,8 @@ class Tetris():
         if not is_valid_position(self.board, self.falling_piece):
             self.falling_piece['rotation'] = (self.falling_piece['rotation'] + 1) % rots
 
-    def step(self, action: int):
-        """
-        """
-        if self.falling_piece is None:
-            # No falling piece in play, so start a new piece at the top
-            self.falling_piece = self.next_piece
-            self.next_piece = new_piece()
-            # can't fit a new piece on the board, so game over
-            if not is_valid_position(self.board, self.falling_piece):
-                return
-
-        # TODO: handle action
-
-        # return if it's not time to fall yet
-        if time.time() - self.last_fall_time < self.fall_freq:
-            return
-
+    def fall(self) -> None:
+        """Make the piece fall naturally."""
         # see if the piece has landed
         if not is_valid_position(self.board, self.falling_piece, adj_y=1):
             # falling piece has landed, set it on the board
@@ -383,6 +368,32 @@ class Tetris():
             self.falling_piece['y'] += 1
             self.last_fall_time = time.time()
 
+    def step(self, action: int):
+        """TODO:"""
+        if self.falling_piece is None:
+            # No falling piece in play, so start a new piece at the top
+            self.falling_piece = self.next_piece
+            self.next_piece = new_piece()
+            # can't fit a new piece on the board, so game over
+            if not is_valid_position(self.board, self.falling_piece):
+                return
+
+        # TODO: handle action
+
+        # fall if it's time to do so
+        if time.time() - self.last_fall_time > self.fall_freq:
+            self.fall()
+
+        # draw everything on the screen
+        self._display.fill(BGCOLOR)
+        draw_board(self.board)
+        draw_status(self.score, self.level)
+        draw_next_piece(self.next_piece)
+        if self.falling_piece is not None:
+            draw_piece(self.falling_piece)
+        # update the pygame display
+        pygame.display.update()
+
     def __del__(self) -> None:
         """Close the pygame environment before deleting this object."""
         pygame.quit()
@@ -390,6 +401,8 @@ class Tetris():
 
 def main():
     a = Tetris()
+    for _ in range(10000000):
+        a.step(0)
     del a
 
     global DISPLAYSURF, BASICFONT
