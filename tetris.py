@@ -69,6 +69,8 @@ LEVEL_LABEL = 'Level: {}'
 SCORE_LABEL = 'Score: {}'
 # the label for the press key
 PRESS_KEY_LABEL = 'Press a key to play.'
+# The label for the title screen and window
+GAME_NAME_LABEL = 'Tetris'
 
 
 # TODO: use a csv and numpy to remove this nastiness
@@ -233,11 +235,14 @@ def main():
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
     BIGFONT = pygame.font.Font('freesansbold.ttf', 100)
-    pygame.display.set_caption('Tetris')
-
-    show_text_screen('Tetris')
+    # update the name of the game
+    pygame.display.set_caption(GAME_NAME_LABEL)
+    # show the title screen (and wait for a key-press)
+    show_text_screen(GAME_NAME_LABEL)
+    # run the game loop
     while True:
         run_game()
+        # show the game over screen (and wait for a key-press)
         show_text_screen('Game Over')
 
 
