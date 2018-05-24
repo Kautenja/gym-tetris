@@ -30,6 +30,36 @@ XMARGIN = 10
 TOPMARGIN = 20
 
 
+# the dimensions of the border rectangle
+BORDER_DIMS = (
+    XMARGIN - 5,
+    TOPMARGIN - 5,
+    BOARDWIDTH * BOXSIZE + 10,
+    BOARDHEIGHT * BOXSIZE + 10
+)
+
+
+# the dimensions of the background rectangle
+BG_DIMS = (
+    XMARGIN,
+    TOPMARGIN,
+    BOXSIZE * BOARDWIDTH,
+    BOXSIZE * BOARDHEIGHT
+)
+
+
+# the x position for status items
+STATUS_X = BORDER_DIMS[2] + 15
+# the Y position for the score status
+SCORE_Y = BORDER_DIMS[0] + 15
+# the Y position for the level status
+LEVEL_Y = SCORE_Y + 30
+# the Y position for the "next" label
+NEXT_LABEL_Y = LEVEL_Y + 30
+# the Y position for the next piece preview
+NEXT_Y = NEXT_LABEL_Y + 30
+
+
 # TODO: use a csv and numpy to remove this nastiness
 #               R    G    B
 WHITE       = (255, 255, 255)
@@ -542,36 +572,6 @@ def drawBox(
     # draw the smaller depth perspective effect box
     depth_rect = (pixel_x + 1, pixel_y + 1, BOXSIZE - 4, BOXSIZE - 4)
     pygame.draw.rect(DISPLAYSURF, LIGHTCOLORS[color], depth_rect)
-
-
-# the dimensions of the border rectangle
-BORDER_DIMS = (
-    XMARGIN - 5,
-    TOPMARGIN - 5,
-    BOARDWIDTH * BOXSIZE + 10,
-    BOARDHEIGHT * BOXSIZE + 10
-)
-
-
-# the dimensions of the background rectangle
-BG_DIMS = (
-    XMARGIN,
-    TOPMARGIN,
-    BOXSIZE * BOARDWIDTH,
-    BOXSIZE * BOARDHEIGHT
-)
-
-
-# the x position for status items
-STATUS_X = BORDER_DIMS[2] + 15
-# the Y position for the score status
-SCORE_Y = BORDER_DIMS[0] + 15
-# the Y position for the level status
-LEVEL_Y = SCORE_Y + 30
-# the Y position for the "next" label
-NEXT_LABEL_Y = LEVEL_Y + 30
-# the Y position for the next piece preview
-NEXT_Y = NEXT_LABEL_Y + 30
 
 
 def drawBoard(board) -> None:
