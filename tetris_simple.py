@@ -280,6 +280,17 @@ PIECES = {
 }
 
 
+# an enumeration of actions in the game
+ACTIONS = [
+    'NOP',
+    'LEFT',
+    'RIGHT',
+    'DOWN',
+    'ROT_R',
+    'ROT_L',
+]
+
+
 class Tetris():
     """An object oriented design of Tetris."""
 
@@ -298,6 +309,44 @@ class Tetris():
         # setup the initial pieces
         self.falling_piece = new_piece()
         self.next_piece = new_piece()
+
+    def left(self) -> None:
+        """Move the falling piece left on the board."""
+        self.falling_piece['x'] -= 1
+
+    def right(self) -> None:
+        """Move the falling piece right on the board."""
+        self.falling_piece['x'] += 1
+
+    def down(self) -> None:
+        """Moving the falling piece down on the board."""
+        if is_valid_position(self.board, self.falling_piece, adj_y=1):
+            self.falling_piece['y'] += 1
+
+    def rot_r(self) -> None:
+        """Rotate the falling piece right on the board."""
+        rots = len(PIECES[self.falling_piece['shape']])
+        self.falling_piece['rotation'] = (self.falling_piece['rotation'] + 1) % rots
+        if not is_valid_position(self.board, self.falling_piece):
+            self.falling_piece['rotation'] = (self.falling_piece['rotation'] - 1) % rots
+
+    def rot_l(self) -> None:
+        """Rotate the falling piece left on the board."""
+        rots = len(PIECES[self.falling_piece['shape']])
+        self.falling_piece['rotation'] = (self.falling_piece['rotation'] - 1) % rots
+        if not is_valid_position(self.board, self.falling_piece):
+            self.falling_piece['rotation'] = (self.falling_piece['rotation'] + 1) % rots
+
+    def step(self, action: int):
+        """
+        """
+        if self.falling_piece is None:
+            # No falling piece in play, so start a new piece at the top
+            self.falling_piece = self.next_piece
+            self.next_piece = new_piece()
+            # can't fit a new piece on the board, so game over
+            if not is_valid_position(self.board, self.falling_piece):
+                return
 
     def __del__(self) -> None:
         """Close the pygame environment before deleting this object."""
