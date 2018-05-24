@@ -300,7 +300,7 @@ class Tetris():
         pygame.init()
         pygame.display.set_caption(GAME_NAME_LABEL)
         self._display = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.font = pygame.font.Font('freesansbold.ttf', 18)
+        self._font = pygame.font.Font('freesansbold.ttf', 18)
         # set the board as a blank board
         self.board = get_blank_board()
         # set the score to 0 and get the corresponding level and fall rate
@@ -314,7 +314,7 @@ class Tetris():
         self.last_move_side_time = time.time()
         self.last_fall_time = time.time()
 
-    def left(self) -> None:
+    def _left(self) -> None:
         """Move the falling piece left on the board."""
         if is_valid_position(self.board, self.falling_piece, adj_x=-1):
             if time.time() - self.last_move_side_time < MOVESIDEWAYSFREQ:
@@ -322,7 +322,7 @@ class Tetris():
             self.falling_piece['x'] -= 1
             self.last_move_side_time = time.time()
 
-    def right(self) -> None:
+    def _right(self) -> None:
         """Move the falling piece right on the board."""
         if is_valid_position(self.board, self.falling_piece, adj_x=1):
             if time.time() - self.last_move_side_time < MOVESIDEWAYSFREQ:
@@ -330,7 +330,7 @@ class Tetris():
             self.falling_piece['x'] += 1
             self.last_move_side_time = time.time()
 
-    def down(self) -> None:
+    def _down(self) -> None:
         """Moving the falling piece down on the board."""
         if is_valid_position(self.board, self.falling_piece, adj_y=1):
             if time.time() - self.last_move_down_time < MOVEDOWNFREQ:
@@ -338,7 +338,7 @@ class Tetris():
             self.falling_piece['y'] += 1
             self.last_move_down_time = time.time()
 
-    def rot_r(self) -> None:
+    def _rot_r(self) -> None:
         """Rotate the falling piece right on the board."""
         rots = len(PIECES[self.falling_piece['shape']])
         self.falling_piece['rotation'] = (self.falling_piece['rotation'] + 1) % rots
@@ -346,7 +346,7 @@ class Tetris():
         if not is_valid_position(self.board, self.falling_piece):
             self.falling_piece['rotation'] = (self.falling_piece['rotation'] - 1) % rots
 
-    def rot_l(self) -> None:
+    def _rot_l(self) -> None:
         """Rotate the falling piece left on the board."""
         rots = len(PIECES[self.falling_piece['shape']])
         self.falling_piece['rotation'] = (self.falling_piece['rotation'] - 1) % rots
@@ -354,7 +354,7 @@ class Tetris():
         if not is_valid_position(self.board, self.falling_piece):
             self.falling_piece['rotation'] = (self.falling_piece['rotation'] + 1) % rots
 
-    def fall(self) -> None:
+    def _fall(self) -> None:
         """Make the piece fall naturally."""
         # see if the piece has landed
         if not is_valid_position(self.board, self.falling_piece, adj_y=1):
@@ -382,7 +382,7 @@ class Tetris():
 
         # fall if it's time to do so
         if time.time() - self.last_fall_time > self.fall_freq:
-            self.fall()
+            self._fall()
 
         # draw everything on the screen
         self._display.fill(BGCOLOR)
