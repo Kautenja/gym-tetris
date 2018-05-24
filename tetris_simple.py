@@ -16,8 +16,6 @@ from pygame.locals import (
 )
 
 
-# the framerate to maintain during gameplay
-FPS = 144
 # the width of the main game window
 SCREEN_WIDTH = 330
 # the height of the main game window
@@ -331,7 +329,6 @@ def run_game():
                     moving_right = False
                 elif event.key == K_DOWN or event.key == K_s:
                     moving_down = False
-
             elif event.type == KEYDOWN:
                 # moving the piece sideways
                 if (event.key == K_LEFT or event.key == K_a) and is_valid_position(board, falling_piece, adj_x=-1):
@@ -339,19 +336,18 @@ def run_game():
                     moving_left = True
                     moving_right = False
                     last_move_side_time = time.time()
-
                 elif (event.key == K_RIGHT or event.key == K_d) and is_valid_position(board, falling_piece, adj_x=1):
                     falling_piece['x'] += 1
                     moving_right = True
                     moving_left = False
                     last_move_side_time = time.time()
-
-                # rotating the piece (if there is room to rotate)
                 elif event.key == K_UP or event.key == K_w:
+                    # rotate
                     falling_piece['rotation'] = (falling_piece['rotation'] + 1) % len(PIECES[falling_piece['shape']])
                     if not is_valid_position(board, falling_piece):
                         falling_piece['rotation'] = (falling_piece['rotation'] - 1) % len(PIECES[falling_piece['shape']])
-                elif event.key == K_q: # rotate the other direction
+                elif event.key == K_q:
+                    # rotate opposite direction
                     falling_piece['rotation'] = (falling_piece['rotation'] - 1) % len(PIECES[falling_piece['shape']])
                     if not is_valid_position(board, falling_piece):
                         falling_piece['rotation'] = (falling_piece['rotation'] + 1) % len(PIECES[falling_piece['shape']])
