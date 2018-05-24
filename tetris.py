@@ -532,24 +532,30 @@ def drawBox(
     pygame.draw.rect(DISPLAYSURF, LIGHTCOLORS[color], depth_rect)
 
 
+# the dimensions of the border rectangle
+BORDER_DIMS = (
+    XMARGIN - 5,
+    TOPMARGIN - 5,
+    BOARDWIDTH * BOXSIZE + 10,
+    BOARDHEIGHT * BOXSIZE + 10
+)
+
+
+# the dimensions of the background rectangle
+BG_DIMS = (
+    XMARGIN,
+    TOPMARGIN,
+    BOXSIZE * BOARDWIDTH,
+    BOXSIZE * BOARDHEIGHT
+)
+
+
 def drawBoard(board) -> None:
     """Draw the board."""
-    # draw the border around the board
-    border_rect = (
-        XMARGIN - 5,
-        TOPMARGIN - 5,
-        BOARDWIDTH * BOXSIZE + 10,
-        BOARDHEIGHT * BOXSIZE + 10
-    )
-    pygame.draw.rect(DISPLAYSURF, BORDERCOLOR, border_rect, 3)
+    # draw the border
+    pygame.draw.rect(DISPLAYSURF, BORDERCOLOR, BORDER_DIMS, 3)
     # fill the background of the board
-    bg_rect = (
-        XMARGIN,
-        TOPMARGIN,
-        BOXSIZE * BOARDWIDTH,
-        BOXSIZE * BOARDHEIGHT
-    )
-    pygame.draw.rect(DISPLAYSURF, BGCOLOR, bg_rect)
+    pygame.draw.rect(DISPLAYSURF, BGCOLOR, BG_DIMS)
     # draw the individual boxes on the board
     for x in range(BOARDWIDTH):
         for y in range(BOARDHEIGHT):
@@ -559,9 +565,6 @@ def drawBoard(board) -> None:
 def drawStatus(
     score: int,
     level: int,
-    _right_margin_pad: int = 150,
-    _score_top_pad: int = 20,
-    _level_top_pad: int = 50,
 ) -> None:
     """
     Draw the status information for the player
@@ -569,24 +572,20 @@ def drawStatus(
     Args:
         score: the score of the game
         level: the current level the player is on
-        _right_margin_pad: the padding from the right side of the screen
-        _score_top_pad:
-        _level_top_pad:
 
     Returns:
         None
 
     """
-    # TODO: anchor these against the border
     # draw the score text
     score_surf = BASICFONT.render('Score: %s' % score, True, TEXTCOLOR)
     score_rect = score_surf.get_rect()
-    score_rect.topleft = (WINDOWWIDTH - _right_margin_pad, _score_top_pad)
+    score_rect.topleft = (BORDER_DIMS[2] + 15, BORDER_DIMS[0] + 15)
     DISPLAYSURF.blit(score_surf, score_rect)
     # draw the level text
     level_surf = BASICFONT.render('Level: %s' % level, True, TEXTCOLOR)
     level_rect = level_surf.get_rect()
-    level_rect.topleft = (WINDOWWIDTH - _right_margin_pad, _level_top_pad)
+    level_rect.topleft = (BORDER_DIMS[2] + 15, BORDER_DIMS[0] + 45)
     DISPLAYSURF.blit(level_surf, level_rect)
 
 
