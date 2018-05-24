@@ -457,7 +457,7 @@ def getBlankBoard() -> list:
     return board
 
 
-def isOnBoard(x: int, y: int) -> bool:
+def is_on_board(x: int, y: int) -> bool:
     """
     Return a boolean determining if the box is on the board.
 
@@ -497,7 +497,7 @@ def is_valid_position(
             is_blank = PIECES[piece['shape']][piece['rotation']][y][x] == BLANK
             if is_above_board or is_blank:
                 continue
-            if not isOnBoard(x + piece['x'] + adj_x, y + piece['y'] + adj_y):
+            if not is_on_board(x + piece['x'] + adj_x, y + piece['y'] + adj_y):
                 return False
             if board[x + piece['x'] + adj_x][y + piece['y'] + adj_y] != BLANK:
                 return False
