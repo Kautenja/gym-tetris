@@ -318,7 +318,7 @@ def runGame():
         DISPLAYSURF.fill(BGCOLOR)
         drawBoard(board)
         drawStatus(score, level)
-        drawNextPiece(nextPiece)
+        draw_next_piece(nextPiece)
         if fallingPiece is not None:
             drawPiece(fallingPiece)
 
@@ -624,7 +624,7 @@ def drawStatus(score: int, level: int) -> None:
     DISPLAYSURF.blit(level_surf, level_rect)
 
 
-def drawNextPiece(piece: dict) -> None:
+def draw_next_piece(piece: dict) -> None:
     """
     Draw the next piece that is coming to the player.
 
@@ -636,10 +636,10 @@ def drawNextPiece(piece: dict) -> None:
 
     """
     # draw the "next" label
-    nextSurf = BASICFONT.render('Next', True, TEXTCOLOR)
-    nextRect = nextSurf.get_rect()
-    nextRect.topleft = (STATUS_X, NEXT_LABEL_Y)
-    DISPLAYSURF.blit(nextSurf, nextRect)
+    next_surf = BASICFONT.render('Next', True, TEXTCOLOR)
+    next_rect = next_surf.get_rect()
+    next_rect.topleft = (STATUS_X, NEXT_LABEL_Y)
+    DISPLAYSURF.blit(next_surf, next_rect)
     # draw the "next" piece preview
     drawPiece(piece, pixel_x=STATUS_X, pixel_y=NEXT_Y)
 
