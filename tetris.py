@@ -1,8 +1,22 @@
 """An implementation of Tetris for OpenAI Gym using Pygame."""
 import random, time, pygame, sys
-from pygame.locals import *
-# TODO: numpy randomness
-import numpy as np
+from pygame.locals import (
+    QUIT,
+    KEYUP,
+    KEYDOWN,
+    K_ESCAPE,
+    K_LEFT,
+    K_RIGHT,
+    K_UP,
+    K_DOWN,
+    K_a,
+    K_d,
+    K_p,
+    K_q,
+    K_s,
+    K_w,
+    K_SPACE,
+)
 
 
 # the framerate to maintain during gameplay
