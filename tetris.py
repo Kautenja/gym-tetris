@@ -457,7 +457,18 @@ def getBlankBoard() -> list:
     return board
 
 
-def isOnBoard(x, y) -> bool:
+def isOnBoard(x: int, y: int) -> bool:
+    """
+    Return a boolean determining if the box is on the board.
+
+    Args:
+        x: the x coordinate of the box
+        y: the y coordinate of the box
+
+    Returns:
+        True if the coordinates are in range, False otherwise
+
+    """
     return x >= 0 and x < BOARDWIDTH and y < BOARDHEIGHT
 
 
