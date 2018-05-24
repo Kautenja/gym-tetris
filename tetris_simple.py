@@ -365,6 +365,24 @@ class Tetris():
             if not is_valid_position(self.board, self.falling_piece):
                 return
 
+        # TODO: handle action
+
+        # return if it's not time to fall yet
+        if time.time() - self.last_fall_time < self.fall_freq:
+            return
+
+        # see if the piece has landed
+        if not is_valid_position(self.board, self.falling_piece, adj_y=1):
+            # falling piece has landed, set it on the board
+            add_to_board(self.board, self.falling_piece)
+            self.score += remove_complete_lines(self.board)
+            self.level, self.fall_freq = level_and_fall_frequency(self.score)
+            self.falling_piece = None
+        else:
+            # piece did not land, just move the piece down
+            self.falling_piece['y'] += 1
+            self.last_fall_time = time.time()
+
     def __del__(self) -> None:
         """Close the pygame environment before deleting this object."""
         pygame.quit()
