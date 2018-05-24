@@ -405,13 +405,13 @@ def show_text_screen(text: str) -> None:
 
     """
     # Draw the text drop shadow
-    titleSurf, titleRect = makeTextObjs(text, BIGFONT, TEXTSHADOWCOLOR)
-    titleRect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2))
-    DISPLAYSURF.blit(titleSurf, titleRect)
+    title_surf, title_rect = makeTextObjs(text, BIGFONT, TEXTSHADOWCOLOR)
+    title_rect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2))
+    DISPLAYSURF.blit(title_surf, title_rect)
     # Draw the text
-    titleSurf, titleRect = makeTextObjs(text, BIGFONT, TEXTCOLOR)
-    titleRect.center = (int(WINDOWWIDTH / 2) - 3, int(WINDOWHEIGHT / 2) - 3)
-    DISPLAYSURF.blit(titleSurf, titleRect)
+    title_surf, title_rect = makeTextObjs(text, BIGFONT, TEXTCOLOR)
+    title_rect.center = (int(WINDOWWIDTH / 2) - 3, int(WINDOWHEIGHT / 2) - 3)
+    DISPLAYSURF.blit(title_surf, title_rect)
     # Draw the additional press key text.
     pressKeySurf, pressKeyRect = makeTextObjs(PRESS_KEY_LABEL, BASICFONT, TEXTCOLOR)
     pressKeyRect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2) + 100)
