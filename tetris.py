@@ -35,7 +35,9 @@ BOARDHEIGHT = 20
 BLANK = '.'
 
 
+# TODO: document
 MOVESIDEWAYSFREQ = 0.15
+# TODO: document
 MOVEDOWNFREQ = 0.1
 
 
@@ -89,28 +91,81 @@ GAME_NAME_LABEL = 'Tetris'
 
 # TODO: use a csv and numpy to remove this nastiness
 #               R    G    B
-WHITE       = (255, 255, 255)
-GRAY        = (185, 185, 185)
-BLACK       = (  0,   0,   0)
-RED         = (155,   0,   0)
-LIGHTRED    = (175,  20,  20)
-GREEN       = (  0, 155,   0)
-LIGHTGREEN  = ( 20, 175,  20)
-BLUE        = (  0,   0, 155)
-LIGHTBLUE   = ( 20,  20, 175)
-YELLOW      = (155, 155,   0)
-LIGHTYELLOW = (175, 175,  20)
+# WHITE       = (255, 255, 255)
+# GRAY        = (185, 185, 185)
+# BLACK       = (  0,   0,   0)
+# RED         = (155,   0,   0)
+# LIGHTRED    = (175,  20,  20)
+# GREEN       = (  0, 155,   0)
+# LIGHTGREEN  = ( 20, 175,  20)
+# BLUE        = (  0,   0, 155)
+# LIGHTBLUE   = ( 20,  20, 175)
+# YELLOW      = (155, 155,   0)
+# LIGHTYELLOW = (175, 175,  20)
 
 
+# BORDERCOLOR = WHITE
+# BGCOLOR = BLACK
+# TEXTCOLOR = WHITE
+# TEXTSHADOWCOLOR = GRAY
+# COLORS = (BLUE, GREEN, RED, YELLOW)
+# LIGHTCOLORS = (LIGHTBLUE, LIGHTGREEN, LIGHTRED, LIGHTYELLOW)
+
+
+WHITE = (255, 255, 255)
+GRAY = (185, 185, 185)
+BLACK = (0, 0, 0)
+CYAN = (3, 236, 239)
+LIGHT_CYAN = (3, 252, 255)
+BLUE = (22, 29, 212)
+LIGHT_BLUE = (25, 34, 251)
+ORANGE = (234, 152, 28)
+LIGHT_ORANGE = (250, 146, 0)
+YELLOW = (235, 234, 46)
+LIGHT_YELLOW = (255, 255, 0)
+GREEN = (9, 234, 45)
+LIGHT_GREEN = (61, 255, 0)
+PURPLE = (149, 39, 219)
+LIGHT_PURPLE = (146, 0, 255)
+RED = (225, 37, 5)
+LIGHT_RED = (246, 0, 0)
+
+
+# the color of the game border
 BORDERCOLOR = WHITE
+# the background color for the game board
 BGCOLOR = BLACK
+# the color to use for text labels
 TEXTCOLOR = WHITE
+# the shadow color for text to give perspective
 TEXTSHADOWCOLOR = GRAY
-COLORS = (BLUE, GREEN, RED, YELLOW)
-LIGHTCOLORS = (LIGHTBLUE, LIGHTGREEN, LIGHTRED, LIGHTYELLOW)
+# the background color for Tetrominos
+COLORS = (
+    CYAN,
+    BLUE,
+    ORANGE,
+    YELLOW,
+    GREEN,
+    PURPLE,
+    RED
+)
+# the foreground color for Tetrominos
+LIGHTCOLORS = (
+    LIGHT_CYAN,
+    LIGHT_BLUE,
+    LIGHT_ORANGE,
+    LIGHT_YELLOW,
+    LIGHT_GREEN,
+    LIGHT_PURPLE,
+    LIGHT_RED
+)
+# The color palette for game pieces
+PALETTE = {shape: index for index, shape in enumerate(list('IJLOSTZ'))}
 
 
+# the max width of a Tetromino
 TEMPLATEWIDTH = 5
+# the max height of a Tetromino
 TEMPLATEHEIGHT = 5
 
 
@@ -486,7 +541,7 @@ def new_piece() -> dict:
         'rotation': random.randint(0, len(PIECES[shape]) - 1),
         'x': int(BOARDWIDTH / 2) - int(TEMPLATEWIDTH / 2),
         'y': -2,
-        'color': 2
+        'color': PALETTE[shape]
     }
 
 
