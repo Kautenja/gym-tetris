@@ -302,7 +302,7 @@ class Tetris():
         self._display = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self._font = pygame.font.Font('freesansbold.ttf', 18)
         # set the board as a blank board
-        self.board = get_blank_board()
+        self.board = new_board()
         # set the score to 0 and get the corresponding level and fall rate
         self.score = 0
         self.level, self.fall_freq = level_and_fall_frequency(self.score)
@@ -421,14 +421,14 @@ class Tetris():
 
         """
         # get the template of the piece based on shape and rotation
-        shapeToDraw = PIECES[piece['shape']][piece['rotation']]
+        shape_to_draw = PIECES[piece['shape']][piece['rotation']]
         # if pixel_x & pixel_y are None, use the pieces internal location
         if pixel_x is None and pixel_y is None:
             pixel_x, pixel_y = to_pixel_coordinate(piece['x'], piece['y'])
         # draw each of the boxes that make up the piece
         for box_x in range(TEMPLATEWIDTH):
             for box_y in range(TEMPLATEHEIGHT):
-                if shapeToDraw[box_y][box_x] != BLANK:
+                if shape_to_draw[box_y][box_x] != BLANK:
                     x = pixel_x + (box_x * BOXSIZE)
                     y = pixel_y + (box_y * BOXSIZE)
                     self._draw_box(None, None, piece['color'], x, y)
@@ -589,7 +589,7 @@ def add_to_board(board: list, piece: dict) -> None:
                 board[x + piece['x']][y + piece['y']] = piece['color']
 
 
-def get_blank_board() -> list:
+def new_board() -> list:
     """Return a new blank board data structure."""
     board = []
     for _ in range(BOARDWIDTH):
