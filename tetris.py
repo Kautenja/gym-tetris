@@ -279,13 +279,13 @@ def runGame():
 
             elif event.type == KEYDOWN:
                 # moving the piece sideways
-                if (event.key == K_LEFT or event.key == K_a) and isValidPosition(board, fallingPiece, adjX=-1):
+                if (event.key == K_LEFT or event.key == K_a) and isValidPosition(board, fallingPiece, adj_x=-1):
                     fallingPiece['x'] -= 1
                     movingLeft = True
                     movingRight = False
                     lastMoveSidewaysTime = time.time()
 
-                elif (event.key == K_RIGHT or event.key == K_d) and isValidPosition(board, fallingPiece, adjX=1):
+                elif (event.key == K_RIGHT or event.key == K_d) and isValidPosition(board, fallingPiece, adj_x=1):
                     fallingPiece['x'] += 1
                     movingRight = True
                     movingLeft = False
@@ -304,7 +304,7 @@ def runGame():
                 # making the piece fall faster with the down key
                 elif event.key == K_DOWN or event.key == K_s:
                     movingDown = True
-                    if isValidPosition(board, fallingPiece, adjY=1):
+                    if isValidPosition(board, fallingPiece, adj_y=1):
                         fallingPiece['y'] += 1
                     lastMoveDownTime = time.time()
 
@@ -314,26 +314,26 @@ def runGame():
                     movingLeft = False
                     movingRight = False
                     for i in range(1, BOARDHEIGHT):
-                        if not isValidPosition(board, fallingPiece, adjY=i):
+                        if not isValidPosition(board, fallingPiece, adj_y=i):
                             break
                     fallingPiece['y'] += i - 1
 
         # handle moving the piece because of user input
         if (movingLeft or movingRight) and time.time() - lastMoveSidewaysTime > MOVESIDEWAYSFREQ:
-            if movingLeft and isValidPosition(board, fallingPiece, adjX=-1):
+            if movingLeft and isValidPosition(board, fallingPiece, adj_x=-1):
                 fallingPiece['x'] -= 1
-            elif movingRight and isValidPosition(board, fallingPiece, adjX=1):
+            elif movingRight and isValidPosition(board, fallingPiece, adj_x=1):
                 fallingPiece['x'] += 1
             lastMoveSidewaysTime = time.time()
 
-        if movingDown and time.time() - lastMoveDownTime > MOVEDOWNFREQ and isValidPosition(board, fallingPiece, adjY=1):
+        if movingDown and time.time() - lastMoveDownTime > MOVEDOWNFREQ and isValidPosition(board, fallingPiece, adj_y=1):
             fallingPiece['y'] += 1
             lastMoveDownTime = time.time()
 
         # let the piece fall if it is time to fall
         if time.time() - lastFallTime > fallFreq:
             # see if the piece has landed
-            if not isValidPosition(board, fallingPiece, adjY=1):
+            if not isValidPosition(board, fallingPiece, adj_y=1):
                 # falling piece has landed, set it on the board
                 addToBoard(board, fallingPiece)
                 score += remove_complete_lines(board)
@@ -461,17 +461,34 @@ def isOnBoard(x, y) -> bool:
     return x >= 0 and x < BOARDWIDTH and y < BOARDHEIGHT
 
 
-def isValidPosition(board, piece, adjX=0, adjY=0) -> bool:
-    """Return True if the piece is within the board and not colliding."""
+def isValidPosition(
+    board: list,
+    piece: dict,
+    adj_x: int=0,
+    adj_y: int=0
+) -> bool:
+    """
+    Return True if the piece is within the board and not colliding.
+
+    Args:
+        board: the board to look for collisions in
+        piece: the piece to check the validity of
+        adj_x: TODO
+        adj_y: TODO
+
+    Returns:
+        True if the piece is within the board and not colliding
+
+    """
     for x in range(TEMPLATEWIDTH):
         for y in range(TEMPLATEHEIGHT):
-            is_above_board = y + piece['y'] + adjY < 0
+            is_above_board = y + piece['y'] + adj_y < 0
             is_blank = PIECES[piece['shape']][piece['rotation']][y][x] == BLANK
             if is_above_board or is_blank:
                 continue
-            if not isOnBoard(x + piece['x'] + adjX, y + piece['y'] + adjY):
+            if not isOnBoard(x + piece['x'] + adj_x, y + piece['y'] + adj_y):
                 return False
-            if board[x + piece['x'] + adjX][y + piece['y'] + adjY] != BLANK:
+            if board[x + piece['x'] + adj_x][y + piece['y'] + adj_y] != BLANK:
                 return False
 
     return True
