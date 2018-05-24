@@ -574,8 +574,17 @@ def drawBox(
     pygame.draw.rect(DISPLAYSURF, LIGHTCOLORS[color], depth_rect)
 
 
-def draw_board(board) -> None:
-    """Draw the board."""
+def draw_board(board: list) -> None:
+    """
+    Draw the board.
+
+    Args:
+        board: the board of boxes to draw
+
+    Returns:
+        None
+
+    """
     # draw the border
     pygame.draw.rect(DISPLAYSURF, BORDERCOLOR, BORDER_DIMS, 3)
     # fill the background of the board
