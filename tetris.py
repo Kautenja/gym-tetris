@@ -22,7 +22,7 @@ from pygame.locals import (
 # the framerate to maintain during gameplay
 FPS = 144
 # the width of the main game window
-WINDOWWIDTH = 340
+WINDOWWIDTH = 330
 # the height of the main game window
 WINDOWHEIGHT = 430
 # the number of pixels to use for a box
@@ -67,10 +67,14 @@ BG_DIMS = (
 
 # the x position for status items
 STATUS_X = BORDER_DIMS[2] + 15
+# the Y position for the "score" static label
+SCORE_LABEL_Y = BORDER_DIMS[0] + 15
 # the Y position for the score status
-SCORE_Y = BORDER_DIMS[0] + 15
+SCORE_Y = SCORE_LABEL_Y + 30
+# the Y position for the "level" static label
+LEVEL_LABEL_Y = SCORE_Y + 30
 # the Y position for the level status
-LEVEL_Y = SCORE_Y + 30
+LEVEL_Y = LEVEL_LABEL_Y + 30
 # the Y position for the "next" label
 NEXT_LABEL_Y = LEVEL_Y + 30
 # the Y position for the next piece preview
@@ -80,12 +84,16 @@ NEXT_Y = NEXT_LABEL_Y + 30
 # the label for the "Next" piece to come
 NEXT_LABEL = 'Next'
 # the label for the current level status
-LEVEL_LABEL = 'Level: {}'
+LEVEL_LABEL = 'Level'
 # the label for the current score status
-SCORE_LABEL = 'Score: {}'
+SCORE_LABEL = 'Score'
 # the label for the press key
 PRESS_KEY_LABEL = 'Press a key to play.'
-# The label for the title screen and window
+# the label to indicate that the game is over
+GAME_OVER_LABEL = 'Over'
+# the label to indicate that the game is paused
+GAME_PAUSE_LABEL = 'Pause'
+# the label for the title screen and window
 GAME_NAME_LABEL = 'Tetris'
 
 
@@ -292,7 +300,7 @@ def main():
     while True:
         run_game()
         # show the game over screen (and wait for a key-press)
-        show_text_screen('Game Over')
+        show_text_screen(GAME_OVER_LABEL)
 
 
 def run_game():
@@ -331,7 +339,7 @@ def run_game():
                     # Pausing the game
                     DISPLAYSURF.fill(BGCOLOR)
                     # pause until a key press
-                    show_text_screen('Paused')
+                    show_text_screen(GAME_PAUSE_LABEL)
                     last_fall_time = time.time()
                     last_move_down_time = time.time()
                     last_move_side_time = time.time()
@@ -755,7 +763,6 @@ def draw_piece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
                 draw_box(None, None, piece['color'], x, y)
 
 
-# TODO: put score and level below the static label to conserve horizontal space
 def draw_status(score: int, level: int) -> None:
     """
     Draw the status information for the player
@@ -768,13 +775,23 @@ def draw_status(score: int, level: int) -> None:
         None
 
     """
-    # draw the score text
-    score_surf = BASICFONT.render(SCORE_LABEL.format(score), True, TEXTCOLOR)
+    # draw the score label
+    score_label_surf = BASICFONT.render(SCORE_LABEL, True, TEXTCOLOR)
+    score_label_rect = score_label_surf.get_rect()
+    score_label_rect.topleft = (STATUS_X, SCORE_LABEL_Y)
+    DISPLAYSURF.blit(score_label_surf, score_label_rect)
+    # draw the score
+    score_surf = BASICFONT.render(str(score), True, TEXTCOLOR)
     score_rect = score_surf.get_rect()
     score_rect.topleft = (STATUS_X, SCORE_Y)
     DISPLAYSURF.blit(score_surf, score_rect)
-    # draw the level text
-    level_surf = BASICFONT.render(LEVEL_LABEL.format(level), True, TEXTCOLOR)
+    # draw the level label
+    level_label_surf = BASICFONT.render(LEVEL_LABEL, True, TEXTCOLOR)
+    level_label_rect = level_label_surf.get_rect()
+    level_label_rect.topleft = (STATUS_X, LEVEL_LABEL_Y)
+    DISPLAYSURF.blit(level_label_surf, level_label_rect)
+    # draw the level
+    level_surf = BASICFONT.render(str(level), True, TEXTCOLOR)
     level_rect = level_surf.get_rect()
     level_rect.topleft = (STATUS_X, LEVEL_Y)
     DISPLAYSURF.blit(level_surf, level_rect)
