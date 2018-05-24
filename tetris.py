@@ -22,9 +22,9 @@ from pygame.locals import (
 # the framerate to maintain during gameplay
 FPS = 144
 # the width of the main game window
-WINDOWWIDTH = 330
+SCREEN_WIDTH = 330
 # the height of the main game window
-WINDOWHEIGHT = 430
+SCREEN_HEIGHT = 430
 # the number of pixels to use for a box
 BOXSIZE = 20
 # the number of horizontal boxes on the board (classic Tetris uses 10)
@@ -289,7 +289,7 @@ def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT, BIGFONT
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
-    DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+    DISPLAYSURF = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
     BIGFONT = pygame.font.Font('freesansbold.ttf', 100)
     # update the name of the game
@@ -468,15 +468,15 @@ def show_text_screen(text: str) -> None:
     """
     # Draw the text drop shadow
     title_surf, title_rect = make_text(text, BIGFONT, TEXTSHADOWCOLOR)
-    title_rect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2))
+    title_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 2))
     DISPLAYSURF.blit(title_surf, title_rect)
     # Draw the text
     title_surf, title_rect = make_text(text, BIGFONT, TEXTCOLOR)
-    title_rect.center = (int(WINDOWWIDTH / 2) - 3, int(WINDOWHEIGHT / 2) - 3)
+    title_rect.center = (int(SCREEN_WIDTH / 2) - 3, int(SCREEN_HEIGHT / 2) - 3)
     DISPLAYSURF.blit(title_surf, title_rect)
     # Draw the additional press key text.
     press_surf, press_rect = make_text(PRESS_KEY_LABEL, BASICFONT, TEXTCOLOR)
-    press_rect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2) + 100)
+    press_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 2) + 100)
     DISPLAYSURF.blit(press_surf, press_rect)
     # lock until a key press event
     while check_for_key_press() is None:
