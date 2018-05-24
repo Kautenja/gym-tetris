@@ -255,7 +255,7 @@ def runGame():
             lastFallTime = time.time()
 
             # can't fit a new piece on the board, so game over
-            if not isValidPosition(board, fallingPiece):
+            if not is_valid_position(board, fallingPiece):
                 return
 
         checkForQuit()
@@ -279,13 +279,13 @@ def runGame():
 
             elif event.type == KEYDOWN:
                 # moving the piece sideways
-                if (event.key == K_LEFT or event.key == K_a) and isValidPosition(board, fallingPiece, adj_x=-1):
+                if (event.key == K_LEFT or event.key == K_a) and is_valid_position(board, fallingPiece, adj_x=-1):
                     fallingPiece['x'] -= 1
                     movingLeft = True
                     movingRight = False
                     lastMoveSidewaysTime = time.time()
 
-                elif (event.key == K_RIGHT or event.key == K_d) and isValidPosition(board, fallingPiece, adj_x=1):
+                elif (event.key == K_RIGHT or event.key == K_d) and is_valid_position(board, fallingPiece, adj_x=1):
                     fallingPiece['x'] += 1
                     movingRight = True
                     movingLeft = False
@@ -294,17 +294,17 @@ def runGame():
                 # rotating the piece (if there is room to rotate)
                 elif event.key == K_UP or event.key == K_w:
                     fallingPiece['rotation'] = (fallingPiece['rotation'] + 1) % len(PIECES[fallingPiece['shape']])
-                    if not isValidPosition(board, fallingPiece):
+                    if not is_valid_position(board, fallingPiece):
                         fallingPiece['rotation'] = (fallingPiece['rotation'] - 1) % len(PIECES[fallingPiece['shape']])
                 elif event.key == K_q: # rotate the other direction
                     fallingPiece['rotation'] = (fallingPiece['rotation'] - 1) % len(PIECES[fallingPiece['shape']])
-                    if not isValidPosition(board, fallingPiece):
+                    if not is_valid_position(board, fallingPiece):
                         fallingPiece['rotation'] = (fallingPiece['rotation'] + 1) % len(PIECES[fallingPiece['shape']])
 
                 # making the piece fall faster with the down key
                 elif event.key == K_DOWN or event.key == K_s:
                     movingDown = True
-                    if isValidPosition(board, fallingPiece, adj_y=1):
+                    if is_valid_position(board, fallingPiece, adj_y=1):
                         fallingPiece['y'] += 1
                     lastMoveDownTime = time.time()
 
@@ -314,26 +314,26 @@ def runGame():
                     movingLeft = False
                     movingRight = False
                     for i in range(1, BOARDHEIGHT):
-                        if not isValidPosition(board, fallingPiece, adj_y=i):
+                        if not is_valid_position(board, fallingPiece, adj_y=i):
                             break
                     fallingPiece['y'] += i - 1
 
         # handle moving the piece because of user input
         if (movingLeft or movingRight) and time.time() - lastMoveSidewaysTime > MOVESIDEWAYSFREQ:
-            if movingLeft and isValidPosition(board, fallingPiece, adj_x=-1):
+            if movingLeft and is_valid_position(board, fallingPiece, adj_x=-1):
                 fallingPiece['x'] -= 1
-            elif movingRight and isValidPosition(board, fallingPiece, adj_x=1):
+            elif movingRight and is_valid_position(board, fallingPiece, adj_x=1):
                 fallingPiece['x'] += 1
             lastMoveSidewaysTime = time.time()
 
-        if movingDown and time.time() - lastMoveDownTime > MOVEDOWNFREQ and isValidPosition(board, fallingPiece, adj_y=1):
+        if movingDown and time.time() - lastMoveDownTime > MOVEDOWNFREQ and is_valid_position(board, fallingPiece, adj_y=1):
             fallingPiece['y'] += 1
             lastMoveDownTime = time.time()
 
         # let the piece fall if it is time to fall
         if time.time() - lastFallTime > fallFreq:
             # see if the piece has landed
-            if not isValidPosition(board, fallingPiece, adj_y=1):
+            if not is_valid_position(board, fallingPiece, adj_y=1):
                 # falling piece has landed, set it on the board
                 addToBoard(board, fallingPiece)
                 score += remove_complete_lines(board)
@@ -461,7 +461,7 @@ def isOnBoard(x, y) -> bool:
     return x >= 0 and x < BOARDWIDTH and y < BOARDHEIGHT
 
 
-def isValidPosition(
+def is_valid_position(
     board: list,
     piece: dict,
     adj_x: int=0,
