@@ -309,21 +309,34 @@ class Tetris():
         # setup the initial pieces
         self.falling_piece = new_piece()
         self.next_piece = new_piece()
+        # setup the initial times for movement restriction
+        self.last_move_down_time = time.time()
+        self.last_move_side_time = time.time()
+        self.last_fall_time = time.time()
 
     def left(self) -> None:
         """Move the falling piece left on the board."""
         if is_valid_position(self.board, self.falling_piece, adj_x=-1):
+            if time.time() - self.last_move_side_time < MOVESIDEWAYSFREQ:
+                return
             self.falling_piece['x'] -= 1
+            self.last_move_side_time = time.time()
 
     def right(self) -> None:
         """Move the falling piece right on the board."""
         if is_valid_position(self.board, self.falling_piece, adj_x=1):
+            if time.time() - self.last_move_side_time < MOVESIDEWAYSFREQ:
+                return
             self.falling_piece['x'] += 1
+            self.last_move_side_time = time.time()
 
     def down(self) -> None:
         """Moving the falling piece down on the board."""
         if is_valid_position(self.board, self.falling_piece, adj_y=1):
+            if time.time() - self.last_move_down_time < MOVEDOWNFREQ:
+                return
             self.falling_piece['y'] += 1
+            self.last_move_down_time = time.time()
 
     def rot_r(self) -> None:
         """Rotate the falling piece right on the board."""
