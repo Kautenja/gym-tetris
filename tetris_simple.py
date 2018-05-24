@@ -312,11 +312,13 @@ class Tetris():
 
     def left(self) -> None:
         """Move the falling piece left on the board."""
-        self.falling_piece['x'] -= 1
+        if is_valid_position(self.board, self.falling_piece, adj_x=-1):
+            self.falling_piece['x'] -= 1
 
     def right(self) -> None:
         """Move the falling piece right on the board."""
-        self.falling_piece['x'] += 1
+        if is_valid_position(self.board, self.falling_piece, adj_x=1):
+            self.falling_piece['x'] += 1
 
     def down(self) -> None:
         """Moving the falling piece down on the board."""
@@ -327,6 +329,7 @@ class Tetris():
         """Rotate the falling piece right on the board."""
         rots = len(PIECES[self.falling_piece['shape']])
         self.falling_piece['rotation'] = (self.falling_piece['rotation'] + 1) % rots
+        # rotate back if the position is invalid
         if not is_valid_position(self.board, self.falling_piece):
             self.falling_piece['rotation'] = (self.falling_piece['rotation'] - 1) % rots
 
@@ -334,6 +337,7 @@ class Tetris():
         """Rotate the falling piece left on the board."""
         rots = len(PIECES[self.falling_piece['shape']])
         self.falling_piece['rotation'] = (self.falling_piece['rotation'] - 1) % rots
+        # rotate back if the position is invalid
         if not is_valid_position(self.board, self.falling_piece):
             self.falling_piece['rotation'] = (self.falling_piece['rotation'] + 1) % rots
 
