@@ -534,15 +534,14 @@ def drawBox(
 
 def drawBoard(board) -> None:
     """Draw the board."""
-    # TODO: improve border dimensions and remove the static numbers below
     # draw the border around the board
     border_rect = (
-        XMARGIN - 3,
-        TOPMARGIN - 7,
-        BOARDWIDTH * BOXSIZE + 8,
-        BOARDHEIGHT * BOXSIZE + 8
+        XMARGIN - 5,
+        TOPMARGIN - 5,
+        BOARDWIDTH * BOXSIZE + 10,
+        BOARDHEIGHT * BOXSIZE + 10
     )
-    pygame.draw.rect(DISPLAYSURF, BORDERCOLOR, border_rect, 5)
+    pygame.draw.rect(DISPLAYSURF, BORDERCOLOR, border_rect, 3)
     # fill the background of the board
     bg_rect = (
         XMARGIN,
