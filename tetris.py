@@ -241,7 +241,7 @@ def runGame():
     movingLeft = False
     movingRight = False
     score = 0
-    level, fallFreq = calculateLevelAndFallFreq(score)
+    level, fallFreq = level_and_fall_frequency(score)
 
     fallingPiece = new_piece()
     nextPiece = new_piece()
@@ -338,7 +338,7 @@ def runGame():
                 # falling piece has landed, set it on the board
                 add_to_board(board, fallingPiece)
                 score += remove_complete_lines(board)
-                level, fallFreq = calculateLevelAndFallFreq(score)
+                level, fallFreq = level_and_fall_frequency(score)
                 fallingPiece = None
             else:
                 # piece did not land, just move the piece down
@@ -418,7 +418,7 @@ def checkForQuit() -> None:
         pygame.event.post(event)
 
 
-def calculateLevelAndFallFreq(score: float) -> tuple:
+def level_and_fall_frequency(score: float) -> tuple:
     """
     Return the level the player is on based on score and the fall speed.
 
