@@ -259,7 +259,7 @@ def runGame():
             if not is_valid_position(board, fallingPiece):
                 return
 
-        checkForQuit()
+        check_for_quit()
         # event handling loop
         for event in pygame.event.get():
             if event.type == KEYUP:
@@ -373,7 +373,7 @@ def checkForKeyPress():
     """Look for a KEYUP event in the event queue and remove KEYDOWN events."""
     # Go through event queue looking for a KEYUP event.
     # Grab KEYDOWN events to remove them from the event queue.
-    checkForQuit()
+    check_for_quit()
 
     for event in pygame.event.get([KEYDOWN, KEYUP]):
         if event.type == KEYDOWN:
@@ -403,7 +403,7 @@ def showTextScreen(text: str) -> None:
         FPSCLOCK.tick()
 
 
-def checkForQuit() -> None:
+def check_for_quit() -> None:
     """Check if the game has quit and terminate if so."""
     # get all the QUIT events
     for event in pygame.event.get(QUIT):
