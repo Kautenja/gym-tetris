@@ -237,11 +237,11 @@ def main():
 
     show_text_screen('Tetris')
     while True:
-        runGame()
+        run_game()
         show_text_screen('Game Over')
 
 
-def runGame():
+def run_game():
     # setup variables for the start of the game
     board = get_blank_board()
     lastMoveDownTime = time.time()
