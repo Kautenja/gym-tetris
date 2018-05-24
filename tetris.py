@@ -317,7 +317,7 @@ def runGame():
         # drawing everything on the screen
         DISPLAYSURF.fill(BGCOLOR)
         drawBoard(board)
-        drawStatus(score, level)
+        draw_status(score, level)
         draw_next_piece(nextPiece)
         if fallingPiece is not None:
             draw_piece(fallingPiece)
@@ -600,7 +600,7 @@ def draw_piece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
                 drawBox(None, None, piece['color'], pixel_x + (x * BOXSIZE), pixel_y + (y * BOXSIZE))
 
 
-def drawStatus(score: int, level: int) -> None:
+def draw_status(score: int, level: int) -> None:
     """
     Draw the status information for the player
 
