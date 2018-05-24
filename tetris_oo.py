@@ -514,6 +514,7 @@ class Tetris():
             self.next_piece = new_piece()
             # can't fit a new piece on the board, so game over
             if not is_valid_position(self.board, self.falling_piece):
+                print('game over')
                 return
 
         # TODO: handle action
@@ -530,7 +531,8 @@ class Tetris():
         if self.falling_piece is not None:
             self._draw_piece(self.falling_piece)
         # update the pygame display
-        pygame.display.update()
+        # pygame.display.update()
+        self._display.update()
 
     def __del__(self) -> None:
         """Close the pygame environment before deleting this object."""
