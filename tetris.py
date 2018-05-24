@@ -592,7 +592,6 @@ def draw_piece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
     # if pixel_x & pixel_y are None, use the pieces internal location
     if pixel_x is None and pixel_y is None:
         pixel_x, pixel_y = convertToPixelCoords(piece['x'], piece['y'])
-
     # draw each of the boxes that make up the piece
     for box_x in range(TEMPLATEWIDTH):
         for box_y in range(TEMPLATEHEIGHT):
