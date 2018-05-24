@@ -419,7 +419,18 @@ def checkForQuit() -> None:
 
 
 def calculateLevelAndFallFreq(score: float) -> tuple:
-    """Return the level the player is on based on score and the fall speed."""
+    """
+    Return the level the player is on based on score and the fall speed.
+
+    Args:
+        score: the score to calculate level and fall freq from
+
+    Returns:
+        a tuple of:
+        - the level the player is on
+        - the fall_frequency for piece (drop speed)
+
+    """
     # get the level that the player is on
     level = int(score / 10) + 1
     # get the frequency with which to move pieces down
