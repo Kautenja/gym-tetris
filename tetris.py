@@ -61,6 +61,14 @@ NEXT_LABEL_Y = LEVEL_Y + 30
 NEXT_Y = NEXT_LABEL_Y + 30
 
 
+# the label for the "Next" piece to come
+NEXT_LABEL = 'Next'
+# the label for the current level status
+LEVEL_LABEL = 'Level: {}'
+# the label for the current score status
+SCORE_LABEL = 'Score: {}'
+
+
 # TODO: use a csv and numpy to remove this nastiness
 #               R    G    B
 WHITE       = (255, 255, 255)
@@ -384,7 +392,16 @@ def checkForKeyPress():
 
 
 def showTextScreen(text: str) -> None:
-    """Display a string in the center of the screen until a key press."""
+    """
+    Display a string in the center of the screen until a key press.
+
+    Args:
+        text: the text to display in the middle of the screen
+
+    Returns:
+        None
+
+    """
     # Draw the text drop shadow
     titleSurf, titleRect = makeTextObjs(text, BIGFONT, TEXTSHADOWCOLOR)
     titleRect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2))
@@ -695,12 +712,12 @@ def draw_status(score: int, level: int) -> None:
 
     """
     # draw the score text
-    score_surf = BASICFONT.render('Score: %s' % score, True, TEXTCOLOR)
+    score_surf = BASICFONT.render(SCORE_LABEL.format(score), True, TEXTCOLOR)
     score_rect = score_surf.get_rect()
     score_rect.topleft = (STATUS_X, SCORE_Y)
     DISPLAYSURF.blit(score_surf, score_rect)
     # draw the level text
-    level_surf = BASICFONT.render('Level: %s' % level, True, TEXTCOLOR)
+    level_surf = BASICFONT.render(LEVEL_LABEL.format(level), True, TEXTCOLOR)
     level_rect = level_surf.get_rect()
     level_rect.topleft = (STATUS_X, LEVEL_Y)
     DISPLAYSURF.blit(level_surf, level_rect)
@@ -718,7 +735,7 @@ def draw_next_piece(piece: dict) -> None:
 
     """
     # draw the "next" label
-    next_surf = BASICFONT.render('Next', True, TEXTCOLOR)
+    next_surf = BASICFONT.render(NEXT_LABEL, True, TEXTCOLOR)
     next_rect = next_surf.get_rect()
     next_rect.topleft = (STATUS_X, NEXT_LABEL_Y)
     DISPLAYSURF.blit(next_surf, next_rect)
