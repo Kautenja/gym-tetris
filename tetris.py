@@ -235,10 +235,10 @@ def main():
     BIGFONT = pygame.font.Font('freesansbold.ttf', 100)
     pygame.display.set_caption('Tetris')
 
-    showTextScreen('Tetris')
+    show_text_screen('Tetris')
     while True:
         runGame()
-        showTextScreen('Game Over')
+        show_text_screen('Game Over')
 
 
 def runGame():
@@ -277,7 +277,7 @@ def runGame():
                     # Pausing the game
                     DISPLAYSURF.fill(BGCOLOR)
                     # pause until a key press
-                    showTextScreen('Paused')
+                    show_text_screen('Paused')
                     lastFallTime = time.time()
                     lastMoveDownTime = time.time()
                     lastMoveSidewaysTime = time.time()
@@ -393,7 +393,7 @@ def checkForKeyPress():
     return None
 
 
-def showTextScreen(text: str) -> None:
+def show_text_screen(text: str) -> None:
     """
     Display a string in the center of the screen until a key press.
 
@@ -412,7 +412,7 @@ def showTextScreen(text: str) -> None:
     titleSurf, titleRect = makeTextObjs(text, BIGFONT, TEXTCOLOR)
     titleRect.center = (int(WINDOWWIDTH / 2) - 3, int(WINDOWHEIGHT / 2) - 3)
     DISPLAYSURF.blit(titleSurf, titleRect)
-    # Draw the additional "Press a key to play." text.
+    # Draw the additional press key text.
     pressKeySurf, pressKeyRect = makeTextObjs(PRESS_KEY_LABEL, BASICFONT, TEXTCOLOR)
     pressKeyRect.center = (int(WINDOWWIDTH / 2), int(WINDOWHEIGHT / 2) + 100)
     DISPLAYSURF.blit(pressKeySurf, pressKeyRect)
