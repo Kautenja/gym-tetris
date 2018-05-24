@@ -232,7 +232,7 @@ def main():
 
 def runGame():
     # setup variables for the start of the game
-    board = getBlankBoard()
+    board = get_blank_board()
     lastMoveDownTime = time.time()
     lastMoveSidewaysTime = time.time()
     lastFallTime = time.time()
@@ -449,11 +449,12 @@ def addToBoard(board, piece) -> None:
                 board[x + piece['x']][y + piece['y']] = piece['color']
 
 
-def getBlankBoard() -> list:
+def get_blank_board() -> list:
     """Return a new blank board data structure."""
     board = []
     for _ in range(BOARDWIDTH):
         board.append([BLANK] * BOARDHEIGHT)
+
     return board
 
 
