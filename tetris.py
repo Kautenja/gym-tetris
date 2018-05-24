@@ -477,8 +477,17 @@ def isValidPosition(board, piece, adjX=0, adjY=0) -> bool:
     return True
 
 
-def is_complete_line(board, y) -> bool:
-    # Return True if the line filled with boxes with no gaps.
+def is_complete_line(board: list, y: int) -> bool:
+    """
+    Return True if the line filled with boxes with no gaps.
+
+    Args:
+        board: the board of pieces to look in
+        y: the line to check for completion
+
+    Returns:
+        True if the line is complete, False otherwise
+    """
     for x in range(BOARDWIDTH):
         if board[x][y] == BLANK:
             return False
@@ -486,11 +495,11 @@ def is_complete_line(board, y) -> bool:
     return True
 
 
-def remove_complete_lines(board) -> int:
+def remove_complete_lines(board: list) -> int:
     """Remove completed lines on the board.
 
     Args:
-        board: the board to remove completed lines from
+        board: the board of pieces to remove completed lines from
 
     Returns:
         The number of completed lines removed from the board
