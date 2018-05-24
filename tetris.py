@@ -489,6 +489,7 @@ def is_complete_line(board: list, y: int) -> bool:
         True if the line is complete, False otherwise
     """
     for x in range(BOARDWIDTH):
+        # if there is a blank box then the line is not complete
         if board[x][y] == BLANK:
             return False
 
