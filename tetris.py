@@ -346,7 +346,7 @@ def runGame():
 
         # drawing everything on the screen
         DISPLAYSURF.fill(BGCOLOR)
-        drawBoard(board)
+        draw_board(board)
         draw_status(score, level)
         draw_next_piece(nextPiece)
         if fallingPiece is not None:
@@ -574,7 +574,7 @@ def drawBox(
     pygame.draw.rect(DISPLAYSURF, LIGHTCOLORS[color], depth_rect)
 
 
-def drawBoard(board) -> None:
+def draw_board(board) -> None:
     """Draw the board."""
     # draw the border
     pygame.draw.rect(DISPLAYSURF, BORDERCOLOR, BORDER_DIMS, 3)
