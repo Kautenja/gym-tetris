@@ -522,7 +522,7 @@ def removeCompleteLines(board) -> int:
     return num_lines_removed
 
 
-def convertToPixelCoords(box_x: int, box_y: int) -> tuple:
+def to_pixel_coordinate(box_x: int, box_y: int) -> tuple:
     """
     Convert x, y coordinates of the board to pixel coordinates.
 
@@ -565,7 +565,7 @@ def draw_box(
         return
     # convert the box coordinates to pixel coordinates if none are specified
     if pixel_x is None and pixel_y is None:
-        pixel_x, pixel_y = convertToPixelCoords(box_x, box_y)
+        pixel_x, pixel_y = to_pixel_coordinate(box_x, box_y)
     # draw the main background box
     main_rect = (pixel_x + 1, pixel_y + 1, BOXSIZE - 1, BOXSIZE - 1)
     pygame.draw.rect(DISPLAYSURF, COLORS[color], main_rect)
@@ -612,7 +612,7 @@ def draw_piece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
     shapeToDraw = PIECES[piece['shape']][piece['rotation']]
     # if pixel_x & pixel_y are None, use the pieces internal location
     if pixel_x is None and pixel_y is None:
-        pixel_x, pixel_y = convertToPixelCoords(piece['x'], piece['y'])
+        pixel_x, pixel_y = to_pixel_coordinate(piece['x'], piece['y'])
     # draw each of the boxes that make up the piece
     for box_x in range(TEMPLATEWIDTH):
         for box_y in range(TEMPLATEHEIGHT):
