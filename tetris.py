@@ -469,19 +469,19 @@ def removeCompleteLines(board) -> int:
         - lines are moved down after complete ones are removed
 
     """
-    numLinesRemoved = 0
+    num_lines_removed = 0
     # start y at the bottom of the board
     y = BOARDHEIGHT - 1
     while y >= 0:
         if isCompleteLine(board, y):
             # Remove the line and pull boxes down by one line.
-            for pullDownY in range(y, 0, -1):
+            for pull_down_y in range(y, 0, -1):
                 for x in range(BOARDWIDTH):
-                    board[x][pullDownY] = board[x][pullDownY-1]
+                    board[x][pull_down_y] = board[x][pull_down_y - 1]
             # Set very top line to blank.
             for x in range(BOARDWIDTH):
                 board[x][0] = BLANK
-            numLinesRemoved += 1
+            num_lines_removed += 1
             # Note on the next iteration of the loop, y is the same.
             # This is so that if the line that was pulled down is also
             # complete, it will be removed.
@@ -489,26 +489,47 @@ def removeCompleteLines(board) -> int:
             # move on to check next row up
             y -= 1
 
-    return numLinesRemoved
+    return num_lines_removed
 
 
-def convertToPixelCoords(boxx, boxy):
-    # Convert the given xy coordinates of the board to xy
-    # coordinates of the location on the screen.
-    return (XMARGIN + (boxx * BOXSIZE)), (TOPMARGIN + (boxy * BOXSIZE))
+def convertToPixelCoords(box_x, box_y) -> tuple:
+    """Convert x, y coordinates of tetris board to pixel coordinates."""
+    return (XMARGIN + (box_x * BOXSIZE)), (TOPMARGIN + (box_y * BOXSIZE))
 
 
-def drawBox(boxx, boxy, color, pixelx=None, pixely=None):
-    # draw a single box (each tetromino piece has four boxes)
-    # at xy coordinates on the board. Or, if pixelx & pixely
-    # are specified, draw to the pixel coordinates stored in
-    # pixelx & pixely (this is used for the "Next" piece).
+def drawBox(
+    box_x: int,
+    box_y: int,
+    color: int,
+    pixel_x: int = None,
+    pixel_y: int = None,
+) -> None:
+    """
+    Draw a single box of a piece at given coordinates.
+
+    Args:
+        box_x: the x coordinate in the Tetris grid
+        box_y: the y coordinate in the Tetris grid
+        color: the color of the box (as an index)
+        pixel_x: optional x pixel coordinate to override the box coordinate
+        pixel_y: optional y pixel coordinate to override the box coordinate
+
+    Returns:
+        None
+
+    """
+    # don't draw empty boxes
     if color == BLANK:
         return
-    if pixelx == None and pixely == None:
-        pixelx, pixely = convertToPixelCoords(boxx, boxy)
-    pygame.draw.rect(DISPLAYSURF, COLORS[color], (pixelx + 1, pixely + 1, BOXSIZE - 1, BOXSIZE - 1))
-    pygame.draw.rect(DISPLAYSURF, LIGHTCOLORS[color], (pixelx + 1, pixely + 1, BOXSIZE - 4, BOXSIZE - 4))
+    # convert the box coordinates to pixel coordinates if none are specified
+    if pixel_x is None and pixel_y is None:
+        pixel_x, pixel_y = convertToPixelCoords(box_x, box_y)
+    # draw the main background box
+    main_rect = (pixel_x + 1, pixel_y + 1, BOXSIZE - 1, BOXSIZE - 1)
+    pygame.draw.rect(DISPLAYSURF, COLORS[color], main_rect)
+    # draw the smaller depth perspective effect box
+    depth_rect = (pixel_x + 1, pixel_y + 1, BOXSIZE - 4, BOXSIZE - 4)
+    pygame.draw.rect(DISPLAYSURF, LIGHTCOLORS[color], depth_rect)
 
 
 def drawBoard(board):
@@ -537,17 +558,17 @@ def drawStatus(score, level):
     DISPLAYSURF.blit(levelSurf, levelRect)
 
 
-def drawPiece(piece, pixelx=None, pixely=None):
+def drawPiece(piece, pixel_x=None, pixel_y=None):
     shapeToDraw = PIECES[piece['shape']][piece['rotation']]
-    if pixelx == None and pixely == None:
-        # if pixelx & pixely hasn't been specified, use the location stored in the piece data structure
-        pixelx, pixely = convertToPixelCoords(piece['x'], piece['y'])
+    if pixel_x == None and pixel_y == None:
+        # if pixel_x & pixel_y hasn't been specified, use the location stored in the piece data structure
+        pixel_x, pixel_y = convertToPixelCoords(piece['x'], piece['y'])
 
     # draw each of the boxes that make up the piece
     for x in range(TEMPLATEWIDTH):
         for y in range(TEMPLATEHEIGHT):
             if shapeToDraw[y][x] != BLANK:
-                drawBox(None, None, piece['color'], pixelx + (x * BOXSIZE), pixely + (y * BOXSIZE))
+                drawBox(None, None, piece['color'], pixel_x + (x * BOXSIZE), pixel_y + (y * BOXSIZE))
 
 
 def drawNextPiece(piece):
@@ -557,7 +578,7 @@ def drawNextPiece(piece):
     nextRect.topleft = (WINDOWWIDTH - 120, 80)
     DISPLAYSURF.blit(nextSurf, nextRect)
     # draw the "next" piece
-    drawPiece(piece, pixelx=WINDOWWIDTH-120, pixely=100)
+    drawPiece(piece, pixel_x=WINDOWWIDTH-120, pixel_y=100)
 
 
 if __name__ == '__main__':
