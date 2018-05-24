@@ -539,7 +539,7 @@ def convertToPixelCoords(box_x: int, box_y: int) -> tuple:
     return (XMARGIN + (box_x * BOXSIZE)), (TOPMARGIN + (box_y * BOXSIZE))
 
 
-def drawBox(
+def draw_box(
     box_x: int,
     box_y: int,
     color: int,
@@ -592,7 +592,7 @@ def draw_board(board: list) -> None:
     # draw the individual boxes on the board
     for x in range(BOARDWIDTH):
         for y in range(BOARDHEIGHT):
-            drawBox(x, y, board[x][y])
+            draw_box(x, y, board[x][y])
 
 
 def draw_piece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
@@ -619,7 +619,7 @@ def draw_piece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
             if shapeToDraw[box_y][box_x] != BLANK:
                 x = pixel_x + (box_x * BOXSIZE)
                 y = pixel_y + (box_y * BOXSIZE)
-                drawBox(None, None, piece['color'], x, y)
+                draw_box(None, None, piece['color'], x, y)
 
 
 def draw_status(score: int, level: int) -> None:
