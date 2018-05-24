@@ -320,7 +320,7 @@ def runGame():
         drawStatus(score, level)
         draw_next_piece(nextPiece)
         if fallingPiece is not None:
-            drawPiece(fallingPiece)
+            draw_piece(fallingPiece)
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
@@ -574,7 +574,7 @@ def drawBoard(board) -> None:
             drawBox(x, y, board[x][y])
 
 
-def drawPiece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
+def draw_piece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
     """
     draw a piece on the board.
 
@@ -641,7 +641,7 @@ def draw_next_piece(piece: dict) -> None:
     next_rect.topleft = (STATUS_X, NEXT_LABEL_Y)
     DISPLAYSURF.blit(next_surf, next_rect)
     # draw the "next" piece preview
-    drawPiece(piece, pixel_x=STATUS_X, pixel_y=NEXT_Y)
+    draw_piece(piece, pixel_x=STATUS_X, pixel_y=NEXT_Y)
 
 
 if __name__ == '__main__':
