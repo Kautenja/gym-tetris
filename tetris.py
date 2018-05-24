@@ -206,7 +206,7 @@ def runGame():
     lastMoveDownTime = time.time()
     lastMoveSidewaysTime = time.time()
     lastFallTime = time.time()
-    movingDown = False # note: there is no movingUp variable
+    movingDown = False
     movingLeft = False
     movingRight = False
     score = 0
@@ -532,7 +532,9 @@ def drawBox(
     pygame.draw.rect(DISPLAYSURF, LIGHTCOLORS[color], depth_rect)
 
 
-def drawBoard(board):
+def drawBoard(board) -> None:
+    """Draw the board."""
+    # TODO: improve border dimensions and remove the static numbers below
     # draw the border around the board
     border_rect = (
         XMARGIN - 3,
@@ -541,27 +543,48 @@ def drawBoard(board):
         BOARDHEIGHT * BOXSIZE + 8
     )
     pygame.draw.rect(DISPLAYSURF, BORDERCOLOR, border_rect, 5)
-
     # fill the background of the board
-    pygame.draw.rect(DISPLAYSURF, BGCOLOR, (XMARGIN, TOPMARGIN, BOXSIZE * BOARDWIDTH, BOXSIZE * BOARDHEIGHT))
+    bg_rect = (
+        XMARGIN,
+        TOPMARGIN,
+        BOXSIZE * BOARDWIDTH,
+        BOXSIZE * BOARDHEIGHT
+    )
+    pygame.draw.rect(DISPLAYSURF, BGCOLOR, bg_rect)
     # draw the individual boxes on the board
     for x in range(BOARDWIDTH):
         for y in range(BOARDHEIGHT):
             drawBox(x, y, board[x][y])
 
 
-def drawStatus(score, level):
-    # draw the score text
-    scoreSurf = BASICFONT.render('Score: %s' % score, True, TEXTCOLOR)
-    scoreRect = scoreSurf.get_rect()
-    scoreRect.topleft = (WINDOWWIDTH - 150, 20)
-    DISPLAYSURF.blit(scoreSurf, scoreRect)
+def drawStatus(
+    score: int,
+    level: int,
+    _right_margin_pad: int = 150,
+    _score_top_pad: int = 20,
+    _level_top_pad: int = 50,
+) -> None:
+    """
+    Draw the status information for the player
 
+    Args:
+        score: the score of the game
+        level: the current level the player is on
+
+    Returns:
+        None
+
+    """
+    # draw the score text
+    score_surf = BASICFONT.render('Score: %s' % score, True, TEXTCOLOR)
+    score_rect = score_surf.get_rect()
+    score_rect.topleft = (WINDOWWIDTH - _right_margin_pad, _score_top_pad)
+    DISPLAYSURF.blit(score_surf, score_rect)
     # draw the level text
-    levelSurf = BASICFONT.render('Level: %s' % level, True, TEXTCOLOR)
-    levelRect = levelSurf.get_rect()
-    levelRect.topleft = (WINDOWWIDTH - 150, 50)
-    DISPLAYSURF.blit(levelSurf, levelRect)
+    level_surf = BASICFONT.render('Level: %s' % level, True, TEXTCOLOR)
+    level_rect = level_surf.get_rect()
+    level_rect.topleft = (WINDOWWIDTH - _right_margin_pad, _level_top_pad)
+    DISPLAYSURF.blit(level_surf, level_rect)
 
 
 def drawPiece(piece, pixel_x=None, pixel_y=None):
