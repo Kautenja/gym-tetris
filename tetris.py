@@ -335,7 +335,7 @@ def runGame():
             # see if the piece has landed
             if not is_valid_position(board, fallingPiece, adj_y=1):
                 # falling piece has landed, set it on the board
-                addToBoard(board, fallingPiece)
+                add_to_board(board, fallingPiece)
                 score += remove_complete_lines(board)
                 level, fallFreq = calculateLevelAndFallFreq(score)
                 fallingPiece = None
@@ -441,7 +441,7 @@ def getNewPiece() -> dict:
     }
 
 
-def addToBoard(board: list, piece: dict) -> None:
+def add_to_board(board: list, piece: dict) -> None:
     """
     Fill in the board based on piece's location, shape, and rotation.
 
