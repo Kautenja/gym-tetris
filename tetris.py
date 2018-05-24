@@ -45,7 +45,7 @@ YELLOW      = (155, 155,   0)
 LIGHTYELLOW = (175, 175,  20)
 
 
-BORDERCOLOR = BLUE
+BORDERCOLOR = WHITE
 BGCOLOR = BLACK
 TEXTCOLOR = WHITE
 TEXTSHADOWCOLOR = GRAY
@@ -534,7 +534,13 @@ def drawBox(
 
 def drawBoard(board):
     # draw the border around the board
-    pygame.draw.rect(DISPLAYSURF, BORDERCOLOR, (XMARGIN - 3, TOPMARGIN - 7, (BOARDWIDTH * BOXSIZE) + 8, (BOARDHEIGHT * BOXSIZE) + 8), 5)
+    border_rect = (
+        XMARGIN - 3,
+        TOPMARGIN - 7,
+        BOARDWIDTH * BOXSIZE + 8,
+        BOARDHEIGHT * BOXSIZE + 8
+    )
+    pygame.draw.rect(DISPLAYSURF, BORDERCOLOR, border_rect, 5)
 
     # fill the background of the board
     pygame.draw.rect(DISPLAYSURF, BGCOLOR, (XMARGIN, TOPMARGIN, BOXSIZE * BOARDWIDTH, BOXSIZE * BOARDHEIGHT))
