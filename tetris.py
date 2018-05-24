@@ -570,11 +570,15 @@ def drawStatus(
     Args:
         score: the score of the game
         level: the current level the player is on
+        _right_margin_pad: the padding from the right side of the screen
+        _score_top_pad:
+        _level_top_pad:
 
     Returns:
         None
 
     """
+    # TODO: anchor these against the border
     # draw the score text
     score_surf = BASICFONT.render('Score: %s' % score, True, TEXTCOLOR)
     score_rect = score_surf.get_rect()
@@ -587,10 +591,23 @@ def drawStatus(
     DISPLAYSURF.blit(level_surf, level_rect)
 
 
-def drawPiece(piece, pixel_x=None, pixel_y=None):
+def drawPiece(piece: dict, pixel_x: int = None, pixel_y: int = None) -> None:
+    """
+    draw a piece on the board.
+
+    Args:
+        piece: the piece to draw as a dictionary
+        pixel_x: the optional x pixel to draw the piece at
+        pixel_y: the optional y pixel to draw the piece at
+
+    Returns:
+        None
+
+    """
+    # get the template of the piece based on shape and rotation
     shapeToDraw = PIECES[piece['shape']][piece['rotation']]
-    if pixel_x == None and pixel_y == None:
-        # if pixel_x & pixel_y hasn't been specified, use the location stored in the piece data structure
+    # if pixel_x & pixel_y are None, use the pieces internal location
+    if pixel_x is None and pixel_y is None:
         pixel_x, pixel_y = convertToPixelCoords(piece['x'], piece['y'])
 
     # draw each of the boxes that make up the piece
@@ -600,14 +617,33 @@ def drawPiece(piece, pixel_x=None, pixel_y=None):
                 drawBox(None, None, piece['color'], pixel_x + (x * BOXSIZE), pixel_y + (y * BOXSIZE))
 
 
-def drawNextPiece(piece):
+def drawNextPiece(
+    piece: dict,
+    _right_margin_pad: int = 120,
+    _label_top_pad: int = 80,
+    _piece_top_y: int = 100,
+) -> None:
+    """
+    Draw the next piece that is coming to the player.
+
+    Args:
+        piece: the piece to draw as a dictionary
+
+    Returns:
+        None
+
+    """
     # draw the "next" text
     nextSurf = BASICFONT.render('Next:', True, TEXTCOLOR)
     nextRect = nextSurf.get_rect()
-    nextRect.topleft = (WINDOWWIDTH - 120, 80)
+    nextRect.topleft = (WINDOWWIDTH - _right_margin_pad, _label_top_pad)
     DISPLAYSURF.blit(nextSurf, nextRect)
     # draw the "next" piece
-    drawPiece(piece, pixel_x=WINDOWWIDTH-120, pixel_y=100)
+    drawPiece(
+        piece,
+        pixel_x=WINDOWWIDTH - _right_margin_pad,
+        pixel_y=_piece_top_y
+    )
 
 
 if __name__ == '__main__':
