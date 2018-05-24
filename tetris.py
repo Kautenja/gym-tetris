@@ -2,6 +2,7 @@
 import random, time, pygame, sys
 from pygame.locals import *
 # TODO: numpy randomness
+import numpy as np
 
 
 # the framerate to maintain during gameplay
@@ -431,13 +432,12 @@ def new_piece() -> dict:
     """Return a random new piece in a random rotation."""
     shape = random.choice(list(PIECES.keys()))
     # start the new piece above the board (i.e. y < 0)
-    # TODO: no random color assignment? standard colors for shapes
     return {
         'shape': shape,
         'rotation': random.randint(0, len(PIECES[shape]) - 1),
         'x': int(BOARDWIDTH / 2) - int(TEMPLATEWIDTH / 2),
         'y': -2,
-        'color': random.randint(0, len(COLORS) - 1)
+        'color': 2
     }
 
 
