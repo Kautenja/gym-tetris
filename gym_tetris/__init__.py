@@ -27,8 +27,7 @@ def make(environment: str) -> gym.Env:
     return gym.make(environment)
 
 
-def make_wrapped(
-    game_name: str,
+def wrap(env: gym.Env,
     image_size: tuple=(84, 84),
     skip_frames: int=4,
     death_penalty: int=-1,
@@ -36,7 +35,7 @@ def make_wrapped(
     agent_history_length: int=4
 ):
     """
-    Build and return a configured a wrapped environment.
+    Wrap an environment with standard wrappers.
 
     Args:
         game_name: the name of the game to make
@@ -50,15 +49,13 @@ def make_wrapped(
         a gym environment configured for this experiment
 
     """
-    # make the initial environment
-    env = gym.make('{}-v0'.format(game_name))
     # wrap the environment with a reward cacher
     env = RewardCacheEnv(env)
     # apply the frame skip feature if enabled
     if skip_frames is not None:
         env = MaxFrameskipEnv(env, skip=skip_frames)
     # apply a down-sampler for the given game
-    env = DownsampleEnv(env, image_size, **DownsampleEnv.metadata[game_name])
+    env = DownsampleEnv(env, image_size)
     # apply the death penalty feature if enabled
     if death_penalty is not None:
         env = PenalizeDeathEnv(env, penalty=death_penalty)
@@ -76,5 +73,5 @@ def make_wrapped(
 __all__ = [
     TetrisEnv.__name__,
     make.__name__,
-    make_wrapped.__name__,
+    wrap.__name__,
 ]
