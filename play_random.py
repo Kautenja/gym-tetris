@@ -7,7 +7,6 @@ import gym_tetris
 env = gym_tetris.make('Tetris-v0')
 env = gym_tetris.wrap(env)
 # env = gym.wrappers.Monitor(env, './monitor', force=True)
-print(env)
 
 
 try:
