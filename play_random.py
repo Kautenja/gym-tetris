@@ -8,7 +8,7 @@ env = gym_tetris.make('Tetris-v0')
 
 try:
     done = True
-    progress = tqdm(range(500))
+    progress = tqdm(range(5000))
     for step in progress:
         if done:
             state = env.reset()
