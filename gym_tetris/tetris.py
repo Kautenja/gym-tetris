@@ -235,22 +235,28 @@ class Tetris(object):
         """Rotate the falling piece right on the board."""
         if self.frame - self.last_rot_r_time < MOVE:
             return
+        # backup the piece in case the rotation is illegal
+        backup = self.falling_piece['rotation']
         rots = len(PIECES[self.falling_piece['shape']])
-        self.falling_piece['rotation'] = (self.falling_piece['rotation'] + 1) % rots
-        # rotate back if the position is invalid
+        rotation = (self.falling_piece['rotation'] + 1) % rots
+        self.falling_piece['rotation'] = rotation
+        # rotate back to the backup if the position is invalid
         if not is_valid_position(self.board, self.falling_piece):
-            self.falling_piece['rotation'] = (self.falling_piece['rotation'] - 1) % rots
+            self.falling_piece['rotation'] = backup
         self.last_rot_r_time = self.frame
 
     def _rot_l(self) -> None:
+        """Rotate the falling piece left on the board."""
         if self.frame - self.last_rot_l_time < MOVE:
             return
-        """Rotate the falling piece left on the board."""
+        # backup the piece in case the rotation is illegal
+        backup = self.falling_piece['rotation']
         rots = len(PIECES[self.falling_piece['shape']])
-        self.falling_piece['rotation'] = (self.falling_piece['rotation'] - 1) % rots
-        # rotate back if the position is invalid
+        rotation = (self.falling_piece['rotation'] - 1) % rots
+        self.falling_piece['rotation'] = rotation
+        # rotate back to the backup if the position is invalid
         if not is_valid_position(self.board, self.falling_piece):
-            self.falling_piece['rotation'] = (self.falling_piece['rotation'] + 1) % rots
+            self.falling_piece['rotation'] = backup
         self.last_rot_l_time = self.frame
 
     def _fall(self) -> None:
