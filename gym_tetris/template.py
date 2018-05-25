@@ -5,6 +5,8 @@
 TEMPLATEWIDTH = 5
 # the max height of a Tetromino
 TEMPLATEHEIGHT = 5
+# the sentinel denoting a blank box
+BLANK = '.'
 
 
 S_SHAPE_TEMPLATE = [
