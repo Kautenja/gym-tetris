@@ -2,6 +2,7 @@
 from .clip_reward_env import ClipRewardEnv
 from .downsample_env import DownsampleEnv
 from .frame_stack_env import FrameStackEnv
+from .max_frameskip_env import MaxFrameskipEnv
 from .penalize_death_env import PenalizeDeathEnv
 from .reward_cache_env import RewardCacheEnv
 
@@ -11,6 +12,7 @@ __all__ = [
     ClipRewardEnv.__name__,
     DownsampleEnv.__name__,
     FrameStackEnv.__name__,
+    MaxFrameskipEnv.__name__,
     PenalizeDeathEnv.__name__,
     RewardCacheEnv.__name__,
 ]
