@@ -761,7 +761,6 @@ if __name__ == '__main__':
     a = Tetris()
     for _ in range(10000000):
         a.step(0)
-
         a.render()
 
         # from matplotlib import pyplot as plt
