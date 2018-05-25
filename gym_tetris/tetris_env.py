@@ -12,6 +12,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
     """An environment for playing Tetris in OpenAI Gym."""
 
     # meta-data about the environment for OpenAI Gym utilities (like Monitor)
+    # TODO: update frames_per_second with correct value
     metadata = {
         'render.modes': ['human', 'rgb_array'],
         'video.frames_per_second': 60,
