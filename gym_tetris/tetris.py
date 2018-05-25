@@ -1,7 +1,6 @@
 """Methods for spawning and interacting with a Tetris game."""
 import os
 import random
-import time
 import pygame
 import numpy as np
 from .template import PIECES, TEMPLATEHEIGHT, TEMPLATEWIDTH, BLANK
@@ -10,19 +9,9 @@ from .strings import *
 from .dimensions import *
 
 
-FPS = 25
-# the frequency with which a piece can move sideways
-MOVESIDEWAYSFREQ = 0.15
-# the number of frames between lateral movements
-MOVE_SIDE_FRAMES = int(FPS / MOVESIDEWAYSFREQ)
-# the frequency with which a piece can move downwards
-MOVEDOWNFREQ = 0.1
-# the number of frames between down movements
-MOVE_DOWN_FRAMES = int(FPS / MOVEDOWNFREQ)
+# the number of frames between consecutive actions
+MOVE = 3
 
-
-print(MOVE_SIDE_FRAMES)
-print(MOVE_DOWN_FRAMES)
 
 class Tetris(object):
     """An object oriented design of Tetris."""
@@ -45,9 +34,12 @@ class Tetris(object):
         self.falling_piece = new_piece()
         self.next_piece = new_piece()
         # setup the initial times for movement restriction
-        self.last_move_down_time = time.time()
-        self.last_move_side_time = time.time()
-        self.last_fall_time = time.time()
+        self.frame = 0
+        self.last_move_down_time = self.frame
+        self.last_move_side_time = self.frame
+        self.last_rot_r_time = self.frame
+        self.last_rot_l_time = self.frame
+        self.last_fall_time = self.frame
         self.is_game_over = False
         # a list of callable actions for the game
         self.actions = [
@@ -211,42 +203,48 @@ class Tetris(object):
     def _left(self) -> None:
         """Move the falling piece left on the board."""
         if is_valid_position(self.board, self.falling_piece, adj_x=-1):
-            if time.time() - self.last_move_side_time < MOVESIDEWAYSFREQ:
+            if self.frame - self.last_move_side_time < MOVE:
                 return
             self.falling_piece['x'] -= 1
-            self.last_move_side_time = time.time()
+            self.last_move_side_time = self.frame
 
     def _right(self) -> None:
         """Move the falling piece right on the board."""
         if is_valid_position(self.board, self.falling_piece, adj_x=1):
-            if time.time() - self.last_move_side_time < MOVESIDEWAYSFREQ:
+            if self.frame - self.last_move_side_time < MOVE:
                 return
             self.falling_piece['x'] += 1
-            self.last_move_side_time = time.time()
+            self.last_move_side_time = self.frame
 
     def _down(self) -> None:
         """Moving the falling piece down on the board."""
         if is_valid_position(self.board, self.falling_piece, adj_y=1):
-            if time.time() - self.last_move_down_time < MOVEDOWNFREQ:
+            if self.frame - self.last_move_down_time < MOVE:
                 return
             self.falling_piece['y'] += 1
-            self.last_move_down_time = time.time()
+        self.last_move_down_time = self.frame
 
     def _rot_r(self) -> None:
         """Rotate the falling piece right on the board."""
+        if self.frame - self.last_rot_r_time < MOVE:
+            return
         rots = len(PIECES[self.falling_piece['shape']])
         self.falling_piece['rotation'] = (self.falling_piece['rotation'] + 1) % rots
         # rotate back if the position is invalid
         if not is_valid_position(self.board, self.falling_piece):
             self.falling_piece['rotation'] = (self.falling_piece['rotation'] - 1) % rots
+        self.last_rot_r_time = self.frame
 
     def _rot_l(self) -> None:
+        if self.frame - self.last_rot_l_time < MOVE:
+            return
         """Rotate the falling piece left on the board."""
         rots = len(PIECES[self.falling_piece['shape']])
         self.falling_piece['rotation'] = (self.falling_piece['rotation'] - 1) % rots
         # rotate back if the position is invalid
         if not is_valid_position(self.board, self.falling_piece):
             self.falling_piece['rotation'] = (self.falling_piece['rotation'] + 1) % rots
+        self.last_rot_l_time = self.frame
 
     def _fall(self) -> None:
         """Make the piece fall naturally."""
@@ -260,7 +258,7 @@ class Tetris(object):
         else:
             # piece did not land, just move the piece down
             self.falling_piece['y'] += 1
-            self.last_fall_time = time.time()
+            self.last_fall_time = self.frame
 
     def step(self, action: int):
         """TODO:"""
@@ -279,7 +277,7 @@ class Tetris(object):
         self.actions[action]()
 
         # fall if it's time to do so
-        if time.time() - self.last_fall_time > self.fall_freq:
+        if self.frame - self.last_fall_time > self.fall_freq:
             self._fall()
 
         # draw everything on the screen
@@ -292,6 +290,7 @@ class Tetris(object):
         # update the pygame display
         # pygame.event.get()
         pygame.display.update()
+        self.frame += 1
 
         return self.screen, 0, False, {}
 
@@ -316,7 +315,7 @@ def level_and_fall_frequency(score: float) -> tuple:
     # get the level that the player is on
     level = int(score / 10) + 1
     # get the frequency with which to move pieces down
-    fall_freq = 0.27 - (level * 0.02)
+    fall_freq = int(2.0 / (0.27 - (level * 0.02)))
 
     return level, fall_freq
 
