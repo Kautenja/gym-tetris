@@ -10,11 +10,19 @@ from .strings import *
 from .dimensions import *
 
 
+FPS = 25
 # the frequency with which a piece can move sideways
 MOVESIDEWAYSFREQ = 0.15
+# the number of frames between lateral movements
+MOVE_SIDE_FRAMES = int(FPS / MOVESIDEWAYSFREQ)
 # the frequency with which a piece can move downwards
 MOVEDOWNFREQ = 0.1
+# the number of frames between down movements
+MOVE_DOWN_FRAMES = int(FPS / MOVEDOWNFREQ)
 
+
+print(MOVE_SIDE_FRAMES)
+print(MOVE_DOWN_FRAMES)
 
 class Tetris(object):
     """An object oriented design of Tetris."""
