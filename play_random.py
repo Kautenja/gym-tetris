@@ -14,6 +14,7 @@ try:
             state = env.reset()
         action = env.action_space.sample()
         state, reward, done, info = env.step(action)
+        env.render('human')
         progress.set_postfix(reward=reward)
 except KeyboardInterrupt:
     pass

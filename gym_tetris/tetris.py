@@ -1,4 +1,5 @@
 """Methods for spawning and interacting with a Tetris game."""
+import os
 import random
 import time
 import pygame
@@ -20,6 +21,8 @@ class Tetris(object):
 
     def __init__(self) -> None:
         """Initialize a new Tetris game."""
+        # setup the environment to disable the pygame window
+        os.environ["SDL_VIDEODRIVER"] = "dummy"
         # initialize pygame
         pygame.init()
         pygame.display.set_caption(GAME_NAME_LABEL)
@@ -279,7 +282,7 @@ class Tetris(object):
         if self.falling_piece is not None:
             self._draw_piece(self.falling_piece)
         # update the pygame display
-        pygame.event.get()
+        # pygame.event.get()
         pygame.display.update()
 
         return self.screen, 0, False, {}

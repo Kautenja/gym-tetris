@@ -1,7 +1,8 @@
 """An environment for playing Tetris."""
 import numpy as np
+from pyglet.window import Window
 import gym
-# from gym.envs.classic_control.rendering import SimpleImageViewer
+from gym.envs.classic_control.rendering import SimpleImageViewer
 from .dimensions import SCREEN_HEIGHT, SCREEN_WIDTH
 from .tetris import Tetris
 
@@ -99,20 +100,22 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
             return self.game.screen
         # if the mode is human, create a viewer and display the screen
         elif mode == 'human':
-            # TODO: determine how to disable the pygame window then implement
-            return
-            # if self.viewer is None:
-            #     self.viewer = SimpleImageViewer()
-            # self.viewer.imshow(self.game.screen)
+            if self.viewer is None:
+                self.viewer = SimpleImageViewer()
+                self.viewer.window = Window(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
+            self.viewer.imshow(self.game.screen)
         # otherwise the render mode is not supported, raise an error
         else:
             raise ValueError('unsupported render mode: {}'.format(repr(mode)))
 
     def close(self) -> None:
-        """Close the emulator and shutdown FCEUX."""
+        """Close the emulator."""
         # delete the existing game if there is one
         if isinstance(self.game, Tetris):
             del self.game
+        if isinstance(self.viewer, SimpleImageViewer):
+            self.viewer.close()
+            del self.viewer
 
     def seed(self, seed: int=None) -> list:
         """
