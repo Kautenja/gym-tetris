@@ -36,34 +36,29 @@ def callback(s, s2, a, r, d, i) -> None:
     Image.fromarray(s2).save('{}/{}_{}.png'.format(output_dir, datetime.now(), r))
 
 
-# TODO: update with correct mapping
 # Mapping of buttons on the NES joy-pad to keyboard keys
-# up =    ord('w')
-# down =  ord('s')
-# left =  ord('a')
-# right = ord('d')
-# A =     ord('o')
-# B =     ord('p')
+down =  ord('s')
+left =  ord('a')
+right = ord('d')
+rot_l = ord('q')
+rot_r = ord('e')
 
 
-# TODO: update with correct keys
 # A mapping of pressed key combinations to discrete actions in action space
-# keys_to_action = {
-#     (): 0,
-#     (up, ): 1,
-#     (down, ): 2,
-#     (left, ): 3,
-#     (right, ): 4,
-#     sorted_tuple((left, A, )): 5,
-#     sorted_tuple((left, B, )): 6,
-#     sorted_tuple((left, A, B, )): 7,
-#     sorted_tuple((right, A, )): 8,
-#     sorted_tuple((right, B, )): 9,
-#     sorted_tuple((right, A, B, )): 10,
-#     (A, ): 11,
-#     (B, ): 12,
-#     sorted_tuple((A, B)): 13
-# }
+keys_to_action = {
+    (): 0,
+    (left, ): 1,
+    (right, ): 2,
+    (down, ): 3,
+    (rot_l, ): 4,
+    (rot_r, ): 5,
+    sorted_tuple((left, down, )): 6,
+    sorted_tuple((right, down, )): 7,
+    sorted_tuple((left, rot_l, )): 8,
+    sorted_tuple((right, rot_l, )): 9,
+    sorted_tuple((left, rot_r, )): 10,
+    sorted_tuple((right, rot_r, )): 11,
+}
 
 
 # Create the environment and play the game
