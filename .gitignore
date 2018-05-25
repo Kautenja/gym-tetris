@@ -1,6 +1,7 @@
 # Ignores specific to this project
 build/
 dummy/
+screen_capture/
 
 # Ignores specific to different operating system files
 
