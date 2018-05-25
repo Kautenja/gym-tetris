@@ -1,8 +1,7 @@
 """An environment for playing Tetris."""
-import random, time, pygame
 import numpy as np
 import gym
-from gym.envs.classic_control.rendering import SimpleImageViewer
+# from gym.envs.classic_control.rendering import SimpleImageViewer
 from .dimensions import SCREEN_HEIGHT, SCREEN_WIDTH
 from .tetris import Tetris
 
@@ -40,13 +39,15 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
             shape=(SCREEN_HEIGHT, SCREEN_WIDTH, 3),
             dtype=np.uint8
         )
-        # set the screen to white noise from the observation space
-        self.screen = self.observation_space.sample()
-        # Setup the action space
-        self.actions = ['U', 'D', 'L', 'R', 'UL', 'UR', 'DL', 'DR']
-        self.action_space = gym.spaces.Discrete(len(self.actions))
+        # Setup the action space, the game defines 12 legal actions
+        self.action_space = gym.spaces.Discrete(12)
         # setup the game
         self.game = None
+
+    @property
+    def screen(self) -> np.ndarray:
+        """Return the screen of the game"""
+        return self.game.screen
 
     def step(self, action: int) -> tuple:
         """
@@ -64,15 +65,9 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
             -   a dictionary of additional information
 
         """
-        pass
-        # # unwrap the string action value from the list of actions
-        # self._joypad(self.actions[action])
-        # # increment the frame counter
-        # self.step_number += 1
-        # # get the screen, reward, and done flag from the emulator
-        # self.screen, reward, done = self._get_state()
-
-        # return self.screen, reward, done, {}
+        state, reward, done, info = self.game.step(action)
+        self.step_number += 1
+        return state, reward, done, info
 
     def reset(self) -> np.ndarray:
         """Reset the emulator and return the initial state."""
