@@ -264,6 +264,7 @@ class Tetris(object):
                 self.is_game_over = True
                 return self.screen, 0, True, {}
 
+        # unwrap the action and call it
         self.actions[action]()
 
         # fall if it's time to do so
@@ -282,29 +283,6 @@ class Tetris(object):
         pygame.display.update()
 
         return self.screen, 0, False, {}
-
-    def render(self, mode: str='rgb_array'):
-        """
-        Render the game screen.
-
-        Args:
-            mode: the mode the use to render the screen
-                - 'human': render the screen for a human and return nothing
-                - 'rgb_array': render the screen in memory and return the array
-
-        Returns:
-            None if mode is 'human', otherwise a numpy array
-
-        """
-        if mode == 'rgb_array':
-            # create an RGB tensor of the board, the board is column-major
-            # so it is transposed about axis 0 and 1 to row-major
-            return self.screen
-        elif mode == 'human':
-            # TODO:
-            pass
-        else:
-            raise ValueError('unsupported render mode: {}'.format(repr(mode)))
 
     def __del__(self) -> None:
         """Close the pygame environment before deleting this object."""
