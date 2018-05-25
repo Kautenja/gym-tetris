@@ -1,19 +1,8 @@
 """An implementation of Tetris for OpenAI Gym using Pygame."""
-import random, time, pygame, sys
-from pygame.locals import (
-    QUIT,
-    KEYUP,
-    KEYDOWN,
-    K_LEFT,
-    K_RIGHT,
-    K_UP,
-    K_DOWN,
-    K_a,
-    K_d,
-    K_q,
-    K_s,
-    K_w,
-)
+import random
+import time
+import pygame
+import numpy as np
 
 
 # the width of the main game window
@@ -315,6 +304,11 @@ class Tetris():
         self.last_fall_time = time.time()
         self.is_game_over = False
 
+    @property
+    def screen(self) -> np.ndarray:
+        """Return the screen as a NumPy array."""
+        return pygame.surfarray.array3d(self._screen).swapaxes(0, 1)
+
     def _draw_box(
         self,
         box_x: int,
@@ -518,8 +512,7 @@ class Tetris():
             # can't fit a new piece on the board, so game over
             if not is_valid_position(self.board, self.falling_piece):
                 self.is_game_over = True
-                # TODO: return stuff
-                return
+                return self.screen, 0, True, {}
 
         # TODO: handle action
 
@@ -538,8 +531,30 @@ class Tetris():
         pygame.event.get()
         pygame.display.update()
 
-        # TODO: return stuff
-        return
+        return self.screen, 0, False, {}
+
+    def render(self, mode: str='rgb_array'):
+        """
+        Render the game screen.
+
+        Args:
+            mode: the mode the use to render the screen
+                - 'human': render the screen for a human and return nothing
+                - 'rgb_array': render the screen in memory and return the array
+
+        Returns:
+            None if mode is 'human', otherwise a numpy array
+
+        """
+        if mode == 'rgb_array':
+            # create an RGB tensor of the board, the board is column-major
+            # so it is transposed about axis 0 and 1 to row-major
+            return self.screen
+        elif mode == 'human':
+            # TODO:
+            pass
+        else:
+            raise ValueError('unsupported render mode: {}'.format(repr(mode)))
 
     def __del__(self) -> None:
         """Close the pygame environment before deleting this object."""
@@ -731,4 +746,10 @@ if __name__ == '__main__':
     a = Tetris()
     for _ in range(10000000):
         a.step(0)
+
+        a.render()
+
+        # from matplotlib import pyplot as plt
+        # plt.imshow(a.render())
+        # plt.show()
     del a
