@@ -33,7 +33,7 @@ def callback(s, s2, a, r, d, i) -> None:
 
     """
     # write the initial state to the output directory
-    # Image.fromarray(s2).save('{}/{}_{}.png'.format(output_dir, datetime.now(), r))
+    Image.fromarray(s2).save('{}/{}_{}.png'.format(output_dir, datetime.now(), r))
 
 
 # Mapping of buttons on the NES joy-pad to keyboard keys
