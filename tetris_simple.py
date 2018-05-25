@@ -281,11 +281,6 @@ PIECES = {
 
 
 def main():
-    a = Tetris()
-    for _ in range(10000000):
-        a.step(0)
-    del a
-
     global DISPLAYSURF, BASICFONT
     pygame.init()
     DISPLAYSURF = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
