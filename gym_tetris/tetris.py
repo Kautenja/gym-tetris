@@ -25,22 +25,6 @@ class Tetris(object):
         pygame.display.set_caption(GAME_NAME_LABEL)
         self._screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self._font = pygame.font.Font('freesansbold.ttf', 18)
-        # set the board as a blank board
-        self.board = new_board()
-        # set the score to 0 and get the corresponding level and fall rate
-        self.score = 0
-        self.level, self.fall_freq = level_and_fall_frequency(self.score)
-        # setup the initial pieces
-        self.falling_piece = new_piece()
-        self.next_piece = new_piece()
-        # setup the initial times for movement restriction
-        self.frame = 0
-        self.last_move_down_time = self.frame
-        self.last_move_side_time = self.frame
-        self.last_rot_r_time = self.frame
-        self.last_rot_l_time = self.frame
-        self.last_fall_time = self.frame
-        self.is_game_over = False
         # a list of callable actions for the game
         self.actions = [
             lambda: None,                             # NOP
@@ -60,6 +44,25 @@ class Tetris(object):
     def __del__(self) -> None:
         """Close the pygame environment before deleting this object."""
         pygame.quit()
+
+    def reset(self) -> None:
+        """Reset the board and game variables."""
+        # set the board as a blank board
+        self.board = new_board()
+        # set the score to 0 and get the corresponding level and fall rate
+        self.score = 0
+        self.level, self.fall_freq = level_and_fall_frequency(self.score)
+        # setup the initial pieces
+        self.falling_piece = new_piece()
+        self.next_piece = new_piece()
+        # setup the initial times for movement restriction
+        self.frame = 0
+        self.last_move_down_time = self.frame
+        self.last_move_side_time = self.frame
+        self.last_rot_r_time = self.frame
+        self.last_rot_l_time = self.frame
+        self.last_fall_time = self.frame
+        self.is_game_over = False
 
     @property
     def screen(self) -> np.ndarray:

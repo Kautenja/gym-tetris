@@ -44,7 +44,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
         # Setup the action space, the game defines 12 legal actions
         self.action_space = gym.spaces.Discrete(12)
         # setup the game
-        self.game = None
+        self.game = Tetris()
         self.seed(random_state)
 
     @property
@@ -77,11 +77,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
 
     def reset(self) -> np.ndarray:
         """Reset the emulator and return the initial state."""
-        # delete the existing game if there is one
-        if isinstance(self.game, Tetris):
-            del self.game
-        # setup a new game
-        self.game = Tetris()
+        self.game.reset()
         # reset the step count
         self.step_number = 0
         # return the initial screen from the game
