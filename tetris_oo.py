@@ -303,6 +303,21 @@ class Tetris():
         self.last_move_side_time = time.time()
         self.last_fall_time = time.time()
         self.is_game_over = False
+        # a list of callable actions for the game
+        self.actions = [
+            lambda: None,                             # NOP
+            lambda: self._left(),                     # left
+            lambda: self._right(),                    # right
+            lambda: self._down(),                     # down
+            lambda: self._rot_l(),                    # rotate left
+            lambda: self._rot_r(),                    # rotate right
+            lambda: self._left() or self._down(),    # left + down
+            lambda: self._right() or self._down(),   # right + down
+            lambda: self._left() or self._rot_l(),   # left + rotate left
+            lambda: self._right() or self._rot_l(),  # right + rotate left
+            lambda: self._left() or self._rot_r(),   # left + rotate right
+            lambda: self._right() or self._rot_r(),  # right + rotate right
+        ]
 
     @property
     def screen(self) -> np.ndarray:
@@ -514,7 +529,7 @@ class Tetris():
                 self.is_game_over = True
                 return self.screen, 0, True, {}
 
-        # TODO: handle action
+        self.actions[action]()
 
         # fall if it's time to do so
         if time.time() - self.last_fall_time > self.fall_freq:
@@ -742,10 +757,25 @@ def to_pixel_coordinate(box_x: int, box_y: int) -> tuple:
     return (XMARGIN + (box_x * BOXSIZE)), (TOPMARGIN + (box_y * BOXSIZE))
 
 
+        # self.actions = [
+        #     lambda: None,                             # NOP
+        #     lambda: self._left(),                     # left
+        #     lambda: self._right(),                    # right
+        #     lambda: self._down(),                     # down
+        #     lambda: self._rot_l(),                    # rotate left
+        #     lambda: self._rot_r(),                    # rotate right
+        #     lambda: self._left() and self._down(),    # left + down
+        #     lambda: self._right() and self._down(),   # right + down
+        #     lambda: self._left() and self._rot_l(),   # left + rotate left
+        #     lambda: self._right() and self._rot_l(),  # right + rotate left
+        #     lambda: self._left() and self._rot_r(),   # left + rotate right
+        #     lambda: self._right() and self._rot_r(),  # right + rotate right
+        # ]
+
 if __name__ == '__main__':
     a = Tetris()
     for _ in range(10000000):
-        a.step(0)
+        a.step(-1)
 
         a.render()
 

@@ -20,7 +20,7 @@ from pygame.locals import (
 
 
 # the framerate to maintain during gameplay
-FPS = 144
+FPS = 25
 # the width of the main game window
 SCREEN_WIDTH = 330
 # the height of the main game window
