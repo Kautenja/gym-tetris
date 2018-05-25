@@ -14,7 +14,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
     # meta-data about the environment for OpenAI Gym utilities (like Monitor)
     metadata = {
         'render.modes': ['human', 'rgb_array'],
-        'video.frames_per_second': 144,
+        'video.frames_per_second': 60,
     }
 
     def __init__(self, max_steps: int, random_state: int = None) -> None:
