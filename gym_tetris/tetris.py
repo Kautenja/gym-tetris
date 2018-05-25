@@ -251,18 +251,29 @@ class Tetris(object):
         self.last_rot_l_time = self.frame
 
     def _fall(self) -> None:
-        """Make the piece fall naturally."""
+        """
+        Make the piece fall naturally.
+
+        Returns:
+            the number of lines removed by this fall
+
+        """
+        # the score from the fall
+        num_complete_lines = 0
         # see if the piece has landed
         if not is_valid_position(self.board, self.falling_piece, adj_y=1):
             # falling piece has landed, set it on the board
             add_to_board(self.board, self.falling_piece)
-            self.score += remove_complete_lines(self.board)
+            num_complete_lines = remove_complete_lines(self.board)
+            self.score += num_complete_lines
             self.level, self.fall_freq = level_and_fall_frequency(self.score)
             self.falling_piece = None
         else:
             # piece did not land, just move the piece down
             self.falling_piece['y'] += 1
             self.last_fall_time = self.frame
+
+        return num_complete_lines
 
     def step(self, action: int) -> None:
         """
@@ -284,14 +295,15 @@ class Tetris(object):
             # can't fit a new piece on the board, so game over
             if not is_valid_position(self.board, self.falling_piece):
                 self.is_game_over = True
-                return self.screen, 0, True, {}
+                return self.screen, 0, True, {'score': self.score}
 
         # unwrap the action and call it
         self.actions[action]()
 
         # fall if it's time to do so
+        reward = 0
         if self.frame - self.last_fall_time > self.fall_freq:
-            self._fall()
+            reward = self._fall()
 
         # draw everything on the screen
         self._screen.fill(BGCOLOR)
@@ -305,7 +317,7 @@ class Tetris(object):
         pygame.display.update()
         self.frame += 1
 
-        return self.screen, 0, False, {}
+        return self.screen, reward, False, {'score': self.score}
 
 
 def level_and_fall_frequency(score: float) -> tuple:
