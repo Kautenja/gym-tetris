@@ -36,8 +36,9 @@ setup(
     packages=find_packages(),
     zip_safe=False,
     install_requires=[
-        'gym>=0.10.5',
-        'Pillow>=5.0.0',
+        'gym==0.10.5',
+        'pygame==1.9.3',
+        'pyglet==1.3.2',
         'numpy>=1.14.2'
     ],
 )
