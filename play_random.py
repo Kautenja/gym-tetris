@@ -1,6 +1,5 @@
 """A simple script for debugging the Super Mario Bros. Lua code."""
 from tqdm import tqdm
-import gym
 import gym_tetris
 
 
@@ -11,14 +10,14 @@ env = gym_tetris.wrap(env)
 
 try:
     done = True
-    progress = tqdm(range(5000))
-    for step in progress:
+    PROGRESS = tqdm(range(500000))
+    for step in PROGRESS:
         if done:
             state = env.reset()
         action = env.action_space.sample()
         state, reward, done, info = env.step(action)
         env.render('human')
-        progress.set_postfix(reward=reward)
+        PROGRESS.set_postfix(reward=reward)
 except KeyboardInterrupt:
     pass
 
