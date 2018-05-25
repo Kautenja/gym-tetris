@@ -94,13 +94,19 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
             None if mode is 'human' or a matrix if mode is 'rgb_array'
 
         """
-        return self.game.render(mode=mode)
-        # if mode == 'human':
-        #     if self.viewer is None:
-        #         self.viewer = SimpleImageViewer()
-        #     self.viewer.imshow(self.screen)
-        # elif mode == 'rgb_array':
-        #     return self.screen
+        # if the mode is RGB, return the screen as a NumPy array
+        if mode == 'rgb_array':
+            return self.game.screen
+        # if the mode is human, create a viewer and display the screen
+        elif mode == 'human':
+            # TODO: determine how to disable the pygame window then implement
+            return
+            # if self.viewer is None:
+            #     self.viewer = SimpleImageViewer()
+            # self.viewer.imshow(self.game.screen)
+        # otherwise the render mode is not supported, raise an error
+        else:
+            raise ValueError('unsupported render mode: {}'.format(repr(mode)))
 
     def close(self) -> None:
         """Close the emulator and shutdown FCEUX."""
