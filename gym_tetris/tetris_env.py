@@ -16,7 +16,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
         'video.frames_per_second': 144,
     }
 
-    def __init__(self, max_episode_steps: int, random_seed: int=0) -> None:
+    def __init__(self, max_episode_steps: int, random_seed: int = 0) -> None:
         """
         Initialize a new Tetris environment.
 
@@ -117,7 +117,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
             self.viewer.close()
             del self.viewer
 
-    def seed(self, seed: int=None) -> list:
+    def seed(self, seed: int = None) -> list:
         """
         Set the seed for this env's random number generator(s).
 
