@@ -531,6 +531,7 @@ class Tetris():
         if self.falling_piece is not None:
             self._draw_piece(self.falling_piece)
         # update the pygame display
+        pygame.event.get()
         pygame.display.update()
 
     def __del__(self) -> None:
