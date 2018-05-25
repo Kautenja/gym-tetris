@@ -260,8 +260,17 @@ class Tetris(object):
             self.falling_piece['y'] += 1
             self.last_fall_time = self.frame
 
-    def step(self, action: int):
-        """TODO:"""
+    def step(self, action: int) -> None:
+        """
+        Perform a step with the given action.
+
+        Args:
+            action: the action to perform as an index of `self.actions`
+
+        Returns:
+            None
+
+        """
         if self.is_game_over:
             raise ValueError('cant call step() when is_game_over is True')
         if self.falling_piece is None:
@@ -387,8 +396,8 @@ def is_valid_position(
     Args:
         board: the board to look for collisions in
         piece: the piece to check the validity of
-        adj_x: TODO
-        adj_y: TODO
+        adj_x: the direction in the x blocks to check
+        adj_y: the direction in the y blocks to check
 
     Returns:
         True if the piece is within the board and not colliding
