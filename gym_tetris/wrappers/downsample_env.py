@@ -18,8 +18,9 @@ class DownsampleEnv(gym.ObservationWrapper):
             None
 
         """
-        gym.ObservationWrapper.__init__(self, env)
+        super().__init__(env)
         self.image_size = image_size
+        # set up a new observation space
         self.observation_space = gym.spaces.Box(
             low=0,
             high=255,
@@ -30,8 +31,7 @@ class DownsampleEnv(gym.ObservationWrapper):
     def observation(self, frame):
         # convert the frame from RGB to gray scale
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
-        # resize the frame to the expected shape. bilinear is the default
-        # interpolation method
+        # resize the frame to the expected shape. use bilinear interpolation
         frame = cv2.resize(frame, self.image_size)
 
         return frame[:, :, np.newaxis]
