@@ -313,6 +313,7 @@ class Tetris():
         self.last_move_down_time = time.time()
         self.last_move_side_time = time.time()
         self.last_fall_time = time.time()
+        self.is_game_over = False
 
     def _draw_box(
         self,
@@ -508,13 +509,16 @@ class Tetris():
 
     def step(self, action: int):
         """TODO:"""
+        if self.is_game_over:
+            raise ValueError('cant call step() when is_game_over is True')
         if self.falling_piece is None:
             # No falling piece in play, so start a new piece at the top
             self.falling_piece = self.next_piece
             self.next_piece = new_piece()
             # can't fit a new piece on the board, so game over
             if not is_valid_position(self.board, self.falling_piece):
-                print('game over')
+                self.is_game_over = True
+                # TODO: return stuff
                 return
 
         # TODO: handle action
@@ -533,6 +537,9 @@ class Tetris():
         # update the pygame display
         pygame.event.get()
         pygame.display.update()
+
+        # TODO: return stuff
+        return
 
     def __del__(self) -> None:
         """Close the pygame environment before deleting this object."""
