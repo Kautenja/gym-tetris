@@ -63,4 +63,4 @@ keys_to_action = {
 
 # Create the environment and play the game
 env = gym_tetris.make('Tetris-v0')
-play(env, keys_to_action=keys_to_action, callback=callback, fps=60)
+play(env, keys_to_action=keys_to_action, callback=callback, fps=25)
