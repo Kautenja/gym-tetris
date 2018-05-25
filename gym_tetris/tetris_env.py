@@ -68,6 +68,9 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
         """
         state, reward, done, info = self.game.step(action)
         self.step_number += 1
+        # if this step has passed the max number, set the episode to done
+        if self.step_number >= self.max_episode_steps:
+            done = True
         return state, reward, done, info
 
     def reset(self) -> np.ndarray:
