@@ -46,12 +46,12 @@ class Tetris(object):
             lambda: self._down(),                     # down
             lambda: self._rot_l(),                    # rotate left
             lambda: self._rot_r(),                    # rotate right
-            lambda: self._left() or self._down(),    # left + down
-            lambda: self._right() or self._down(),   # right + down
-            lambda: self._left() or self._rot_l(),   # left + rotate left
-            lambda: self._right() or self._rot_l(),  # right + rotate left
-            lambda: self._left() or self._rot_r(),   # left + rotate right
-            lambda: self._right() or self._rot_r(),  # right + rotate right
+            lambda: self._left() or self._down(),     # left + down
+            lambda: self._right() or self._down(),    # right + down
+            lambda: self._left() or self._rot_l(),    # left + rotate left
+            lambda: self._right() or self._rot_l(),   # right + rotate left
+            lambda: self._left() or self._rot_r(),    # left + rotate right
+            lambda: self._right() or self._rot_r(),   # right + rotate right
         ]
 
     @property
