@@ -57,6 +57,10 @@ class Tetris(object):
             lambda: self._right() or self._rot_r(),   # right + rotate right
         ]
 
+    def __del__(self) -> None:
+        """Close the pygame environment before deleting this object."""
+        pygame.quit()
+
     @property
     def screen(self) -> np.ndarray:
         """Return the screen as a NumPy array."""
@@ -302,10 +306,6 @@ class Tetris(object):
         self.frame += 1
 
         return self.screen, 0, False, {}
-
-    def __del__(self) -> None:
-        """Close the pygame environment before deleting this object."""
-        pygame.quit()
 
 
 def level_and_fall_frequency(score: float) -> tuple:

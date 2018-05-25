@@ -1,4 +1,5 @@
 """An environment for playing Tetris."""
+import random
 import numpy as np
 from pyglet.window import Window
 import gym
@@ -16,21 +17,20 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
         'video.frames_per_second': 144,
     }
 
-    def __init__(self, max_episode_steps: int, random_seed: int = 0) -> None:
+    def __init__(self, max_steps: int, random_state: int = None) -> None:
         """
         Initialize a new Tetris environment.
 
         Args:
-            max_episode_steps: the maximum number of steps per episode.
-            random_seed: the random seed to start the environment with
+            max_steps: the maximum number of steps per episode.
+            random_state: the random seed to start the environment with
 
         Returns:
             None
 
         """
         gym.utils.EzPickle.__init__(self)
-        self.max_episode_steps = max_episode_steps
-        self.curr_seed = random_seed
+        self.max_steps = max_steps
         self.viewer = None
         self.step_number = 0
         # Setup the observation space as RGB game frames
@@ -44,6 +44,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
         self.action_space = gym.spaces.Discrete(12)
         # setup the game
         self.game = None
+        self.seed(random_state)
 
     @property
     def screen(self) -> np.ndarray:
@@ -69,7 +70,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
         state, reward, done, info = self.game.step(action)
         self.step_number += 1
         # if this step has passed the max number, set the episode to done
-        if self.step_number >= self.max_episode_steps:
+        if self.step_number >= self.max_steps:
             done = True
         return state, reward, done, info
 
@@ -120,15 +121,20 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
             self.viewer.close()
             del self.viewer
 
-    def seed(self, seed: int = None) -> list:
+    def seed(self, random_state: int = None) -> list:
         """
         Set the seed for this env's random number generator(s).
 
+        Args:
+            random_state: the seed to set the random generator to
+
         Returns:
-            A list of seeds used in this env's random number generators.
-            there is only one "main" seed in this env
+            A list of seeds used in this env's random number generators
+
         """
-        self.curr_seed = gym.utils.seeding.hash_seed(seed) % 256
+        random.seed(random_state)
+        self.curr_seed = random_state
+
         return [self.curr_seed]
 
 

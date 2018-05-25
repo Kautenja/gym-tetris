@@ -9,7 +9,7 @@ gym.envs.registration.register(
     entry_point='gym_tetris:TetrisEnv',
     max_episode_steps=9999999,
     reward_threshold=32000,
-    kwargs={'max_episode_steps': math.inf},
+    kwargs={'max_steps': math.inf},
     nondeterministic=True,
 )
 
