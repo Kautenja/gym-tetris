@@ -8,7 +8,7 @@ from .tetris import Tetris
 
 
 class TetrisEnv(gym.Env, gym.utils.EzPickle):
-    """An environment for playing NES games in OpenAI Gym using FCEUX."""
+    """An environment for playing Tetris in OpenAI Gym."""
 
     # meta-data about the environment for OpenAI Gym utilities (like Monitor)
     metadata = {
