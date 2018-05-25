@@ -4,6 +4,7 @@ import numpy as np
 import gym
 from gym.envs.classic_control.rendering import SimpleImageViewer
 from .dimensions import SCREEN_HEIGHT, SCREEN_WIDTH
+from .tetris import Tetris
 
 
 class TetrisEnv(gym.Env, gym.utils.EzPickle):
@@ -44,6 +45,8 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
         # Setup the action space
         self.actions = ['U', 'D', 'L', 'R', 'UL', 'UR', 'DL', 'DR']
         self.action_space = gym.spaces.Discrete(len(self.actions))
+        # setup the game
+        self.game = None
 
     def step(self, action: int) -> tuple:
         """
@@ -73,16 +76,15 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
 
     def reset(self) -> np.ndarray:
         """Reset the emulator and return the initial state."""
-        pass
-        # if not self.emulator_started:
-        #     self._start_emulator()
-        # # write the reset command to the emulator
-        # self._write_to_pipe('reset' + SEP)
-        # self.step_number = 0
-        # # get a state from the emulator. ignore the `reward` and `done` flag
-        # self.screen, _, _ = self._get_state()
-
-        # return self.screen
+        # delete the existing game if there is one
+        if isinstance(self.game, Tetris):
+            del self.game
+        # setup a new game
+        self.game = Tetris()
+        # reset the step count
+        self.step_number = 0
+        # return the initial screen from the game
+        return self.game.screen
 
     def render(self, mode: str='human'):
         """
@@ -97,7 +99,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
             None if mode is 'human' or a matrix if mode is 'rgb_array'
 
         """
-        pass
+        return self.game.render(mode=mode)
         # if mode == 'human':
         #     if self.viewer is None:
         #         self.viewer = SimpleImageViewer()
@@ -107,11 +109,9 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
 
     def close(self) -> None:
         """Close the emulator and shutdown FCEUX."""
-        pass
-        # self._write_to_pipe('close')
-        # self.pipe_in.close()
-        # self.pipe_out.close()
-        # self.emulator_started = False
+        # delete the existing game if there is one
+        if isinstance(self.game, Tetris):
+            del self.game
 
     def seed(self, seed: int=None) -> list:
         """
