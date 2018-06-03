@@ -48,7 +48,7 @@ Please cite `gym-tetris` if you use it in your research.
 
 ```tex
 @misc{gym-tetris,
-  author = {Christian Kauten},
+  author = {Albert Sweigart and Christian Kauten},
   title = {{Tetris} for {OpenAI Gym}},
   year = {2018},
   publisher = {GitHub},
