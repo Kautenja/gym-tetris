@@ -14,7 +14,10 @@
 [python-version]: https://img.shields.io/pypi/pyversions/gym-tetris.svg
 [python-home]: https://python.org
 
-An [OpenAI Gym](https://github.com/openai/gym) environment for Tetris.
+An [OpenAI Gym](https://github.com/openai/gym) environment for Tetris. This environemnt 
+derives from the Tetromino clone developed by Al Sweigart found [here][Tetromino].
+
+[Tetromino]: http://inventwithpython.com/blog/2010/11/18/code-comments-tutorial-tetromino/
 
 # Installation
 
@@ -48,7 +51,7 @@ Please cite `gym-tetris` if you use it in your research.
 
 ```tex
 @misc{gym-tetris,
-  author = {Christian Kauten},
+  author = {Albert Sweigart and Christian Kauten},
   title = {{Tetris} for {OpenAI Gym}},
   year = {2018},
   publisher = {GitHub},
