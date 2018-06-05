@@ -33,7 +33,7 @@ def wrap(env: gym.Env,
     death_penalty: int=-1,
     clip_rewards: bool=True,
     agent_history_length: int=4
-):
+) -> gym.Env:
     """
     Wrap an environment with standard wrappers.
 
