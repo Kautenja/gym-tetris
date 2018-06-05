@@ -38,7 +38,7 @@ def wrap(env: gym.Env,
     Wrap an environment with standard wrappers.
 
     Args:
-        game_name: the name of the game to make
+        env: the environment to wrap
         image_size: the size to down-sample images to
         skip_frames: the number of frames to hold each action for
         death_penatly: the penalty for losing a life in a game
