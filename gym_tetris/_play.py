@@ -33,11 +33,12 @@ def play_random(env: gym.Env) -> None:
     try:
         done = True
         progress = tqdm(range(500))
-        for step in progress:
+        for _ in progress:
             if done:
-                state = env.reset()
+                _ = env.reset()
             action = env.action_space.sample()
-            state, reward, done, info = env.step(action)
+            _, reward, done, _ = env.step(action)
+            env.render('human')
             progress.set_postfix(reward=reward)
     except KeyboardInterrupt:
         pass
