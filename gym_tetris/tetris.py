@@ -19,7 +19,8 @@ class Tetris(object):
     def __init__(self) -> None:
         """Initialize a new Tetris game."""
         # setup the environment to disable the pygame window
-        os.environ["SDL_VIDEODRIVER"] = "dummy"
+        if os.environ.get('HUMAN_PLAY', None) is None:
+            os.environ["SDL_VIDEODRIVER"] = "dummy"
         # initialize pygame
         pygame.init()
         pygame.display.set_caption(GAME_NAME_LABEL)

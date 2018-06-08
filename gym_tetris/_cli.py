@@ -1,4 +1,5 @@
 """Tetris for OpenAI Gym."""
+import os
 import argparse
 from ._registration import make
 from ._play import play_human, play_random
@@ -31,6 +32,7 @@ def main() -> None:
     # select the method for playing the game
     mode = args.mode
     if mode == 'human':
+        os.environ['HUMAN_PLAY'] = str(True)
         play = play_human
     elif mode == 'random':
         play = play_random
