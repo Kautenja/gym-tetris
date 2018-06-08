@@ -42,4 +42,9 @@ setup(
         'numpy>=1.14.2',
         'opencv-python>=3.4.0.12',
     ],
+    entry_points={
+        'console_scripts': [
+            'gym_tetris = gym_tetris._cli:main',
+        ],
+    },
 )
