@@ -134,6 +134,32 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
 
         return [self.curr_seed]
 
+    def get_keys_to_action(self) -> dict:
+        """Return the dictionary of keyboard keys to actions."""
+        # Map of in game directives to their associated keyboard value
+        down =  ord('s')
+        left =  ord('a')
+        right = ord('d')
+        rot_l = ord('q')
+        rot_r = ord('e')
+        # A mapping of pressed key combinations to discrete actions in action space
+        keys_to_action = {
+            (): 0,
+            (left, ): 1,
+            (right, ): 2,
+            (down, ): 3,
+            (rot_l, ): 4,
+            (rot_r, ): 5,
+            tuple(sorted((left, down, ))): 6,
+            tuple(sorted((right, down, ))): 7,
+            tuple(sorted((left, rot_l, ))): 8,
+            tuple(sorted((right, rot_l, ))): 9,
+            tuple(sorted((left, rot_r, ))): 10,
+            tuple(sorted((right, rot_r, ))): 11,
+        }
+
+        return keys_to_action
+
 
 # explicitly define the outward facing API of this module
 __all__ = [TetrisEnv.__name__]
