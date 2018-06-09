@@ -2,6 +2,7 @@
 import os
 import argparse
 from ._registration import make
+from .wrappers import wrap
 from ._play import play_human, play_random
 
 
@@ -34,10 +35,11 @@ def main() -> None:
     if mode == 'human':
         os.environ['HUMAN_PLAY'] = str(True)
         play = play_human
+        env = wrap(make(args.env), skip_frames=None)
     elif mode == 'random':
         play = play_random
+        env = wrap(make(args.env))
     # play the game
-    env = make(args.env)
     play(env)
 
 
