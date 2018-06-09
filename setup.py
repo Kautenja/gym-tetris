@@ -19,7 +19,7 @@ setup(
     keywords='OpenAI-Gym Tetris Reinforcement-Learning-Environment',
     classifiers=[
         'License :: OSI Approved :: MIT License',
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'Operating System :: MacOS :: MacOS X',
