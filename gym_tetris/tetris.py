@@ -3,10 +3,10 @@ import os
 import random
 import pygame
 import numpy as np
-from .template import PIECES, TEMPLATEHEIGHT, TEMPLATEWIDTH, BLANK
-from .palette import *
-from .strings import *
-from .dimensions import *
+from ._constants.template import PIECES, TEMPLATEHEIGHT, TEMPLATEWIDTH, BLANK
+from ._constants.palette import *
+from ._constants.strings import *
+from ._constants.dimensions import *
 
 
 # the number of frames between consecutive actions

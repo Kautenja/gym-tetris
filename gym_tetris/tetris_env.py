@@ -4,7 +4,7 @@ import numpy as np
 from pyglet.window import Window
 import gym
 from gym.envs.classic_control.rendering import SimpleImageViewer
-from .dimensions import SCREEN_HEIGHT, SCREEN_WIDTH
+from ._constants.dimensions import SCREEN_HEIGHT, SCREEN_WIDTH
 from .tetris import Tetris
 
 
