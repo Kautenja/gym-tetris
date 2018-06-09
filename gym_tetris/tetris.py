@@ -70,8 +70,7 @@ class Tetris(object):
         """Return the screen as a NumPy array."""
         return pygame.surfarray.array3d(self._screen).swapaxes(0, 1)
 
-    def _draw_box(
-        self,
+    def _draw_box(self,
         box_x: int,
         box_y: int,
         color: int,
@@ -158,8 +157,7 @@ class Tetris(object):
         level_rect.topleft = (STATUS_X, LEVEL_Y)
         self._screen.blit(level_surf, level_rect)
 
-    def _draw_piece(
-        self,
+    def _draw_piece(self,
         piece: dict,
         pixel_x: int = None,
         pixel_y: int = None,
