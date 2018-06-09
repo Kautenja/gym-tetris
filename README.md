@@ -14,7 +14,7 @@
 [python-version]: https://img.shields.io/pypi/pyversions/gym-tetris.svg
 [python-home]: https://python.org
 
-An [OpenAI Gym](https://github.com/openai/gym) environment for Tetris. This environemnt 
+An [OpenAI Gym](https://github.com/openai/gym) environment for Tetris. This environemnt
 derives from the Tetromino clone developed by Al Sweigart found [here][Tetromino].
 
 [Tetromino]: http://inventwithpython.com/blog/2010/11/18/code-comments-tutorial-tetromino/
@@ -28,6 +28,11 @@ pip install gym-tetris
 ```
 
 # Usage
+
+## Python
+
+You must import `gym_tetris` before trying to make an environment. This is
+because gym environments are registered at runtime.
 
 ```python
 import gym_tetris
@@ -44,6 +49,18 @@ env.close()
 
 **NOTE:** `gym_tetris.make` is just an alias to `gym.make` for
 convenience.
+
+## Command Line
+
+`gym_tetris` feature a command line interface for playing environments using
+either the keyboard, or uniform random movement.
+
+```shell
+gym_tetris -e <the environment ID to play> -m <`human` or `random`>
+```
+
+**NOTE:** by default, `-e` is set to `Tetris-v0` and `-m` is set to
+`human`.
 
 # Citation
 
