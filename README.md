@@ -16,8 +16,9 @@
 [python-version]: https://img.shields.io/pypi/pyversions/gym-tetris.svg
 [python-home]: https://python.org
 
-An [OpenAI Gym](https://github.com/openai/gym) environment for Tetris. This environemnt
-derives from the Tetromino clone developed by Al Sweigart found [here][Tetromino].
+An [OpenAI Gym](https://github.com/openai/gym) environment for Tetris. This
+environemnt derives from the [Tetromino clone][Tetromino] developed by Al
+Sweigart.
 
 ![Tetris](https://user-images.githubusercontent.com/2184469/41186404-826ebba2-6b5b-11e8-8215-eb21d765b0b9.png)
 
