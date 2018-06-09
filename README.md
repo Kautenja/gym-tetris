@@ -1,4 +1,4 @@
-# gym-<img src='https://github.com/Kautenja/gym-tetris/blob/master/sketch/T.svg' width=40 height=20/>etris
+# gym-tetris
 
 [![PackageVersion][pypi-version]][pypi-home]
 [![PythonVersion][python-version]][python-home]
