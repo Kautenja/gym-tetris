@@ -7,28 +7,33 @@ from .play_human import play
 def play_human(env: gym.Env) -> None:
     """
     Play the environment using keyboard as a human.
+
     Args:
         env: the initialized gym environment to play
+
     Returns:
         None
+
     """
     # play the game and catch a potential keyboard interrupt
     try:
         play(env, fps=25)
     except KeyboardInterrupt:
         pass
-    # reset and close the environment
-    env.reset()
+
     env.close()
 
 
 def play_random(env: gym.Env) -> None:
     """
     Play the environment making uniformly random decisions.
+
     Args:
         env: the initialized gym environment to play
+
     Returns:
         None
+
     """
     try:
         done = True
@@ -42,8 +47,7 @@ def play_random(env: gym.Env) -> None:
             progress.set_postfix(reward=reward)
     except KeyboardInterrupt:
         pass
-    # reset and close the environment
-    env.reset()
+
     env.close()
 
 
