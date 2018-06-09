@@ -103,7 +103,11 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
         elif mode == 'human':
             if self.viewer is None:
                 self.viewer = SimpleImageViewer()
-                self.viewer.window = Window(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
+                self.viewer.window = Window(
+                    width=SCREEN_WIDTH,
+                    height=SCREEN_HEIGHT,
+                    caption=self.spec.id,
+                )
             self.viewer.imshow(self.game.screen)
         # otherwise the render mode is not supported, raise an error
         else:
