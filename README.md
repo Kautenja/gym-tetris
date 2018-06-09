@@ -1,6 +1,6 @@
-# gym-![T][t]etris
+# gym-![T][]etris
 
-[t]: https://user-images.githubusercontent.com/2184469/41186381-ebd61f8c-6b5a-11e8-98ce-874e29801308.png
+[T]: https://user-images.githubusercontent.com/2184469/41186381-ebd61f8c-6b5a-11e8-98ce-874e29801308.png
 
 [![PackageVersion][pypi-version]][pypi-home]
 [![PythonVersion][python-version]][python-home]
