@@ -1,4 +1,6 @@
-# gym-tetris
+# gym-![T][t]etris
+
+[t]: https://user-images.githubusercontent.com/2184469/41186381-ebd61f8c-6b5a-11e8-98ce-874e29801308.png
 
 [![PackageVersion][pypi-version]][pypi-home]
 [![PythonVersion][python-version]][python-home]
@@ -16,6 +18,8 @@
 
 An [OpenAI Gym](https://github.com/openai/gym) environment for Tetris. This environemnt
 derives from the Tetromino clone developed by Al Sweigart found [here][Tetromino].
+
+<img width="325" alt="screenshot" src="https://user-images.githubusercontent.com/2184469/41186341-75785468-6b5a-11e8-9394-ad66d33713f5.png">
 
 [Tetromino]: http://inventwithpython.com/blog/2010/11/18/code-comments-tutorial-tetromino/
 
