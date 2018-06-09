@@ -19,7 +19,7 @@
 An [OpenAI Gym](https://github.com/openai/gym) environment for Tetris. This environemnt
 derives from the Tetromino clone developed by Al Sweigart found [here][Tetromino].
 
-![Tetris](https://user-images.githubusercontent.com/2184469/41186341-75785468-6b5a-11e8-9394-ad66d33713f5.png)
+![Tetris](https://user-images.githubusercontent.com/2184469/41186404-826ebba2-6b5b-11e8-8215-eb21d765b0b9.png)
 
 [Tetromino]: http://inventwithpython.com/blog/2010/11/18/code-comments-tutorial-tetromino/
 
