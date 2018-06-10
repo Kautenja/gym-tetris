@@ -18,33 +18,23 @@ class FrameskipEnv(gym.Wrapper):
             None
 
         """
-        gym.Wrapper.__init__(self, env)
-        # most recent raw observations (for max pooling across time steps)
-        self._obs_buffer = np.zeros((2, *env.observation_space.shape), dtype=np.uint8)
+        super().__init__(env)
         self._skip = skip
 
     def step(self, action):
         """Repeat action, sum reward, and max over last observations."""
         # the total reward from `skip` frames having `action` held on them
         total_reward = 0.0
-        done = None
+        done = False
         # perform the action `skip` times
         for i in range(self._skip):
-            obs, reward, done, info = self.env.step(action)
+            state, reward, done, info = self.env.step(action)
             total_reward += reward
-            # assign the buffer with the last two frames
-            if i == self._skip - 2:
-                self._obs_buffer[0] = obs
-            if i == self._skip - 1:
-                self._obs_buffer[1] = obs
             # break the loop if the game terminated
             if done:
                 break
-        # Note that the observation on the done=True frame doesn't matter
-        # (because the next state isn't evaluated when done is true)
-        max_frame = self._obs_buffer.max(axis=0)
 
-        return max_frame, total_reward, done, info
+        return state, total_reward, done, info
 
     def reset(self, **kwargs):
         return self.env.reset(**kwargs)
