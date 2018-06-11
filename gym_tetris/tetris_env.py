@@ -1,9 +1,7 @@
 """An environment for playing Tetris."""
 import random
 import numpy as np
-from pyglet.window import Window
 import gym
-from gym.envs.classic_control.rendering import SimpleImageViewer
 from ._constants.dimensions import SCREEN_HEIGHT, SCREEN_WIDTH
 from .tetris import Tetris
 
@@ -101,6 +99,8 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
             return self.game.screen
         # if the mode is human, create a viewer and display the screen
         elif mode == 'human':
+            from pyglet.window import Window
+            from gym.envs.classic_control.rendering import SimpleImageViewer
             if self.viewer is None:
                 self.viewer = SimpleImageViewer()
                 self.viewer.window = Window(
@@ -118,7 +118,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
         # delete the existing game if there is one
         if isinstance(self.game, Tetris):
             del self.game
-        if isinstance(self.viewer, SimpleImageViewer):
+        if self.viewer is not None:
             self.viewer.close()
             del self.viewer
 
