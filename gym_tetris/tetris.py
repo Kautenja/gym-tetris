@@ -273,7 +273,6 @@ class Tetris(object):
             # falling piece has landed, set it on the board
             add_to_board(self.board, self.falling_piece)
             num_complete_lines = remove_complete_lines(self.board)
-            self.score += num_complete_lines
             self.level, self.fall_freq = level_and_fall_frequency(self.score)
             self.falling_piece = None
         else:
@@ -281,7 +280,11 @@ class Tetris(object):
             self.falling_piece['y'] += 1
             self.last_fall_time = self.frame
 
-        return num_complete_lines
+        # calculate the score of using the standard exponential scoring scheme
+        score = 0 if num_complete_lines == 0 else 2 ** (num_complete_lines - 1)
+        self.score += score
+
+        return score
 
     def step(self, action: int) -> None:
         """
