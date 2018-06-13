@@ -7,7 +7,7 @@ import numpy as np
 class DownsampleEnv(gym.ObservationWrapper):
     """An environment that down-samples frames."""
 
-    def __init__(self, env, image_size: tuple):
+    def __init__(self, env: gym.Env, image_size: tuple):
         """
         Create a new down-sampler.
 
