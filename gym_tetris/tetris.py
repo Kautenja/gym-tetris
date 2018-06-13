@@ -333,7 +333,11 @@ class Tetris(object):
         return self.screen, num_complete_lines, False, {'score': self.score}
 
 
-def level_and_fall_freq(complete_lines: float, base_speed: float=8.0) -> tuple:
+def level_and_fall_freq(
+    complete_lines: float,
+    base_speed: float=8.0,
+    speed_limit: float=0.1,
+    ) -> tuple:
     """
     Return the level the player is on based on number of complete lines.
 
@@ -351,6 +355,9 @@ def level_and_fall_freq(complete_lines: float, base_speed: float=8.0) -> tuple:
     level = int(complete_lines / 10) + 1
     # get the frequency with which to move pieces down
     fall_freq = base_speed / level
+    # reset the fall_frequency if it's below the speed limit
+    if fall_freq < speed_limit:
+        fall_freq = speed_limit
 
     return level, fall_freq
 
