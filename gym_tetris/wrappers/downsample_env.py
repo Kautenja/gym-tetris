@@ -28,7 +28,7 @@ class DownsampleEnv(gym.ObservationWrapper):
             dtype=np.uint8
         )
 
-    def observation(self, frame):
+    def observation(self, frame: np.ndarray):
         # convert the frame from RGB to gray scale
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
         # resize the frame to the expected shape. use bilinear interpolation
