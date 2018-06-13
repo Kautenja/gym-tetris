@@ -315,9 +315,9 @@ class Tetris(object):
         self.actions[action]()
 
         # fall if it's time to do so
-        num_complete_lines = 0
+        reward = 0
         if self.frame - self.last_fall_time > self.fall_freq:
-            num_complete_lines = self._fall()
+            reward = self._fall()
 
         # draw everything on the screen
         self._screen.fill(BGCOLOR)
@@ -330,7 +330,7 @@ class Tetris(object):
         pygame.display.update()
         self.frame += 1
 
-        return self.screen, num_complete_lines, False, {'score': self.score}
+        return self.screen, reward, False, {'score': self.score}
 
 
 def level_and_fall_freq(
