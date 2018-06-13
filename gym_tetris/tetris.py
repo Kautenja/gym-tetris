@@ -28,18 +28,18 @@ class Tetris(object):
         self._font = pygame.font.Font('freesansbold.ttf', 18)
         # a list of callable actions for the game
         self.actions = [
-            lambda: None,                             # NOP
-            lambda: self._left(),                     # left
-            lambda: self._right(),                    # right
-            lambda: self._down(),                     # down
-            lambda: self._rot_l(),                    # rotate left
-            lambda: self._rot_r(),                    # rotate right
-            lambda: self._left() or self._down(),     # left + down
-            lambda: self._right() or self._down(),    # right + down
-            lambda: self._left() or self._rot_l(),    # left + rotate left
-            lambda: self._right() or self._rot_l(),   # right + rotate left
-            lambda: self._left() or self._rot_r(),    # left + rotate right
-            lambda: self._right() or self._rot_r(),   # right + rotate right
+            lambda: None,                            # NOP
+            self._left,                              # left
+            self._right,                             # right
+            self._down,                              # down
+            self._rot_l,                             # rotate left
+            self._rot_r,                             # rotate right
+            lambda: (self._left(), self._down()),    # left + down
+            lambda: (self._right(), self._down()),   # right + down
+            lambda: (self._left(), self._rot_l()),   # left + rotate left
+            lambda: (self._right(), self._rot_l()),  # right + rotate left
+            lambda: (self._left(), self._rot_r()),   # left + rotate right
+            lambda: (self._right(), self._rot_r()),  # right + rotate right
         ]
 
     def __del__(self) -> None:
