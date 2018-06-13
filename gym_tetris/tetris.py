@@ -52,7 +52,8 @@ class Tetris(object):
         self.board = new_board()
         # set the score to 0 and get the corresponding level and fall rate
         self.score = 0
-        self.level, self.fall_freq = level_and_fall_frequency(self.score)
+        self.complete_lines = 0
+        self.level, self.fall_freq = level_and_fall_freq(self.complete_lines)
         # setup the initial pieces
         self.falling_piece = new_piece()
         self.next_piece = new_piece()
@@ -267,13 +268,12 @@ class Tetris(object):
 
         """
         # the score from the fall
-        num_complete_lines = 0
+        complete_lines = 0
         # see if the piece has landed
         if not is_valid_position(self.board, self.falling_piece, adj_y=1):
             # falling piece has landed, set it on the board
             add_to_board(self.board, self.falling_piece)
-            num_complete_lines = remove_complete_lines(self.board)
-            self.level, self.fall_freq = level_and_fall_frequency(self.score)
+            complete_lines = remove_complete_lines(self.board)
             self.falling_piece = None
         else:
             # piece did not land, just move the piece down
@@ -281,8 +281,11 @@ class Tetris(object):
             self.last_fall_time = self.frame
 
         # calculate the score of using the standard exponential scoring scheme
-        score = 0 if num_complete_lines == 0 else 2 ** (num_complete_lines - 1)
+        score = 0 if complete_lines == 0 else 2 ** (complete_lines - 1)
         self.score += score
+        # update the level based on the number of cleared lines
+        self.complete_lines += complete_lines
+        self.level, self.fall_freq = level_and_fall_freq(self.complete_lines)
 
         return score
 
@@ -330,12 +333,12 @@ class Tetris(object):
         return self.screen, num_complete_lines, False, {'score': self.score}
 
 
-def level_and_fall_frequency(score: float) -> tuple:
+def level_and_fall_freq(complete_lines: float) -> tuple:
     """
-    Return the level the player is on based on score and the fall speed.
+    Return the level the player is on based on number of complete lines.
 
     Args:
-        score: the score to calculate level and fall freq from
+        complete_lines: the number of lines cleared in the game
 
     Returns:
         a tuple of:
@@ -344,7 +347,7 @@ def level_and_fall_frequency(score: float) -> tuple:
 
     """
     # get the level that the player is on
-    level = int(score / 10) + 1
+    level = int(complete_lines / 10) + 1
     # get the frequency with which to move pieces down
     fall_freq = int(2.0 / (0.27 - (level * 0.02)))
 
