@@ -5,6 +5,7 @@ from .downsample_env import DownsampleEnv
 from .frame_stack_env import FrameStackEnv
 from .frameskip_env import FrameskipEnv
 from .penalize_death_env import PenalizeDeathEnv
+from .penalize_height_env import PenalizeHeightEnv
 from .reward_cache_env import RewardCacheEnv
 
 
@@ -13,7 +14,8 @@ def wrap(env: gym.Env,
     skip_frames: int=4,
     death_penalty: int=-10,
     clip_rewards: bool=False,
-    agent_history_length: int=4
+    agent_history_length: int=4,
+    penalize_height: bool=True,
 ) -> gym.Env:
     """
     Wrap an environment with standard wrappers.
@@ -40,6 +42,9 @@ def wrap(env: gym.Env,
     # apply the death penalty feature if enabled
     if death_penalty is not None:
         env = PenalizeDeathEnv(env, penalty=death_penalty)
+    # apply the penalty for height increases if enabled
+    if penalize_height:
+        env = PenalizeHeightEnv(env)
     # clip the rewards in {-1, 0, +1} if the feature is enabled
     if clip_rewards:
         env = ClipRewardEnv(env)
@@ -57,6 +62,7 @@ __all__ = [
     FrameStackEnv.__name__,
     FrameskipEnv.__name__,
     PenalizeDeathEnv.__name__,
+    PenalizeHeightEnv.__name__,
     RewardCacheEnv.__name__,
     wrap.__name__,
 ]
