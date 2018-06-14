@@ -123,7 +123,7 @@ class Tetris(object):
         # draw the individual boxes on the board
         for x in range(BOARDWIDTH):
             for y in range(BOARDHEIGHT):
-                self._draw_box(x, y, board[x][y])
+                self._draw_box(x, y, board[y][x])
 
     def _draw_status(self, score: int, level: int) -> None:
         """
@@ -302,6 +302,7 @@ class Tetris(object):
         """
         if self.is_game_over:
             raise ValueError('cant call step() when is_game_over is True')
+
         if self.falling_piece is None:
             # No falling piece in play, so start a new piece at the top
             self.falling_piece = self.next_piece
@@ -309,10 +310,12 @@ class Tetris(object):
             # can't fit a new piece on the board, so game over
             if not is_valid_position(self.board, self.falling_piece):
                 self.is_game_over = True
-                return self.screen, 0, True, {'score': self.score}
+                info = {'score': self.score, 'height': BOARDHEIGHT}
+                return self.screen, 0, True, info
 
         # unwrap the action and call it
         self.actions[action]()
+        height = get_height(self.board)
 
         # fall if it's time to do so
         reward = 0
@@ -330,7 +333,8 @@ class Tetris(object):
         pygame.display.update()
         self.frame += 1
 
-        return self.screen, reward, False, {'score': self.score}
+        info = {'score': self.score, 'height': height}
+        return self.screen, reward, False, info
 
 
 def level_and_fall_freq(
@@ -390,14 +394,14 @@ def add_to_board(board: list, piece: dict) -> None:
     for x in range(TEMPLATEWIDTH):
         for y in range(TEMPLATEHEIGHT):
             if PIECES[piece['shape']][piece['rotation']][y][x] != BLANK:
-                board[x + piece['x']][y + piece['y']] = piece['color']
+                board[y + piece['y']][x + piece['x']] = piece['color']
 
 
 def new_board() -> list:
     """Return a new blank board data structure."""
     board = []
-    for _ in range(BOARDWIDTH):
-        board.append([BLANK] * BOARDHEIGHT)
+    for _ in range(BOARDHEIGHT):
+        board.append([BLANK] * BOARDWIDTH)
 
     return board
 
@@ -444,7 +448,7 @@ def is_valid_position(
                 continue
             if not is_on_board(x + piece['x'] + adj_x, y + piece['y'] + adj_y):
                 return False
-            if board[x + piece['x'] + adj_x][y + piece['y'] + adj_y] != BLANK:
+            if board[y + piece['y'] + adj_y][x + piece['x'] + adj_x] != BLANK:
                 return False
 
     return True
@@ -463,7 +467,7 @@ def is_complete_line(board: list, y: int) -> bool:
     """
     for x in range(BOARDWIDTH):
         # if there is a blank box then the line is not complete
-        if board[x][y] == BLANK:
+        if board[y][x] == BLANK:
             return False
 
     return True
@@ -483,17 +487,17 @@ def remove_complete_lines(board: list) -> int:
 
     """
     num_lines_removed = 0
-    # start y at the bottom of the board
+    # start y at the top of the board
     y = BOARDHEIGHT - 1
     while y >= 0:
         if is_complete_line(board, y):
             # Remove the line and pull boxes down by one line.
             for pull_down_y in range(y, 0, -1):
                 for x in range(BOARDWIDTH):
-                    board[x][pull_down_y] = board[x][pull_down_y - 1]
+                    board[pull_down_y][x] = board[pull_down_y - 1][x]
             # Set very top line to blank.
             for x in range(BOARDWIDTH):
-                board[x][0] = BLANK
+                board[0][x] = BLANK
             num_lines_removed += 1
             # Note on the next iteration of the loop, y is the same.
             # This is so that if the line that was pulled down is also
@@ -503,6 +507,26 @@ def remove_complete_lines(board: list) -> int:
             y -= 1
 
     return num_lines_removed
+
+
+def get_height(board: list) -> int:
+    """
+    Return the height of the board.
+
+    Args:
+        board: the board to return the height of
+
+    Returns:
+        the y coordinate of the first row (from top) with a non-blank box in it
+
+    """
+    # iterate over the board starting at the end of the matrix (the bottom)
+    for y in reversed(range(0, BOARDHEIGHT)):
+        # if reached a row with entirely blanks, return the row index
+        if set(board[y]) == {BLANK}:
+            return BOARDHEIGHT - y - 1
+
+    return BOARDHEIGHT
 
 
 def to_pixel_coordinate(box_x: int, box_y: int) -> tuple:

@@ -1,14 +1,14 @@
-"""A gym wrapper for caching rewards."""
+"""A gym wrapper for penalizing height increases."""
 import gym
 import numpy as np
 
 
-class RewardCacheEnv(gym.Wrapper):
-    """a wrapper that caches rewards of episodes."""
+class PenalizeHeightEnv(gym.Wrapper):
+    """a wrapper that penalizes height increases."""
 
     def __init__(self, env: gym.Env) -> None:
         """
-        Initialize a reward caching environment.
+        Initialize a new height-increase penalizing environment wrapper.
 
         Args:
             env: the environment to wrap
@@ -18,8 +18,7 @@ class RewardCacheEnv(gym.Wrapper):
 
         """
         super().__init__(env)
-        self._score = 0
-        self.env.unwrapped.episode_rewards = []
+        self.height = 0
 
     def step(self, action: int) -> tuple:
         """
@@ -36,17 +35,21 @@ class RewardCacheEnv(gym.Wrapper):
             -   a dictionary of extra information
 
         """
-        state, reward, done, info = self.env.step(action)
-        self._score += reward
-        if done:
-            self.env.unwrapped.episode_rewards.append(self._score)
-            self._score = 0
-        return state, reward, done, info
+        obs, reward, done, info = self.env.step(action)
+        # augment the reward based on the change in height
+        reward -= info['height'] - self.height
+        # update the local reference to the height of the board
+        self.height = info['height']
+
+        return obs, reward, done, info
 
     def reset(self) -> np.ndarray:
         """Reset the emulator and return the initial state."""
+        # reset the height to 0
+        self.height = 0
+
         return self.env.reset()
 
 
 # explicitly specify the external API of this module
-__all__ = [RewardCacheEnv.__name__]
+__all__ = [PenalizeHeightEnv.__name__]
