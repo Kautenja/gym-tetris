@@ -15,12 +15,12 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
         'video.frames_per_second': 30,
     }
 
-    def __init__(self, max_steps: int, random_state: int = None) -> None:
+    def __init__(self, max_steps: int, random_state: int=None) -> None:
         """
         Initialize a new Tetris environment.
 
         Args:
-            max_steps: the maximum number of steps per episode.
+            max_steps: the max number of steps per episode.
             random_state: the random seed to start the environment with
 
         Returns:
@@ -70,7 +70,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
             -   the start as a result of the action
             -   the reward achieved by taking the action
             -   a flag denoting whether the episode has ended
-            -   a dictionary of additional information
+            -   a dictionary of extra information
 
         """
         state, reward, done, info = self.game.step(action)
@@ -108,6 +108,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
                     caption=self.spec.id,
                 )
             self.viewer.imshow(self.game.screen)
+            return self.viewer.isopen
         # otherwise the render mode is not supported, raise an error
         else:
             raise ValueError('unsupported render mode: {}'.format(repr(mode)))
@@ -121,7 +122,7 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
             self.viewer.close()
             del self.viewer
 
-    def seed(self, random_state: int = None) -> list:
+    def seed(self, random_state: int=None) -> list:
         """
         Set the seed for this env's random number generator(s).
 
@@ -140,12 +141,12 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
     def get_keys_to_action(self) -> dict:
         """Return the dictionary of keyboard keys to actions."""
         # Map of in game directives to their associated keyboard value
-        down =  ord('s')
-        left =  ord('a')
+        down = ord('s')
+        left = ord('a')
         right = ord('d')
         rot_l = ord('q')
         rot_r = ord('e')
-        # A mapping of pressed key combinations to discrete actions in action space
+        # A mapping of pressed key combinations to discrete actions
         keys_to_action = {
             (): 0,
             (left, ): 1,
