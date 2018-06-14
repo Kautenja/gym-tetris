@@ -302,6 +302,10 @@ class Tetris(object):
         """
         if self.is_game_over:
             raise ValueError('cant call step() when is_game_over is True')
+
+        # height = get_height(self.board)
+        # print(height)
+
         if self.falling_piece is None:
             # No falling piece in play, so start a new piece at the top
             self.falling_piece = self.next_piece
@@ -483,7 +487,7 @@ def remove_complete_lines(board: list) -> int:
 
     """
     num_lines_removed = 0
-    # start y at the bottom of the board
+    # start y at the top of the board
     y = BOARDHEIGHT - 1
     while y >= 0:
         if is_complete_line(board, y):
@@ -503,6 +507,27 @@ def remove_complete_lines(board: list) -> int:
             y -= 1
 
     return num_lines_removed
+
+
+def get_height(board: list) -> int:
+    """
+    Return the height of the board.
+
+    Args:
+        board: the board to return the height of
+
+    Returns:
+        the y coordinate of the first row (from top) with a non-blank box in it
+
+    """
+    # for x in range(BOARDWIDTH):
+    # start y at the top of the board
+    y = BOARDHEIGHT - 1
+    # iterate over the rows until finding a row that is not entirely blanks
+    # while y >= 0 and set(board[x][y]) == {BLANK}:
+    #     y -= 1
+
+    return y + 1
 
 
 def to_pixel_coordinate(box_x: int, box_y: int) -> tuple:
