@@ -13,9 +13,9 @@ def wrap(env: gym.Env,
     image_size: tuple=(84, 84),
     skip_frames: int=4,
     death_penalty: int=-10,
+    penalize_height: bool=True,
     clip_rewards: bool=False,
     agent_history_length: int=4,
-    penalize_height: bool=True,
 ) -> gym.Env:
     """
     Wrap an environment with standard wrappers.
@@ -45,10 +45,10 @@ def wrap(env: gym.Env,
     # apply the penalty for height increases if enabled
     if penalize_height:
         env = PenalizeHeightEnv(env)
-    # clip the rewards in {-1, 0, +1} if the feature is enabled
+    # clip the rewards in {-1, 0, +1} if the feature is on
     if clip_rewards:
         env = ClipRewardEnv(env)
-    # apply the back history of frames if the feature is enabled
+    # apply the back history of frames if the feature is on
     if agent_history_length is not None:
         env = FrameStackEnv(env, agent_history_length)
 
