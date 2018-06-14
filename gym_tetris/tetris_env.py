@@ -49,6 +49,14 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
         """Return the screen of the game"""
         return self.game.screen
 
+    def reset(self) -> np.ndarray:
+        """Reset the emulator and return the initial state."""
+        self.game.reset()
+        # reset the step count
+        self.step_number = 0
+        # return the initial screen from the game
+        return self.game.screen
+
     def step(self, action: int) -> tuple:
         """
         Take a step using the given action.
@@ -71,14 +79,6 @@ class TetrisEnv(gym.Env, gym.utils.EzPickle):
         if self.step_number >= self.max_steps:
             done = True
         return state, reward, done, info
-
-    def reset(self) -> np.ndarray:
-        """Reset the emulator and return the initial state."""
-        self.game.reset()
-        # reset the step count
-        self.step_number = 0
-        # return the initial screen from the game
-        return self.game.screen
 
     def render(self, mode: str='human'):
         """
