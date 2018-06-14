@@ -1,7 +1,6 @@
 """Methods for spawning and interacting with a Tetris game."""
 import os
 import random
-from enum import Enum
 import pygame
 import numpy as np
 from ._constants.template import PIECES, TEMPLATEHEIGHT, TEMPLATEWIDTH, BLANK
