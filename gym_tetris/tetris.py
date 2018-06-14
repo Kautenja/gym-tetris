@@ -303,8 +303,6 @@ class Tetris(object):
         if self.is_game_over:
             raise ValueError('cant call step() when is_game_over is True')
 
-        height = get_height(self.board)
-
         if self.falling_piece is None:
             # No falling piece in play, so start a new piece at the top
             self.falling_piece = self.next_piece
@@ -312,10 +310,12 @@ class Tetris(object):
             # can't fit a new piece on the board, so game over
             if not is_valid_position(self.board, self.falling_piece):
                 self.is_game_over = True
-                return self.screen, 0, True, {'score': self.score}
+                info = {'score': self.score, 'height': BOARDHEIGHT}
+                return self.screen, 0, True, info
 
         # unwrap the action and call it
         self.actions[action]()
+        height = get_height(self.board)
 
         # fall if it's time to do so
         reward = 0
@@ -333,7 +333,8 @@ class Tetris(object):
         pygame.display.update()
         self.frame += 1
 
-        return self.screen, reward, False, {'score': self.score}
+        info = {'score': self.score, 'height': height}
+        return self.screen, reward, False, info
 
 
 def level_and_fall_freq(
