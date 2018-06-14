@@ -11,7 +11,7 @@ from .reward_cache_env import RewardCacheEnv
 
 def wrap(env: gym.Env,
     image_size: tuple=(84, 84),
-    skip_frames: int=4,
+    skip_frames: int=3,
     death_penalty: int=-10,
     penalize_height: bool=True,
     clip_rewards: bool=False,
