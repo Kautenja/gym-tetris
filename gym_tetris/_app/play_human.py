@@ -1,7 +1,7 @@
 """A method to play gym environments using human IO inputs."""
 import gym
 import pygame
-from ._visualize.realtime_plot import RealtimePlot
+from .visualize.realtime_plot import RealtimePlot
 
 
 def play(env: gym.Env, fps: int=30) -> None:

@@ -48,7 +48,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'gym_tetris = gym_tetris._cli:main',
+            'gym_tetris = gym_tetris._app.cli:main',
         ],
     },
 )
