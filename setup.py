@@ -10,7 +10,7 @@ def README() -> str:
 setup(
     name='gym_tetris',
     setup_requires=[
-        'setuptools-git-version'
+        'very-good-setuptools-git-version'
     ],
     version_format='{tag}',
     description='Tetris for OpenAI Gym',
