@@ -1,6 +1,7 @@
 """Methods for spawning and interacting with a Tetris game."""
 import os
 import random
+from enum import Enum
 import pygame
 import numpy as np
 from ._constants.template import PIECES, TEMPLATEHEIGHT, TEMPLATEWIDTH, BLANK
@@ -9,8 +10,12 @@ from ._constants.strings import *
 from ._constants.dimensions import *
 
 
-# the number of frames between consecutive actions
-MOVE = 3
+# the frequency to accept moves of a certain kind
+MOVE_FREQ = 3
+# the direction indicating a side move to the left
+MOVE_RIGHT = 1
+# the direction indicating a side move to the right
+MOVE_LEFT = -1
 
 
 class Tetris(object):
@@ -28,48 +33,37 @@ class Tetris(object):
         self._font = pygame.font.Font('freesansbold.ttf', 18)
         # a list of callable actions for the game
         self.actions = [
-            lambda: None,                            # NOP
-            self._left,                              # left
-            self._right,                             # right
-            self._down,                              # down
-            self._rot_l,                             # rotate left
-            self._rot_r,                             # rotate right
-            lambda: (self._left(), self._down()),    # left + down
-            lambda: (self._right(), self._down()),   # right + down
-            lambda: (self._left(), self._rot_l()),   # left + rotate left
-            lambda: (self._right(), self._rot_l()),  # right + rotate left
-            lambda: (self._left(), self._rot_r()),   # left + rotate right
-            lambda: (self._right(), self._rot_r()),  # right + rotate right
+            # NOP
+            lambda: None,
+            # left
+            lambda: self._move_sideways(MOVE_LEFT),
+            # right
+            lambda: self._move_sideways(MOVE_RIGHT),
+            # down
+            self._move_down,
+            # rotate left
+            lambda: self._rotate(MOVE_LEFT),
+            # rotate right
+            lambda: self._rotate(MOVE_RIGHT),
+            # left + down
+            lambda: (self._move_sideways(MOVE_LEFT), self._move_down()),
+            # right + down
+            lambda: (self._move_sideways(MOVE_RIGHT), self._move_down()),
+            # left + rotate left
+            lambda: (self._move_sideways(MOVE_LEFT), self._rotate(MOVE_LEFT)),
+            # right + rotate left
+            lambda: (self._move_sideways(MOVE_RIGHT), self._rotate(MOVE_LEFT)),
+            # left + rotate right
+            lambda: (self._move_sideways(MOVE_LEFT), self._rotate(MOVE_RIGHT)),
+            # right + rotate right
+            lambda: (self._move_sideways(MOVE_RIGHT), self._rotate(MOVE_RIGHT)),
         ]
 
     def __del__(self) -> None:
         """Close the pygame environment before deleting this object."""
         pygame.quit()
 
-    def reset(self) -> None:
-        """Reset the board and game variables."""
-        # set the board as a blank board
-        self.board = new_board()
-        # set the score to 0 and get the corresponding level and fall rate
-        self.score = 0
-        self.complete_lines = 0
-        self.level, self.fall_freq = level_and_fall_freq(self.complete_lines)
-        # setup the initial pieces
-        self.falling_piece = new_piece()
-        self.next_piece = new_piece()
-        # setup the initial times for movement restriction
-        self.frame = 0
-        self.last_move_down_time = self.frame
-        self.last_move_side_time = self.frame
-        self.last_rot_r_time = self.frame
-        self.last_rot_l_time = self.frame
-        self.last_fall_time = self.frame
-        self.is_game_over = False
-
-    @property
-    def screen(self) -> np.ndarray:
-        """Return the screen as a NumPy array."""
-        return pygame.surfarray.array3d(self._screen).swapaxes(0, 1)
+    # MARK: private graphics methods
 
     def _draw_box(self,
         box_x: int,
@@ -207,57 +201,7 @@ class Tetris(object):
         # draw the "next" piece preview
         self._draw_piece(piece, pixel_x=STATUS_X, pixel_y=NEXT_Y)
 
-    def _left(self) -> None:
-        """Move the falling piece left on the board."""
-        if is_valid_position(self.board, self.falling_piece, adj_x=-1):
-            if self.frame - self.last_move_side_time < MOVE:
-                return
-            self.falling_piece['x'] -= 1
-            self.last_move_side_time = self.frame
-
-    def _right(self) -> None:
-        """Move the falling piece right on the board."""
-        if is_valid_position(self.board, self.falling_piece, adj_x=1):
-            if self.frame - self.last_move_side_time < MOVE:
-                return
-            self.falling_piece['x'] += 1
-            self.last_move_side_time = self.frame
-
-    def _down(self) -> None:
-        """Moving the falling piece down on the board."""
-        if is_valid_position(self.board, self.falling_piece, adj_y=1):
-            if self.frame - self.last_move_down_time < MOVE:
-                return
-            self.falling_piece['y'] += 1
-        self.last_move_down_time = self.frame
-
-    def _rot_r(self) -> None:
-        """Rotate the falling piece right on the board."""
-        if self.frame - self.last_rot_r_time < MOVE:
-            return
-        # backup the piece in case the rotation is illegal
-        backup = self.falling_piece['rotation']
-        rots = len(PIECES[self.falling_piece['shape']])
-        rotation = (self.falling_piece['rotation'] + 1) % rots
-        self.falling_piece['rotation'] = rotation
-        # rotate back to the backup if the position is invalid
-        if not is_valid_position(self.board, self.falling_piece):
-            self.falling_piece['rotation'] = backup
-        self.last_rot_r_time = self.frame
-
-    def _rot_l(self) -> None:
-        """Rotate the falling piece left on the board."""
-        if self.frame - self.last_rot_l_time < MOVE:
-            return
-        # backup the piece in case the rotation is illegal
-        backup = self.falling_piece['rotation']
-        rots = len(PIECES[self.falling_piece['shape']])
-        rotation = (self.falling_piece['rotation'] - 1) % rots
-        self.falling_piece['rotation'] = rotation
-        # rotate back to the backup if the position is invalid
-        if not is_valid_position(self.board, self.falling_piece):
-            self.falling_piece['rotation'] = backup
-        self.last_rot_l_time = self.frame
+    # MARK: private movement methods
 
     def _fall(self) -> None:
         """
@@ -288,6 +232,79 @@ class Tetris(object):
         self.level, self.fall_freq = level_and_fall_freq(self.complete_lines)
 
         return score
+
+    def _rotate(self, direction: int) -> None:
+        """
+        Rotate the falling piece based on the given direction.
+
+        Args:
+            direction: the direction to move the piece in
+
+        Returns:
+            None
+        """
+        if self.frame - self.last_rotate_time < MOVE_FREQ:
+            return
+        # backup the piece in case the rotation is illegal
+        backup = self.falling_piece['rotation']
+        rots = len(PIECES[self.falling_piece['shape']])
+        rotation = (self.falling_piece['rotation'] + direction) % rots
+        self.falling_piece['rotation'] = rotation
+        # rotate back to the backup if the position is invalid
+        if not is_valid_position(self.board, self.falling_piece):
+            self.falling_piece['rotation'] = backup
+        self.last_rotate_time = self.frame
+
+    def _move_sideways(self, direction: int) -> None:
+        """
+        Move the falling piece left or right on the board.
+
+        Args:
+            direction: the direction to move the piece in
+
+        Returns:
+            None
+
+        """
+        if is_valid_position(self.board, self.falling_piece, adj_x=direction):
+            if self.frame - self.last_move_side_time < MOVE_FREQ:
+                return
+            self.falling_piece['x'] += direction
+            self.last_move_side_time = self.frame
+
+    def _move_down(self) -> None:
+        """Moving the falling piece down on the board."""
+        if is_valid_position(self.board, self.falling_piece, adj_y=1):
+            if self.frame - self.last_move_down_time < MOVE_FREQ:
+                return
+            self.falling_piece['y'] += 1
+        self.last_move_down_time = self.frame
+
+    # MARK: public facing API
+
+    @property
+    def screen(self) -> np.ndarray:
+        """Return the screen as a NumPy array."""
+        return pygame.surfarray.array3d(self._screen).swapaxes(0, 1)
+
+    def reset(self) -> None:
+        """Reset the board and game variables."""
+        # set the board as a blank board
+        self.board = new_board()
+        # set the score to 0 and get the corresponding level and fall rate
+        self.score = 0
+        self.complete_lines = 0
+        self.level, self.fall_freq = level_and_fall_freq(self.complete_lines)
+        # setup the initial pieces
+        self.falling_piece = new_piece()
+        self.next_piece = new_piece()
+        # setup the initial times for movement restriction
+        self.frame = 0
+        self.last_move_down_time = self.frame
+        self.last_move_side_time = self.frame
+        self.last_rotate_time = self.frame
+        self.last_fall_time = self.frame
+        self.is_game_over = False
 
     def step(self, action: int) -> None:
         """
