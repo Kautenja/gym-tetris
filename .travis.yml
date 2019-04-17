@@ -1,0 +1,11 @@
+---
+sudo: required
+language: python
+python:
+  - '3.5'
+  - '3.6'
+os: linux
+script:
+  - python -m unittest discover gym_tetris
+notifications:
+  email: false
