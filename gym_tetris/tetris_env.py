@@ -82,7 +82,10 @@ class TetrisEnv(NESEnv):
     @property
     def _current_piece(self):
         """Return the current piece."""
-        return _PIECE_ORIENTATION_TABLE[self.ram[0x0042]]
+        try:
+            return _PIECE_ORIENTATION_TABLE[self.ram[0x0042]]
+        except IndexError:
+            return None
 
     @property
     def _number_of_lines(self):
@@ -107,7 +110,10 @@ class TetrisEnv(NESEnv):
     @property
     def _next_piece(self):
         """Return the current piece."""
-        return _PIECE_ORIENTATION_TABLE[self.ram[0x00BF]]
+        try:
+            return _PIECE_ORIENTATION_TABLE[self.ram[0x00BF]]
+        except IndexError:
+            return None
 
     @property
     def _statistics(self):
