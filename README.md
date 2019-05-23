@@ -22,8 +22,8 @@
   src="https://user-images.githubusercontent.com/2184469/58226585-ee152500-7cec-11e9-84a9-1658e4012361.jpg"
   height="300px" />
 <img
-  src="https://user-images.githubusercontent.com/2184469/58226620-13a22e80-7ced-11e9-9e2f-034a92aa0deb.png"
-  width="318px" />
+  src="https://user-images.githubusercontent.com/2184469/58226782-cffbf480-7ced-11e9-8f55-a42baae35fbd.png"
+  width="320px" />
 </p>
 
 An [OpenAI Gym](https://github.com/openai/gym) environment for Tetris on The
