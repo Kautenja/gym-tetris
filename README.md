@@ -83,16 +83,22 @@ Info about the rewards and info returned by the `step` method.
 
 ### Reward Function
 
-TODO: The reward function is a complicated work in progress.
+The reward function assumes the objective of the game is to increase the score.
+As such, the reward is defined as the instantaneous change in score for a
+given action.
 
 ### `info` dictionary
 
 The `info` dictionary returned by the `step` method contains the following
 keys:
 
-| Key                   | Type    | Description
-|:----------------------|:--------|:------------------------------------------------------|
-
+| Key               | Type    | Description
+|:------------------|:--------|:------------------------------------------------------|
+| `current_piece`   | `str`   | the current piece as a string
+| `number_of_lines` | `int`   | the number of cleared lines
+| `score`           | `int`   | the current score of the game
+| `next_piece`      | `str`   | the next piece on deck
+| `statistics`      | `dict`  | statistics for each piece
 
 ## Citation
 
