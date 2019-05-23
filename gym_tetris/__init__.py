@@ -1,12 +1,19 @@
-"""The top level package for the Tetris OpenAI Gym Environment."""
+"""Registration code of Gym environments in this package."""
+import gym as _gym
+from gym import make
 from .tetris_env import TetrisEnv
-from ._registration import make
-from .wrappers import wrap
 
 
-# define the outward facing API of this module (none, gym provides the API)
+# register the environment
+_gym.envs.registration.register(
+    id='Tetris-v0',
+    entry_point='gym_tetris:TetrisEnv',
+    nondeterministic=True,
+)
+
+
+# define the outward facing API of this package
 __all__ = [
-    TetrisEnv.__name__,
     make.__name__,
-    wrap.__name__,
+    TetrisEnv.__name__,
 ]

@@ -1,168 +1,172 @@
-"""An environment for playing Tetris."""
+"""An OpenAI Gym environment for Tetris."""
+import os
 import random
-import numpy as np
-import gym
-from ._constants.dimensions import SCREEN_HEIGHT, SCREEN_WIDTH
-from .tetris import Tetris
+from nes_py import NESEnv
 
 
-class TetrisEnv(gym.Env, gym.utils.EzPickle):
-    """An environment for playing Tetris in OpenAI Gym."""
+# the directory that houses this module
+_MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-    # meta-data about the environment for OpenAI Gym utilities (like Monitor)
-    metadata = {
-        'render.modes': ['human', 'rgb_array'],
-        'video.frames_per_second': 30,
-    }
 
-    def __init__(self, max_steps: int, random_state: int=None) -> None:
+# the path to the Zelda 1 ROM
+_ROM_PATH = os.path.join(_MODULE_DIR, '_roms', 'Tetris.nes')
+
+
+# the table for looking up piece orientations
+_PIECE_ORIENTATION_TABLE = [
+    'Tu',
+    'Tr',
+    'Td',
+    'Tl',
+    'Jl',
+    'Ju',
+    'Jr',
+    'Jd',
+    'Zh',
+    'Zv',
+    'O',
+    'Sh',
+    'Sv',
+    'Lr',
+    'Ld',
+    'Ll',
+    'Lu',
+    'Iv',
+    'Ih'
+]
+
+
+class TetrisEnv(NESEnv):
+    """An environment for playing Tetris with OpenAI Gym."""
+
+    # the legal range of rewards for each step
+    reward_range = (-float('inf'), float('inf'))
+
+    def __init__(self):
+        """Initialize a new Tetris environment."""
+        super().__init__(_ROM_PATH)
+        self._current_score = 0
+
+    def seed(self, seed):
+        """Seed the random number generator."""
+        random.seed(seed)
+        return [seed]
+
+    def _read_bcd(self, address, length, little_endian=True):
         """
-        Initialize a new Tetris environment.
+        Read a range of bytes where each nibble is a 10's place figure.
 
         Args:
-            max_steps: the max number of steps per episode.
-            random_state: the random seed to start the environment with
+            address: the address to read from as a 16 bit integer
+            length: the number of sequential bytes to read
+            little_endian: whether the bytes are in little endian order
 
         Returns:
-            None
+            the integer value of the BCD representation
 
         """
-        gym.utils.EzPickle.__init__(self)
-        self.max_steps = max_steps
-        self.viewer = None
-        self.step_number = 0
-        # Setup the observation space as RGB game frames
-        self.observation_space = gym.spaces.Box(
-            low=0,
-            high=255,
-            shape=(SCREEN_HEIGHT, SCREEN_WIDTH, 3),
-            dtype=np.uint8
-        )
-        # Setup the action space, the game defines 12 legal actions
-        self.action_space = gym.spaces.Discrete(12)
-        # setup the game
-        self.game = Tetris()
-        self.seed(random_state)
+        if little_endian:
+            iterator = range(address, address + length)
+        else:
+            iterator = reversed(range(address, address + length))
+        # iterate over the addresses to accumulate the value
+        value = 0
+        for idx, address in enumerate(iterator):
+            value += 10**(2 * idx + 1) * (self.ram[address] >> 4)
+            value += 10**(2 * idx) * (0x0F & self.ram[address])
+
+        return value
+
+    # MARK: Memory access
 
     @property
-    def screen(self) -> np.ndarray:
-        """Return the screen of the game"""
-        return self.game.screen
+    def _current_piece(self):
+        """Return the current piece."""
+        return _PIECE_ORIENTATION_TABLE[self.ram[0x0042]]
 
-    def reset(self) -> np.ndarray:
-        """Reset the emulator and return the initial state."""
-        self.game.reset()
-        # reset the step count
-        self.step_number = 0
-        # return the initial screen from the game
-        return self.game.screen
+    @property
+    def _number_of_lines(self):
+        """Return the number of cleared lines."""
+        return self._read_bcd(0x0050, 2)
 
-    def step(self, action: int) -> tuple:
-        """
-        Take a step using the given action.
+    @property
+    def _lines_being_cleared(self):
+        """Return the number of cleared lines."""
+        return self.ram[0x0056]
 
-        Args:
-            action: the discrete action to perform. will use the action in
-                    `self.actions` indexed by this value
+    @property
+    def _score(self):
+        """Return the current score."""
+        return self._read_bcd(0x0053, 3)
 
-        Returns:
-            a tuple of:
-            -   the start as a result of the action
-            -   the reward achieved by taking the action
-            -   a flag denoting whether the episode has ended
-            -   a dictionary of extra information
+    @property
+    def _is_game_over(self):
+        """Return True if the game is over, False otherwise."""
+        return bool(self.ram[0x0058])
 
-        """
-        state, reward, done, info = self.game.step(action)
-        self.step_number += 1
-        # if this step has passed the max number, set the episode to done
-        if self.step_number >= self.max_steps:
-            done = True
-        return state, reward, done, info
+    @property
+    def _next_piece(self):
+        """Return the current piece."""
+        return _PIECE_ORIENTATION_TABLE[self.ram[0x00BF]]
 
-    def render(self, mode: str='human'):
-        """
-        Render the current screen using the given mode.
-
-        Args:
-            mode: the mode to render the screen using
-                - 'human': render in a window using GTK
-                - 'rgb_array': render in the back-end and return a matrix
-
-        Returns:
-            None if mode is 'human' or a matrix if mode is 'rgb_array'
-
-        """
-        # if the mode is RGB, return the screen as a NumPy array
-        if mode == 'rgb_array':
-            return self.game.screen
-        # if the mode is human, create a viewer and display the screen
-        elif mode == 'human':
-            from pyglet.window import Window
-            from gym.envs.classic_control.rendering import SimpleImageViewer
-            if self.viewer is None:
-                self.viewer = SimpleImageViewer()
-                self.viewer.window = Window(
-                    width=SCREEN_WIDTH,
-                    height=SCREEN_HEIGHT,
-                    caption=self.spec.id,
-                )
-            self.viewer.imshow(self.game.screen)
-            return self.viewer.isopen
-        # otherwise the render mode is not supported, raise an error
-        else:
-            raise ValueError('unsupported render mode: {}'.format(repr(mode)))
-
-    def close(self) -> None:
-        """Close the emulator."""
-        # delete the existing game if there is one
-        if isinstance(self.game, Tetris):
-            del self.game
-        if self.viewer is not None:
-            self.viewer.close()
-            del self.viewer
-
-    def seed(self, random_state: int=None) -> list:
-        """
-        Set the seed for this env's random number generator(s).
-
-        Args:
-            random_state: the seed to set the random generator to
-
-        Returns:
-            A list of seeds used in this env's random number generators
-
-        """
-        random.seed(random_state)
-        self.curr_seed = random_state
-
-        return [self.curr_seed]
-
-    def get_keys_to_action(self) -> dict:
-        """Return the dictionary of keyboard keys to actions."""
-        # Map of in game directives to their associated keyboard value
-        down = ord('s')
-        left = ord('a')
-        right = ord('d')
-        rot_l = ord('q')
-        rot_r = ord('e')
-        # A mapping of pressed key combinations to discrete actions
-        keys_to_action = {
-            (): 0,
-            (left, ): 1,
-            (right, ): 2,
-            (down, ): 3,
-            (rot_l, ): 4,
-            (rot_r, ): 5,
-            tuple(sorted((left, down, ))): 6,
-            tuple(sorted((right, down, ))): 7,
-            tuple(sorted((left, rot_l, ))): 8,
-            tuple(sorted((right, rot_l, ))): 9,
-            tuple(sorted((left, rot_r, ))): 10,
-            tuple(sorted((right, rot_r, ))): 11,
+    @property
+    def _statistics(self):
+        """Return the statistics for the Tetrominoes."""
+        return {
+            'T': self._read_bcd(0x03F0, 2),
+            'J': self._read_bcd(0x03F2, 2),
+            'Z': self._read_bcd(0x03F4, 2),
+            'O': self._read_bcd(0x03F6, 2),
+            'S': self._read_bcd(0x03F8, 2),
+            'L': self._read_bcd(0x03FA, 2),
+            'I': self._read_bcd(0x03FC, 2),
         }
 
-        return keys_to_action
+    # MARK: RAM Hacks
+
+    def _skip_start_screen(self):
+        """Press and release start to skip the start screen."""
+        # generate a random number for the Tetris RNG
+        seed = random.randint(0, 255), random.randint(0, 255)
+        # skip garbage screens
+        while self.ram[0x00C0] in {0, 1, 2, 3}:
+            # seed the random number generator
+            self.ram[0x0017:0x0019] = seed
+            self._frame_advance(8)
+            self._frame_advance(0)
+
+    # MARK: nes-py API calls
+
+    def _did_reset(self):
+        """Handle any RAM hacking after a reset occurs."""
+        # mash the start button if this is a game over reset
+        while self._is_game_over:
+            self._frame_advance(8)
+            self._frame_advance(0)
+        self._skip_start_screen()
+        self._current_score = 0
+
+    def _get_reward(self):
+        """Return the reward after a step occurs."""
+        # calculate the reward as the change in the score
+        reward = self._score - self._current_score
+        self._current_score = self._score
+
+        return reward
+
+    def _get_done(self):
+        """Return True if the episode is over, False otherwise."""
+        return self._is_game_over
+
+    def _get_info(self):
+        """Return the info after a step occurs."""
+        return dict(
+            current_piece=self._current_piece,
+            number_of_lines=self._number_of_lines,
+            score=self._score,
+            next_piece=self._next_piece,
+            statistics=self._statistics,
+        )
 
 
 # explicitly define the outward facing API of this module
