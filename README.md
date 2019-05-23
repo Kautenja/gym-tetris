@@ -49,7 +49,7 @@ from nes_py.wrappers import BinarySpaceToDiscreteSpaceEnv
 import gym_tetris
 from gym_tetris.actions import MOVEMENT
 
-env = gym_tetris.make('Zelda1-v0')
+env = gym_tetris.make('Tetris-v0')
 env = BinarySpaceToDiscreteSpaceEnv(env, MOVEMENT)
 
 done = True
