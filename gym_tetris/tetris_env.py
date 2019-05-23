@@ -32,7 +32,7 @@ _PIECE_ORIENTATION_TABLE = [
     'Ll',
     'Lu',
     'Iv',
-    'Ih'
+    'Ih',
 ]
 
 
