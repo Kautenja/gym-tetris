@@ -17,9 +17,13 @@
 [python-version]: https://img.shields.io/pypi/pyversions/gym-tetris.svg
 [python-home]: https://python.org
 
-<!-- <img
-  src="https://user-images.githubusercontent.com/2184469/58208692-dae16580-7caa-11e9-82cf-2e870c681201.gif"
-  width="200px" /> -->
+<img
+  src="https://user-images.githubusercontent.com/2184469/58226585-ee152500-7cec-11e9-84a9-1658e4012361.jpg"
+  width="200px" />
+
+<img
+  src="https://user-images.githubusercontent.com/2184469/58226620-13a22e80-7ced-11e9-9e2f-034a92aa0deb.png"
+  width="200px" />
 
 An [OpenAI Gym](https://github.com/openai/gym) environment for Tetris on The
 Nintendo Entertainment System (NES) based on the
