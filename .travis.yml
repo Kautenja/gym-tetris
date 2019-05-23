@@ -1,11 +1,37 @@
 ---
-sudo: required
-language: python
-python:
-  - '3.5'
-  - '3.6'
-os: linux
+language: python # this works for Linux but is an error on macOS or Windows
+matrix:
+  include:
+    - name: "Python 3.5 on Ubuntu 14.04"
+      python: 3.5
+    - name: "Python 3.6 on Ubuntu 14.04"
+      python: 3.6
+    - name: "Python 3.5 on Ubuntu 16.04"
+      python: 3.5
+      dist: xenial
+    - name: "Python 3.6 on Ubuntu 16.04"
+      python: 3.6
+      dist: xenial
+    - name: "Python 3.7 on Ubuntu 16.04"
+      python: 3.7
+      dist: xenial
+    - name: "Python 3.7 on macOS 10.14 (Xcode 10.2)"
+      os: osx
+      osx_image: xcode10.2
+      language: shell
+    - name: "Python 3.7 on Windows"
+      os: windows
+      language: shell
+      before_install: choco install python
+      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+      script:
+        - python setup.py sdist
+        - python setup.py install
+        - python run.py
+install:
+  - pip3 install -r requirements.txt
 script:
-  - python -m unittest discover gym_tetris
+  - python3 -m unittest discover .
+  - python3 setup.py sdist bdist_wheel
 notifications:
   email: false
