@@ -21,7 +21,7 @@ setup(
     ]),
     classifiers=[
         'License :: Free For Educational Use',
-        'Development Status :: 1 - Planning',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'Operating System :: MacOS :: MacOS X',
