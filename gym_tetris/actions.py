@@ -1,7 +1,6 @@
 """A list of discrete actions that are legal in the game."""
 
 
-# actions for movement
 MOVEMENT = [
     ['NOOP'],
     ['A'],
@@ -15,4 +14,14 @@ MOVEMENT = [
     ['down'],
     ['down', 'A'],
     ['down', 'B'],
+]
+
+
+SIMPLE_MOVEMENT = [
+    ['NOOP'],
+    ['A'],
+    ['B'],
+    ['right'],
+    ['left'],
+    ['down'],
 ]
