@@ -47,7 +47,9 @@ This is because gym environments are registered at runtime. By default,
 `gym_tetris` environments use the full NES action space of 256
 discrete actions. To constrain this, `gym_tetris.actions` provides
 an action list called `MOVEMENT` (20 discrete actions) for the
-`nes_py.wrappers.BinarySpaceToDiscreteSpaceEnv` wrapper.
+`nes_py.wrappers.BinarySpaceToDiscreteSpaceEnv` wrapper. There is also
+`SIMPLE_MOVEMENT` with a reduced action space (6 actions). For exact details,
+see [gym_tetris/actions.py](gym_tetris/actions.py).
 
 ```python
 from nes_py.wrappers import BinarySpaceToDiscreteSpaceEnv
@@ -79,20 +81,21 @@ speedup.
 environments using either the keyboard, or uniform random movement.
 
 ```shell
-gym_tetris -m <`human` or `random`>
+gym_tetris -e <`Tetris-v0` or `Tetris-v1`> -m <`human` or `random`>
 ```
 
-## Step
+## Environments
 
-Info about the rewards and info returned by the `step` method.
+| Environment | Reward function                 |
+|:------------|:--------------------------------|
+| `Tetris-v0` | Instantaneous change in score   |
+| `Tetris-v1` | 2^(Number of lines cleared) - 1 |
 
-### Reward Function
+**Note on v1:** The number of lines cleared is managed by the NES and fires
+until the PPU removes the cleared line from the screen. In other words, the
+reward is triggered for every frame that cleared lines are visible.
 
-The reward function assumes the objective of the game is to increase the score.
-As such, the reward is defined as the instantaneous change in score for a
-given action.
-
-### `info` dictionary
+## `info` dictionary
 
 The `info` dictionary returned by the `step` method contains the following
 keys:
