@@ -1,6 +1,3 @@
-# an alias to the python command
-PYTHON=python3
-
 # build the LaiNES code, test the Python interface, and build
 # the deployment package
 all: deployment
@@ -13,8 +10,8 @@ clean:
 
 # build the deployment package
 deployment: clean
-	${PYTHON} setup.py sdist bdist_wheel --universal
+	python3 setup.py sdist bdist_wheel
 
 # ship the deployment package to PyPi
-ship: test deployment
+ship: deployment
 	twine upload dist/*
