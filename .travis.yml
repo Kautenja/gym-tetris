@@ -31,7 +31,7 @@ matrix:
 install:
   - pip3 install -r requirements.txt
 script:
-  - python3 -m unittest discover .
+  - python3 run_tests.py
   - python3 setup.py sdist bdist_wheel
 notifications:
   email: false
