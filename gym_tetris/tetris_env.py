@@ -36,15 +36,32 @@ _PIECE_ORIENTATION_TABLE = [
 ]
 
 
+# the reward streams that are defined
+_REWARD_STREAMS = {'score', 'lines'}
+
+
 class TetrisEnv(NESEnv):
     """An environment for playing Tetris with OpenAI Gym."""
 
     # the legal range of rewards for each step
     reward_range = (-float('inf'), float('inf'))
 
-    def __init__(self):
-        """Initialize a new Tetris environment."""
+    def __init__(self, reward='score'):
+        """
+        Initialize a new Tetris environment.
+
+        Args:
+            reward: the reward stream to use
+
+        Returns:
+            None
+
+        """
         super().__init__(_ROM_PATH)
+        # type and value check reward
+        if reward not in _REWARD_STREAMS:
+            raise ValueError('reward must be in {}'.format(_REWARD_STREAMS))
+        self._reward_stream = reward
         self._current_score = 0
 
     def seed(self, seed):
@@ -140,6 +157,9 @@ class TetrisEnv(NESEnv):
             self.ram[0x0017:0x0019] = seed
             self._frame_advance(8)
             self._frame_advance(0)
+        # wait until the initial pieces appear
+        for _ in range(4):
+            self._frame_advance(0)
 
     # MARK: nes-py API calls
 
@@ -154,6 +174,10 @@ class TetrisEnv(NESEnv):
 
     def _get_reward(self):
         """Return the reward after a step occurs."""
+        # calculate the reward as 2^# of lines cleared (0 if no lines cleared)
+        if self._reward_stream == 'lines':
+            return 2**self._lines_being_cleared - 1
+
         # calculate the reward as the change in the score
         reward = self._score - self._current_score
         self._current_score = self._score

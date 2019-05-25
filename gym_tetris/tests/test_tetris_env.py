@@ -3,88 +3,65 @@ from unittest import TestCase
 from ..tetris_env import TetrisEnv
 
 
-# class ShouldRaiseErrorOnInvalidRomMode(TestCase):
-#     def test(self):
-#         self.assertRaises(ValueError, SuperMarioBrosEnv, rom_mode=-1)
-#         self.assertRaises(ValueError, SuperMarioBrosEnv, rom_mode=5)
-#         self.assertRaises(ValueError, SuperMarioBrosEnv, rom_mode=-1, lost_levels=True)
-#         self.assertRaises(ValueError, SuperMarioBrosEnv, rom_mode=5, lost_levels=True)
+class ShouldRaiseErrorOnInvalidReward(TestCase):
+    def test(self):
+        self.assertRaises(ValueError, TetrisEnv, reward=None)
+        self.assertRaises(ValueError, TetrisEnv, reward='foo')
 
 
-# class ShouldRaiseErrorOnInvalidTypeLostLevels(TestCase):
-#     def test(self):
-#         self.assertRaises(TypeError, SuperMarioBrosEnv, lost_levels='foo')
+class ShouldCreateEnvWithScore(TestCase):
+    def test(self):
+        env = TetrisEnv()
+        self.assertEqual('score', env._reward_stream)
 
 
-# class ShouldRaiseErrorOnInvalidTypeWorld(TestCase):
-#     def test(self):
-#         self.assertRaises(TypeError, SuperMarioBrosEnv, target=('foo', 1))
+class ShouldCreateEnvWithLine(TestCase):
+    def test(self):
+        env = TetrisEnv(reward='lines')
+        self.assertEqual('lines', env._reward_stream)
 
 
-# class ShouldRaiseErrorOnBelowBoundsWorld(TestCase):
-#     def test(self):
-#         self.assertRaises(ValueError, SuperMarioBrosEnv, target=(0, 1))
-#         self.assertRaises(ValueError, SuperMarioBrosEnv, target=(0, 1), lost_levels=True)
+class ShouldStep(TestCase):
+    def test(self):
+        env = TetrisEnv()
+        env.seed(1)
+        _ = env.reset()
+        s, r, d, i = env.step(0)
+        # check all the information
+        self.assertEqual(0, r)
+        self.assertEqual('O', i['current_piece'])
+        self.assertEqual(0, i['number_of_lines'])
+        self.assertEqual(0, i['score'])
+        self.assertEqual('Td', i['next_piece'])
+        stats = {'T': 0, 'J': 0, 'Z': 0, 'O': 1, 'S': 0, 'L': 0, 'I': 0}
+        self.assertEqual(stats, i['statistics'])
+
+        env.close()
 
 
-# class ShouldRaiseErrorOnAboveBoundsWorld(TestCase):
-#     def test(self):
-#         self.assertRaises(ValueError, SuperMarioBrosEnv, target=(9, 1))
-#         self.assertRaises(ValueError, SuperMarioBrosEnv, target=(13, 1), lost_levels=True)
+class ShouldCompleteEpisode(TestCase):
 
+    def assertIsNotBlackScreen(self, screen):
+        """
+        Assert that the given screen (as a NumPy vector) is not empty.
 
-# class ShouldRaiseErrorOnInvalidTypeStage(TestCase):
-#     def test(self):
-#         self.assertRaises(TypeError, SuperMarioBrosEnv, target=('foo', 1))
+        Args:
+            screen: the screen to validate
 
+        Returns:
+            None
 
-# class ShouldRaiseErrorOnBelowBoundsStage(TestCase):
-#     def test(self):
-#         self.assertRaises(ValueError, SuperMarioBrosEnv, target=(1, 0))
-#         self.assertRaises(ValueError, SuperMarioBrosEnv, target=(1, 0), lost_levels=True)
+        """
+        self.assertNotEqual(0, screen.sum())
 
-
-# class ShouldRaiseErrorOnAboveBoundsStage(TestCase):
-#     def test(self):
-#         self.assertRaises(ValueError, SuperMarioBrosEnv, target=(1, 5))
-#         self.assertRaises(ValueError, SuperMarioBrosEnv, target=(1, 5), lost_levels=True)
-
-
-# class ShouldStepGameEnv(TestCase):
-#     def test(self):
-#         env = SuperMarioBrosEnv()
-#         self.assertFalse(env.unwrapped.is_single_stage_env)
-#         self.assertIsNone(env.unwrapped._target_world)
-#         self.assertIsNone(env.unwrapped._target_stage)
-#         self.assertIsNone(env.unwrapped._target_area)
-#         env.reset()
-#         s, r, d, i = env.step(0)
-#         self.assertEqual(0, i['coins'])
-#         self.assertEqual(False, i['flag_get'])
-#         self.assertEqual(2, i['life'])
-#         self.assertEqual(1, i['world'])
-#         self.assertEqual(0, i['score'])
-#         self.assertEqual(1, i['stage'])
-#         self.assertEqual(400, i['time'])
-#         self.assertEqual(40, i['x_pos'])
-#         env.close()
-
-
-# class ShouldStepStageEnv(TestCase):
-#     def test(self):
-#         env = SuperMarioBrosEnv(target=(4, 2))
-#         self.assertTrue(env.unwrapped.is_single_stage_env)
-#         self.assertIsInstance(env.unwrapped._target_world, int)
-#         self.assertIsInstance(env.unwrapped._target_stage, int)
-#         self.assertIsInstance(env.unwrapped._target_area, int)
-#         env.reset()
-#         s, r, d, i = env.step(0)
-#         self.assertEqual(0, i['coins'])
-#         self.assertEqual(False, i['flag_get'])
-#         self.assertEqual(2, i['life'])
-#         self.assertEqual(4, i['world'])
-#         self.assertEqual(0, i['score'])
-#         self.assertEqual(2, i['stage'])
-#         self.assertEqual(400, i['time'])
-#         self.assertEqual(40, i['x_pos'])
-#         env.close()
+    def test(self):
+        env = TetrisEnv()
+        s = env.reset()
+        self.assertIsNotBlackScreen(s)
+        done = False
+        while not done:
+            s, r, done, i = env.step(0)
+            self.assertIsNotBlackScreen(s)
+        s = env.reset()
+        self.assertIsNotBlackScreen(s)
+        env.close()
