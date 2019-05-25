@@ -3,19 +3,7 @@ PYTHON=python3
 
 # build the LaiNES code, test the Python interface, and build
 # the deployment package
-all: test deployment
-
-#
-# MARK: Development
-#
-
-# run the Python test suite
-test:
-	${PYTHON} -m unittest discover .
-
-#
-# MARK: Deployment
-#
+all: deployment
 
 # clean the build directory
 clean:
