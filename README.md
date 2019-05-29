@@ -86,14 +86,10 @@ gym_tetris -e <`Tetris-v0` or `Tetris-v1`> -m <`human` or `random`>
 
 ## Environments
 
-| Environment | Reward function                 |
-|:------------|:--------------------------------|
-| `Tetris-v0` | Instantaneous change in score   |
-| `Tetris-v1` | 2^(Number of lines cleared) - 1 |
-
-**Note on v1:** The number of lines cleared is managed by the NES and fires
-until the PPU removes the cleared line from the screen. In other words, the
-reward is triggered for every frame that cleared lines are visible.
+| Environment | Reward function                       |
+|:------------|:--------------------------------------|
+| `Tetris-v0` | Instantaneous change in score         |
+| `Tetris-v1` | The change in Number of lines cleared |
 
 ## `info` dictionary
 
