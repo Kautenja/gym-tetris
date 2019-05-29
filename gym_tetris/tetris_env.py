@@ -174,13 +174,17 @@ class TetrisEnv(NESEnv):
 
     def _get_reward(self):
         """Return the reward after a step occurs."""
-        # calculate the reward as 2^# of lines cleared (0 if no lines cleared)
         if self._reward_stream == 'lines':
-            return 2**self._lines_being_cleared - 1
-
-        # calculate the reward as the change in the score
-        reward = self._score - self._current_score
-        self._current_score = self._score
+            # calculate the reward as the number of lines cleared
+            reward = self._number_of_lines - self._current_score
+            self._current_score = self._number_of_lines
+        elif self._reward_stream == 'score':
+            # calculate the reward as the change in the score
+            reward = self._score - self._current_score
+            self._current_score = self._score
+        else:
+            msg = '_reward_stream ({}) is invalid!'
+            raise ValueError(msg.format(self._reward_stream))
 
         return reward
 
