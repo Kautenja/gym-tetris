@@ -35,7 +35,7 @@ def main():
     # parse arguments from the command line (argparse validates arguments)
     args = _get_args()
     # build the environment with the given ID
-    env = gym.make('Tetris-v0')
+    env = gym.make(args.environment)
     # play the environment with the given mode
     if args.mode == 'human':
         play_human(env)
