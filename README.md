@@ -52,12 +52,12 @@ an action list called `MOVEMENT` (20 discrete actions) for the
 see [gym_tetris/actions.py](gym_tetris/actions.py).
 
 ```python
-from nes_py.wrappers import BinarySpaceToDiscreteSpaceEnv
+from nes_py.wrappers import JoypadSpace
 import gym_tetris
 from gym_tetris.actions import MOVEMENT
 
 env = gym_tetris.make('Tetris-v0')
-env = BinarySpaceToDiscreteSpaceEnv(env, MOVEMENT)
+env = JoypadSpace(env, MOVEMENT)
 
 done = True
 for step in range(5000):
