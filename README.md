@@ -47,7 +47,7 @@ This is because gym environments are registered at runtime. By default,
 `gym_tetris` environments use the full NES action space of 256
 discrete actions. To constrain this, `gym_tetris.actions` provides
 an action list called `MOVEMENT` (20 discrete actions) for the
-`nes_py.wrappers.BinarySpaceToDiscreteSpaceEnv` wrapper. There is also
+`nes_py.wrappers.JoypadSpace` wrapper. There is also
 `SIMPLE_MOVEMENT` with a reduced action space (6 actions). For exact details,
 see [gym_tetris/actions.py](gym_tetris/actions.py).
 
