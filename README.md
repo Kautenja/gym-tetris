@@ -113,10 +113,11 @@ keys:
 | Key               | Type    | Description
 |:------------------|:--------|:---------------------------------------------|
 | `current_piece`   | `str`   | the current piece as a string
-| `number_of_lines` | `int`   | the number of cleared lines
-| `score`           | `int`   | the current score of the game
-| `next_piece`      | `str`   | the next piece on deck
-| `statistics`      | `dict`  | statistics for each piece
+| `number_of_lines` | `int`   | the number of cleared lines in [0, 999]
+| `score`           | `int`   | the current score of the game in [0, 999999]
+| `next_piece`      | `str`   | the next piece on deck as a string
+| `statistics`      | `dict`  | the number of tetriminos dispatched (by type)
+| `board_height`    | `int`   | the height of the board in [0, 20]
 
 ## Citation
 
