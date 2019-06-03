@@ -88,8 +88,9 @@ gym_tetris -e <`Tetris-v0` or `Tetris-v1`> -m <`human` or `random`>
 
 | Environment | Reward function                       |
 |:------------|:--------------------------------------|
-| `Tetris-v0` | Instantaneous change in score         |
-| `Tetris-v1` | The change in Number of lines cleared |
+| `Tetris-v0` | change in score
+| `Tetris-v1` | change in number of lines cleared
+| `Tetris-v3` | change in number of lines cleared - change in board height
 
 ## `info` dictionary
 
@@ -97,7 +98,7 @@ The `info` dictionary returned by the `step` method contains the following
 keys:
 
 | Key               | Type    | Description
-|:------------------|:--------|:------------------------------------------------------|
+|:------------------|:--------|:---------------------------------------------|
 | `current_piece`   | `str`   | the current piece as a string
 | `number_of_lines` | `int`   | the number of cleared lines
 | `score`           | `int`   | the current score of the game
