@@ -145,6 +145,22 @@ class TetrisEnv(NESEnv):
             'I': self._read_bcd(0x03FC, 2),
         }
 
+    @property
+    def board(self):
+        """Return the Tetris board from NES RAM."""
+        return self.ram[0x0400:0x04C8].reshape((20, 10)).copy()
+
+    @property
+    def board_height(self):
+        """Return the height of the board."""
+        board = self.board
+        # set the sentinel value for "empty" to 0
+        board[board == 239] = 0
+        # look for any piece in any row
+        board = board.any(axis=1)
+        # take to sum to determine the height of the board
+        return board.sum()
+
     # MARK: RAM Hacks
 
     def _skip_start_screen(self):
