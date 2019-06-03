@@ -86,16 +86,16 @@ gym_tetris -e <environment ID> -m <`human` or `random`>
 
 ## Environments
 
-| Environment  | Game Mode | Reward function                       |
-|:-------------|:----------|:--------------------------------------|
-| `TetrisA-v0` | A         | change in score
-| `TetrisA-v1` | A         | change in lines cleared
-| `TetrisA-v2` | A         | change in score - change in board height
-| `TetrisA-v3` | A         | change in lines cleared - change in board height
-| `TetrisB-v0` | B         | change in score
-| `TetrisB-v1` | B         | change in lines cleared
-| `TetrisB-v2` | B         | change in score - change in board height
-| `TetrisB-v3` | B         | change in lines cleared - change in board height
+| Environment  | Game Mode | reward score | reward lines | penalize height |
+|:-------------|:----------|:-------------|:-------------|:----------------|
+| `TetrisA-v0` | A         | &#9989;      | &#10060;     | &#10060;        |
+| `TetrisA-v1` | A         | &#10060;     | &#9989;      | &#10060;        |
+| `TetrisA-v2` | A         | &#9989;      | &#10060;     | &#9989;         |
+| `TetrisA-v3` | A         | &#10060;     | &#9989;      | &#9989;         |
+| `TetrisB-v0` | B         | &#9989;      | &#10060;     | &#10060;        |
+| `TetrisB-v1` | B         | &#10060;     | &#9989;      | &#10060;        |
+| `TetrisB-v2` | B         | &#9989;      | &#10060;     | &#9989;         |
+| `TetrisB-v3` | B         | &#10060;     | &#9989;      | &#9989;         |
 
 ## `info` dictionary
 
