@@ -17,10 +17,14 @@ _ACTION_SPACES = {
 def _get_args():
     """Parse command line arguments and return them."""
     parser = argparse.ArgumentParser(description=__doc__)
+    envs = []
+    for mode in {'A', 'B'}:
+        for version in range(4):
+            envs.append('Tetris{}-v{}'.format(mode, version))
     parser.add_argument('--env', '-e',
         type=str,
-        default='Tetris-v0',
-        choices=['Tetris-v0', 'Tetris-v1', 'Tetris-v2'],
+        default='TetrisA-v0',
+        choices=envs,
         help='The environment to play.'
     )
     parser.add_argument('--mode', '-m',

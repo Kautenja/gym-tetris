@@ -86,11 +86,16 @@ gym_tetris -e <environment ID> -m <`human` or `random`>
 
 ## Environments
 
-| Environment | Reward function                       |
-|:------------|:--------------------------------------|
-| `Tetris-v0` | change in score
-| `Tetris-v1` | change in number of lines cleared
-| `Tetris-v3` | change in number of lines cleared - change in board height
+| Environment  | Game Mode | Reward function                       |
+|:-------------|:----------|:--------------------------------------|
+| `TetrisA-v0` | A         | change in score
+| `TetrisA-v1` | A         | change in lines cleared
+| `TetrisA-v2` | A         | change in score - change in board height
+| `TetrisA-v3` | A         | change in lines cleared - change in board height
+| `TetrisB-v0` | B         | change in score
+| `TetrisB-v1` | B         | change in lines cleared
+| `TetrisB-v2` | B         | change in score - change in board height
+| `TetrisB-v3` | B         | change in lines cleared - change in board height
 
 ## `info` dictionary
 

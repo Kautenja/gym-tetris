@@ -43,9 +43,10 @@ class TetrisEnv(NESEnv):
     reward_range = (-float('inf'), float('inf'))
 
     def __init__(self,
+        b_type: bool=False,
         reward_score: bool=False,
         reward_lines: bool=True,
-        penalize_height: bool=True
+        penalize_height: bool=True,
     ) -> None:
         """
         Initialize a new Tetris environment.
@@ -60,6 +61,7 @@ class TetrisEnv(NESEnv):
 
         """
         super().__init__(_ROM_PATH)
+        self._b_type = b_type
         self._reward_score = reward_score
         self._current_score = 0
         self._reward_lines = reward_lines
@@ -175,6 +177,8 @@ class TetrisEnv(NESEnv):
             # seed the random number generator
             self.ram[0x0017:0x0019] = seed
             self._frame_advance(8)
+            if self._b_type:
+                self._frame_advance(128)
             self._frame_advance(0)
         # wait until the initial pieces appear
         for _ in range(4):
