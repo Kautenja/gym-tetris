@@ -68,6 +68,10 @@ class TetrisEnv(NESEnv):
         self._current_lines = 0
         self._penalize_height = penalize_height
         self._current_height = 0
+        # reset the emulator, skip the start screen, and backup the state
+        self.reset()
+        self._skip_start_screen()
+        self._backup()
 
     def seed(self, seed):
         """Seed the random number generator."""
@@ -188,19 +192,17 @@ class TetrisEnv(NESEnv):
             if self._b_type:
                 self._frame_advance(128)
             self._frame_advance(0)
-        # wait until the initial pieces appear
-        for _ in range(14):
-            self._frame_advance(0)
 
     # MARK: nes-py API calls
 
     def _did_reset(self):
         """Handle any RAM hacking after a reset occurs."""
-        # mash the start button if this is a game over reset
-        while self._is_game_over:
-            self._frame_advance(8)
+        # skip frames and seed the random number generator
+        seed = random.randint(0, 255), random.randint(0, 255)
+        for _ in range(14):
+            self.ram[0x0017:0x0019] = seed
             self._frame_advance(0)
-        self._skip_start_screen()
+        # reset local variables
         self._current_score = 0
         self._current_lines = 0
         self._current_height = 0
