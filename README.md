@@ -86,16 +86,24 @@ gym_tetris -e <environment ID> -m <`human` or `random`>
 
 ## Environments
 
+There are two game modes define in NES Tetris, namely, A-type and B-type.
+A-type is the standard endurance Tetris game and B-type is an arcade style mode
+where the agent must clear a certain number of lines to win. There are three
+potential reward streams: (1) the change in score, (2) the change in number of
+lines cleared, and (3) a penalty for an increase in board height. The table
+below defines the available environments in terms of the game mode (i.e.,
+A-type or B-type) and the rewards applied.
+
 | Environment  | Game Mode | reward score | reward lines | penalize height |
 |:-------------|:----------|:-------------|:-------------|:----------------|
-| `TetrisA-v0` | A         | &#9989;      | &#10005;     | &#10005;        |
-| `TetrisA-v1` | A         | &#10005;     | &#9989;      | &#10005;        |
-| `TetrisA-v2` | A         | &#9989;      | &#10005;     | &#9989;         |
-| `TetrisA-v3` | A         | &#10005;     | &#9989;      | &#9989;         |
-| `TetrisB-v0` | B         | &#9989;      | &#10005;     | &#10005;        |
-| `TetrisB-v1` | B         | &#10005;     | &#9989;      | &#10005;        |
-| `TetrisB-v2` | B         | &#9989;      | &#10005;     | &#9989;         |
-| `TetrisB-v3` | B         | &#10005;     | &#9989;      | &#9989;         |
+| `TetrisA-v0` | A-type    | &#9989;      | &#10005;     | &#10005;        |
+| `TetrisA-v1` | A-type    | &#10005;     | &#9989;      | &#10005;        |
+| `TetrisA-v2` | A-type    | &#9989;      | &#10005;     | &#9989;         |
+| `TetrisA-v3` | A-type    | &#10005;     | &#9989;      | &#9989;         |
+| `TetrisB-v0` | B-type    | &#9989;      | &#10005;     | &#10005;        |
+| `TetrisB-v1` | B-type    | &#10005;     | &#9989;      | &#10005;        |
+| `TetrisB-v2` | B-type    | &#9989;      | &#10005;     | &#9989;         |
+| `TetrisB-v3` | B-type    | &#10005;     | &#9989;      | &#9989;         |
 
 ## `info` dictionary
 
