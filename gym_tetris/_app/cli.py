@@ -20,7 +20,7 @@ def _get_args():
     parser.add_argument('--env', '-e',
         type=str,
         default='Tetris-v0',
-        choices=['Tetris-v0', 'Tetris-v1'],
+        choices=['Tetris-v0', 'Tetris-v1', 'Tetris-v2'],
         help='The environment to play.'
     )
     parser.add_argument('--mode', '-m',

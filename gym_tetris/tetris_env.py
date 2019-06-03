@@ -36,33 +36,36 @@ _PIECE_ORIENTATION_TABLE = [
 ]
 
 
-# the reward streams that are defined
-_REWARD_STREAMS = {'score', 'lines'}
-
-
 class TetrisEnv(NESEnv):
     """An environment for playing Tetris with OpenAI Gym."""
 
     # the legal range of rewards for each step
     reward_range = (-float('inf'), float('inf'))
 
-    def __init__(self, reward='score'):
+    def __init__(self,
+        reward_score: bool=False,
+        reward_lines: bool=True,
+        penalize_height: bool=True
+    ) -> None:
         """
         Initialize a new Tetris environment.
 
         Args:
-            reward: the reward stream to use
+            reward_score:
+            reward_lines:
+            penalize_height:
 
         Returns:
             None
 
         """
         super().__init__(_ROM_PATH)
-        # type and value check reward
-        if reward not in _REWARD_STREAMS:
-            raise ValueError('reward must be in {}'.format(_REWARD_STREAMS))
-        self._reward_stream = reward
+        self._reward_score = reward_score
         self._current_score = 0
+        self._reward_lines = reward_lines
+        self._current_lines = 0
+        self._penalize_height = penalize_height
+        self._current_height = 0
 
     def seed(self, seed):
         """Seed the random number generator."""
@@ -146,14 +149,14 @@ class TetrisEnv(NESEnv):
         }
 
     @property
-    def board(self):
+    def _board(self):
         """Return the Tetris board from NES RAM."""
         return self.ram[0x0400:0x04C8].reshape((20, 10)).copy()
 
     @property
-    def board_height(self):
+    def _board_height(self):
         """Return the height of the board."""
-        board = self.board
+        board = self._board
         # set the sentinel value for "empty" to 0
         board[board == 239] = 0
         # look for any piece in any row
@@ -187,20 +190,28 @@ class TetrisEnv(NESEnv):
             self._frame_advance(0)
         self._skip_start_screen()
         self._current_score = 0
+        self._current_lines = 0
+        self._current_height = 0
 
     def _get_reward(self):
         """Return the reward after a step occurs."""
-        if self._reward_stream == 'lines':
-            # calculate the reward as the number of lines cleared
-            reward = self._number_of_lines - self._current_score
-            self._current_score = self._number_of_lines
-        elif self._reward_stream == 'score':
-            # calculate the reward as the change in the score
-            reward = self._score - self._current_score
-            self._current_score = self._score
-        else:
-            msg = '_reward_stream ({}) is invalid!'
-            raise ValueError(msg.format(self._reward_stream))
+        reward = 0
+        # reward the change in score
+        if self._reward_score:
+            reward += self._score - self._current_score
+        # reward a line being cleared
+        if self._reward_lines:
+            reward += self._number_of_lines - self._current_lines
+        # penalize a change in height
+        if self._penalize_height:
+            penalty = self._board_height - self._current_height
+            # only apply the penalty for an increase in height (not a decrease)
+            if penalty > 0:
+                reward -= penalty
+        # update the locals
+        self._current_score = self._score
+        self._current_lines = self._number_of_lines
+        self._current_height = self._board_height
 
         return reward
 
