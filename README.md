@@ -81,7 +81,7 @@ speedup.
 environments using either the keyboard, or uniform random movement.
 
 ```shell
-gym_tetris -e <`Tetris-v0` or `Tetris-v1`> -m <`human` or `random`>
+gym_tetris -e <environment ID> -m <`human` or `random`>
 ```
 
 ## Environments
