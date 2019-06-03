@@ -231,6 +231,7 @@ class TetrisEnv(NESEnv):
             score=self._score,
             next_piece=self._next_piece,
             statistics=self._statistics,
+            board_height=self._board_height,
         )
 
 
