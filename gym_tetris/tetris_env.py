@@ -130,6 +130,14 @@ class TetrisEnv(NESEnv):
         return bool(self.ram[0x0058])
 
     @property
+    def _did_win_game(self):
+        """Return True if game winning frame for B-type game mode."""
+        if self._b_type:
+            return self._number_of_lines == 0
+        else: # can never win the A-type game
+            return False
+
+    @property
     def _next_piece(self):
         """Return the current piece."""
         try:
@@ -181,7 +189,7 @@ class TetrisEnv(NESEnv):
                 self._frame_advance(128)
             self._frame_advance(0)
         # wait until the initial pieces appear
-        for _ in range(4):
+        for _ in range(14):
             self._frame_advance(0)
 
     # MARK: nes-py API calls
@@ -221,7 +229,7 @@ class TetrisEnv(NESEnv):
 
     def _get_done(self):
         """Return True if the episode is over, False otherwise."""
-        return self._is_game_over
+        return self._is_game_over or self._did_win_game
 
     def _get_info(self):
         """Return the info after a step occurs."""
