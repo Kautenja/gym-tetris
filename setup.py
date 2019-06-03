@@ -9,7 +9,7 @@ with open('README.md') as README_md:
 
 setup(
     name='gym_tetris',
-    version='2.2.3',
+    version='2.3.0',
     description='Tetris (NES) for OpenAI Gym',
     long_description=README,
     long_description_content_type='text/markdown',
