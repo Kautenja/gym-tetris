@@ -126,10 +126,10 @@ Please cite `gym-tetris` if you use it in your research.
 ```tex
 @misc{gym-tetris,
   author = {Christian Kauten},
+  howpublished = {GitHub},
   title = {{Tetris (NES)} for {OpenAI Gym}},
+  URL = {https://github.com/Kautenja/gym-tetris},
   year = {2019},
-  publisher = {GitHub},
-  howpublished = {\url{https://github.com/Kautenja/gym-tetris}},
 }
 ```
 
