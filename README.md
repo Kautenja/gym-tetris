@@ -56,7 +56,7 @@ from nes_py.wrappers import JoypadSpace
 import gym_tetris
 from gym_tetris.actions import MOVEMENT
 
-env = gym_tetris.make('Tetris-v0')
+env = gym_tetris.make('TetrisA-v0')
 env = JoypadSpace(env, MOVEMENT)
 
 done = True
