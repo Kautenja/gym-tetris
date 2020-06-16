@@ -1,5 +1,4 @@
-# build the LaiNES code, test the Python interface, and build
-# the deployment package
+# build everything
 all: deployment
 
 # clean the build directory
