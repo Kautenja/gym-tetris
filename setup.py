@@ -41,7 +41,7 @@ setup(
     license='Proprietary',
     packages=find_packages(exclude=['tests', '*.tests', '*.tests.*']),
     package_data={ 'gym_tetris': ['_roms/*.nes'] },
-    install_requires=['nes-py>=8.0.0'],
+    install_requires=['nes-py>=8.1.4'],
     entry_points={
         'console_scripts': [
             'gym_tetris = gym_tetris._app.cli:main',
