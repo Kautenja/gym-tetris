@@ -7,8 +7,8 @@
 [![Format][pypi-format]][pypi-home]
 [![License][pypi-license]](LICENSE)
 
-[build-status]: https://travis-ci.com/Kautenja/gym-tetris.svg?branch=master
-[ci-server]: https://travis-ci.com/Kautenja/gym-tetris
+[build-status]: https://travis-ci.org/Kautenja/gym-tetris.svg?branch=master
+[ci-server]: https://travis-ci.org/Kautenja/gym-tetris
 [pypi-version]: https://badge.fury.io/py/gym-tetris.svg
 [pypi-license]: https://img.shields.io/pypi/l/gym-tetris.svg
 [pypi-status]: https://img.shields.io/pypi/status/gym-tetris.svg
