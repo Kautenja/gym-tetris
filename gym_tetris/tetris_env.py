@@ -43,18 +43,19 @@ class TetrisEnv(NESEnv):
     reward_range = (-float('inf'), float('inf'))
 
     def __init__(self,
-        b_type: bool=False,
-        reward_score: bool=False,
-        reward_lines: bool=True,
-        penalize_height: bool=True,
+        b_type: bool = False,
+        reward_score: bool = False,
+        reward_lines: bool = True,
+        penalize_height: bool = True,
     ) -> None:
         """
         Initialize a new Tetris environment.
 
         Args:
-            reward_score:
-            reward_lines:
-            penalize_height:
+            b_type: whether the game is A Type (false) or B Type (true)
+            reward_score: whether to reward using the game score
+            reward_lines: whether to reward using the number of lines cleared
+            penalize_height: whether to penalize based on height of the board
 
         Returns:
             None
@@ -95,11 +96,11 @@ class TetrisEnv(NESEnv):
             iterator = range(address, address + length)
         else:
             iterator = reversed(range(address, address + length))
-        # iterate over the addresses to accumulate the value
+        # iterate over the addresses to accumulate
         value = 0
-        for idx, address in enumerate(iterator):
-            value += 10**(2 * idx + 1) * (self.ram[address] >> 4)
-            value += 10**(2 * idx) * (0x0F & self.ram[address])
+        for idx, ram_idx in enumerate(iterator):
+            value += 10**(2 * idx + 1) * (self.ram[ram_idx] >> 4)
+            value += 10**(2 * idx) * (0x0F & self.ram[ram_idx])
 
         return value
 
