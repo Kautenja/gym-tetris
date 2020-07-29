@@ -3,22 +3,52 @@ from unittest import TestCase
 from ..tetris_env import TetrisEnv
 
 
-class ShouldRaiseErrorOnInvalidReward(TestCase):
-    def test(self):
-        self.assertRaises(ValueError, TetrisEnv, reward=None)
-        self.assertRaises(ValueError, TetrisEnv, reward='foo')
-
-
-class ShouldCreateEnvWithScore(TestCase):
+class ShouldCreateEnvWithDefaultRewardLines(TestCase):
     def test(self):
         env = TetrisEnv()
-        self.assertEqual('score', env._reward_stream)
+        self.assertFalse(env._b_type)
+        self.assertFalse(env._reward_score)
+        self.assertTrue(env._reward_lines)
+        self.assertTrue(env._penalize_height)
+        self.assertEqual(0, env._current_score)
+        self.assertEqual(0, env._current_lines)
+        self.assertEqual(0, env._current_height)
 
 
-class ShouldCreateEnvWithLine(TestCase):
+class ShouldCreateEnvWithRewardScore(TestCase):
     def test(self):
-        env = TetrisEnv(reward='lines')
-        self.assertEqual('lines', env._reward_stream)
+        env = TetrisEnv(reward_score=True)
+        self.assertFalse(env._b_type)
+        self.assertTrue(env._reward_score)
+        self.assertTrue(env._reward_lines)
+        self.assertTrue(env._penalize_height)
+
+
+class ShouldCreateEnvWithoutPenalizeHeight(TestCase):
+    def test(self):
+        env = TetrisEnv(penalize_height=False)
+        self.assertFalse(env._b_type)
+        self.assertFalse(env._reward_score)
+        self.assertTrue(env._reward_lines)
+        self.assertFalse(env._penalize_height)
+
+
+class ShouldCreateEnvWithoutRewardLines(TestCase):
+    def test(self):
+        env = TetrisEnv(reward_lines=False)
+        self.assertFalse(env._b_type)
+        self.assertFalse(env._reward_score)
+        self.assertFalse(env._reward_lines)
+        self.assertTrue(env._penalize_height)
+
+
+class ShouldCreateEnvWithBType(TestCase):
+    def test(self):
+        env = TetrisEnv(b_type=True)
+        self.assertTrue(env._b_type)
+        self.assertFalse(env._reward_score)
+        self.assertTrue(env._reward_lines)
+        self.assertTrue(env._penalize_height)
 
 
 class ShouldStep(TestCase):
@@ -26,15 +56,15 @@ class ShouldStep(TestCase):
         env = TetrisEnv()
         env.seed(1)
         _ = env.reset()
-        s, r, d, i = env.step(0)
+        _, reward, _, info = env.step(0)
         # check all the information
-        self.assertEqual(0, r)
-        self.assertEqual('O', i['current_piece'])
-        self.assertEqual(0, i['number_of_lines'])
-        self.assertEqual(0, i['score'])
-        self.assertEqual('Td', i['next_piece'])
-        stats = {'T': 0, 'J': 0, 'Z': 0, 'O': 1, 'S': 0, 'L': 0, 'I': 0}
-        self.assertEqual(stats, i['statistics'])
+        self.assertEqual(0, reward)
+        self.assertEqual('Ld', info['current_piece'])
+        self.assertEqual(0, info['number_of_lines'])
+        self.assertEqual(0, info['score'])
+        self.assertEqual('Sh', info['next_piece'])
+        stats = {'T': 0, 'J': 0, 'Z': 0, 'O': 0, 'S': 0, 'L': 1, 'I': 0}
+        self.assertEqual(stats, info['statistics'])
 
         env.close()
 
