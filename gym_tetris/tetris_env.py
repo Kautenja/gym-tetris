@@ -78,7 +78,6 @@ class TetrisEnv(NESEnv):
         self.reset()
         # Set the deterministic flag after setting up the engine.
         self.deterministic = deterministic
-        self.reset()  # Reset again to sample a new point if not deterministic
 
     def _read_bcd(self, address, length, little_endian=True):
         """
