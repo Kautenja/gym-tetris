@@ -39,6 +39,10 @@ def _get_args():
         choices=['nes', 'standard', 'simple'],
         help='the action space wrapper to use'
     )
+    parser.add_argument('--seed', '-S',
+        type=int,
+        help='the random number seed to use'
+    )
     parser.add_argument('--steps', '-s',
         type=int,
         default=500,
@@ -53,6 +57,8 @@ def main():
     args = _get_args()
     # build the environment with the given ID
     env = gym.make(args.env)
+    if args.seed is not None:
+        env.seed(args.seed)
     # wrap the environment with an action space if specified
     if args.actionspace != 'nes':
         # unwrap the actions list by key
