@@ -1,6 +1,5 @@
 """An OpenAI Gym environment for Tetris."""
 import os
-import random
 from nes_py import NESEnv
 
 
@@ -47,6 +46,7 @@ class TetrisEnv(NESEnv):
         reward_score: bool = False,
         reward_lines: bool = True,
         penalize_height: bool = True,
+        deterministic: bool = False,
     ) -> None:
         """
         Initialize a new Tetris environment.
@@ -56,6 +56,7 @@ class TetrisEnv(NESEnv):
             reward_score: whether to reward using the game score
             reward_lines: whether to reward using the number of lines cleared
             penalize_height: whether to penalize based on height of the board
+            deterministic: true to disable RNG in the engine
 
         Returns:
             None
@@ -69,15 +70,15 @@ class TetrisEnv(NESEnv):
         self._current_lines = 0
         self._penalize_height = penalize_height
         self._current_height = 0
+        self.deterministic = True  # Always use a deterministic starting point.
         # reset the emulator, skip the start screen, and backup the state
         self.reset()
         self._skip_start_screen()
         self._backup()
-
-    def seed(self, seed):
-        """Seed the random number generator."""
-        random.seed(seed)
-        return [seed]
+        self.reset()
+        # Set the deterministic flag after setting up the engine.
+        self.deterministic = deterministic
+        self.reset()  # Reset again to sample a new point if not deterministic
 
     def _read_bcd(self, address, length, little_endian=True):
         """
@@ -184,7 +185,10 @@ class TetrisEnv(NESEnv):
     def _skip_start_screen(self):
         """Press and release start to skip the start screen."""
         # generate a random number for the Tetris RNG
-        seed = random.randint(0, 255), random.randint(0, 255)
+        seed = 0, 0
+        if not self.deterministic:
+            seed = self.np_random.randint(0, 255), self.np_random.randint(0, 255)
+        # seed = self.np_random.randint(0, 255), self.np_random.randint(0, 255)
         # skip garbage screens
         while self.ram[0x00C0] in {0, 1, 2, 3}:
             # seed the random number generator
@@ -199,7 +203,9 @@ class TetrisEnv(NESEnv):
     def _did_reset(self):
         """Handle any RAM hacking after a reset occurs."""
         # skip frames and seed the random number generator
-        seed = random.randint(0, 255), random.randint(0, 255)
+        seed = 0, 0
+        if not self.deterministic:
+            seed = self.np_random.randint(0, 255), self.np_random.randint(0, 255)
         for _ in range(14):
             self.ram[0x0017:0x0019] = seed
             self._frame_advance(0)
