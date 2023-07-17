@@ -9,7 +9,7 @@ with open('README.md') as README_md:
 
 setup(
     name='gym_tetris',
-    version='3.0.4',
+    version='3.1.0',
     description='Tetris (NES) for OpenAI Gym',
     long_description=README,
     long_description_content_type='text/markdown',
@@ -41,7 +41,7 @@ setup(
     license='Proprietary',
     packages=find_packages(exclude=['tests', '*.tests', '*.tests.*']),
     package_data={ 'gym_tetris': ['_roms/*.nes'] },
-    install_requires=['nes-py>=8.1.4'],
+    install_requires=['nes-py>=8.3.0'],
     entry_points={
         'console_scripts': [
             'gym_tetris = gym_tetris._app.cli:main',
