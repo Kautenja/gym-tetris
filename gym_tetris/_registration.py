@@ -1,4 +1,4 @@
-"""A script for registering environments with gym."""
+"""A script for registering environments with gymnasium."""
 import gymnasium as gym
 
 # register for game mode A and B

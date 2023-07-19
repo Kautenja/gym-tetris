@@ -42,6 +42,7 @@ class TetrisEnv(NESEnv):
     reward_range = (-float('inf'), float('inf'))
 
     def __init__(self,
+        render_mode: str | None = None,
         b_type: bool = False,
         reward_score: bool = False,
         reward_lines: bool = True,
@@ -62,7 +63,7 @@ class TetrisEnv(NESEnv):
             None
 
         """
-        super().__init__(_ROM_PATH)
+        super().__init__(_ROM_PATH, render_mode=render_mode)
         self._b_type = b_type
         self._reward_score = reward_score
         self._current_score = 0
@@ -204,7 +205,7 @@ class TetrisEnv(NESEnv):
         # skip frames and seed the random number generator
         seed = 0, 0
         if not self.deterministic:
-            seed = self.np_random.randint(0, 255), self.np_random.randint(0, 255)
+            seed = self.np_random.integers(0, 255), self.np_random.integers(0, 255)
         for _ in range(14):
             self.ram[0x0017:0x0019] = seed
             self._frame_advance(0)
@@ -235,7 +236,7 @@ class TetrisEnv(NESEnv):
 
         return reward
 
-    def _get_done(self):
+    def _get_terminated(self):
         """Return True if the episode is over, False otherwise."""
         return self._is_game_over or self._did_win_game
 

@@ -58,11 +58,11 @@ class ShouldStep(TestCase):
         _, reward, _, _, info = env.step(0)
         # check all the information
         self.assertEqual(0, reward)
-        self.assertEqual('Ih', info['current_piece'])
+        self.assertEqual('Jd', info['current_piece'])
         self.assertEqual(0, info['number_of_lines'])
         self.assertEqual(0, info['score'])
-        self.assertEqual('Sh', info['next_piece'])
-        stats = {'T': 0, 'J': 0, 'Z': 0, 'O': 0, 'S': 0, 'L': 0, 'I': 1}
+        self.assertEqual('Ih', info['next_piece'])
+        stats = {'T': 0, 'J': 1, 'Z': 0, 'O': 0, 'S': 0, 'L': 0, 'I': 0}
         self.assertEqual(stats, info['statistics'])
 
         env.close()
