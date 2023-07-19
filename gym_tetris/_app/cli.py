@@ -1,6 +1,6 @@
 """Tetris for OpenAI Gym."""
 import argparse
-import gym
+import gymnasium as gym
 from nes_py.wrappers import JoypadSpace
 from nes_py.app.play_human import play_human
 from nes_py.app.play_random import play_random
@@ -56,9 +56,8 @@ def main():
     # parse arguments from the command line (argparse validates arguments)
     args = _get_args()
     # build the environment with the given ID
-    env = gym.make(args.env)
-    if args.seed is not None:
-        env.seed(args.seed)
+    render_mode = 'human' if args.mode == 'random' else None     # human mode sets its own viewer
+    env = gym.make(args.env, render_mode=render_mode)
     # wrap the environment with an action space if specified
     if args.actionspace != 'nes':
         # unwrap the actions list by key
@@ -67,9 +66,9 @@ def main():
         env = JoypadSpace(env, actions)
     # play the environment with the given mode
     if args.mode == 'human':
-        play_human(env)
+        play_human(env, seed=args.seed)
     else:
-        play_random(env, args.steps)
+        play_random(env, args.steps, seed=args.seed)
 
 
 # explicitly define the outward facing API of this module

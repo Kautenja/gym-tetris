@@ -1,6 +1,5 @@
-"""A script for registering environments with gym."""
-import gym
-
+"""A script for registering environments with gymnasium."""
+import gymnasium as gym
 
 # register for game mode A and B
 for mode in {'A', 'B'}:
