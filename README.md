@@ -26,7 +26,7 @@
   width="320px" />
 </p>
 
-An [OpenAI Gym](https://github.com/openai/gym) environment for Tetris on The
+A [Gymnasium](https://gymnasium.farama.org/) environment for Tetris on The
 Nintendo Entertainment System (NES) based on the
 [nes-py](https://github.com/Kautenja/nes-py) emulator.
 
@@ -43,7 +43,7 @@ pip install gym-tetris
 ### Python
 
 You must import `gym_tetris` before trying to make an environment.
-This is because gym environments are registered at runtime. By default,
+This is because Gymnasium environments are registered at runtime. By default,
 `gym_tetris` environments use the full NES action space of 256
 discrete actions. To constrain this, `gym_tetris.actions` provides
 an action list called `MOVEMENT` (20 discrete actions) for the
@@ -52,24 +52,28 @@ an action list called `MOVEMENT` (20 discrete actions) for the
 see [gym_tetris/actions.py](gym_tetris/actions.py).
 
 ```python
+import gymnasium as gym
 from nes_py.wrappers import JoypadSpace
 import gym_tetris
 from gym_tetris.actions import MOVEMENT
 
-env = gym_tetris.make('TetrisA-v0')
+env = gym.make('TetrisA-v0', render_mode='rgb_array')
 env = JoypadSpace(env, MOVEMENT)
 
 done = True
 for step in range(5000):
     if done:
-        state = env.reset()
-    state, reward, done, info = env.step(env.action_space.sample())
+        state, info = env.reset(seed=123)
+    state, reward, terminated, truncated, info = env.step(
+        env.action_space.sample()
+    )
+    done = terminated or truncated
     env.render()
 
 env.close()
 ```
 
-**NOTE:** `gym_tetris.make` is just an alias to `gym.make` for
+**NOTE:** `gym_tetris.make` is just an alias to `gymnasium.make` for
 convenience.
 
 **NOTE:** remove calls to `render` in training code for a nontrivial
@@ -81,7 +85,8 @@ speedup.
 environments using either the keyboard, or uniform random movement.
 
 ```shell
-gym_tetris -e <environment ID> -m <`human` or `random`>
+gym_tetris -e <environment ID> -m <human or random> --seed 123
+gym_tetris -e TetrisA-v0 -m random --no-render --steps 100
 ```
 
 ## Environments
@@ -135,7 +140,7 @@ Please cite `gym-tetris` if you use it in your research.
 @misc{gym-tetris,
   author = {Christian Kauten},
   howpublished = {GitHub},
-  title = {{Tetris (NES)} for {OpenAI Gym}},
+  title = {{Tetris (NES)} for {Gymnasium}},
   URL = {https://github.com/Kautenja/gym-tetris},
   year = {2019},
 }
