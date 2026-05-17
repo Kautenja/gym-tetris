@@ -119,6 +119,14 @@ keys:
 | `statistics`      | `dict`  | the number of tetriminos dispatched (by type)
 | `board_height`    | `int`   | the height of the board in [0, 20]
 
+## Publishing
+
+PyPI releases are published by the `Publish to PyPI` GitHub Actions workflow
+through PyPI trusted publishing, not by local `twine` credentials. Configure the
+PyPI project publisher with owner `Kautenja`, repository `gym-tetris`, workflow
+filename `publish.yml`, and environment `pypi`. Then create a GitHub release
+from a tag matching `pyproject.toml`'s version, with or without a leading `v`.
+
 ## Citation
 
 Please cite `gym-tetris` if you use it in your research.
