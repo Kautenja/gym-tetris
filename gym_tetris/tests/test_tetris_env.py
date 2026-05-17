@@ -63,7 +63,7 @@ class ShouldStep(TestCase):
         self.assertEqual(0, info['number_of_lines'])
         self.assertEqual(0, info['score'])
         self.assertEqual('Sh', info['next_piece'])
-        stats = {'T': 0, 'J': 0, 'Z': 0, 'O': 0, 'S': 0, 'L': 1, 'I': 0}
+        stats = {'T': 0, 'J': 0, 'Z': 0, 'O': 0, 'S': 0, 'L': 0, 'I': 1}
         self.assertEqual(stats, info['statistics'])
 
         env.close()

@@ -99,8 +99,9 @@ class TetrisEnv(NESEnv):
         # iterate over the addresses to accumulate
         value = 0
         for idx, ram_idx in enumerate(iterator):
-            value += 10**(2 * idx + 1) * (self.ram[ram_idx] >> 4)
-            value += 10**(2 * idx) * (0x0F & self.ram[ram_idx])
+            byte = int(self.ram[ram_idx])
+            value += 10**(2 * idx + 1) * (byte >> 4)
+            value += 10**(2 * idx) * (0x0F & byte)
 
         return value
 
