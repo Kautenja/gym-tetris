@@ -1,4 +1,5 @@
 # Developer/CI bootstrap only. Canonical package metadata lives in pyproject.toml.
-nes-py @ git+https://github.com/Kautenja/nes-py.git@989aa0268990b686fe0bd430e2a9f529f39e0f29
+gymnasium>=1.0.0
+nes-py @ git+https://github.com/Kautenja/nes-py.git@fa84702640d4bedfdbc66304a19fd5d8e5c835e3
 build>=1.2.1
 PyYAML>=6.0.2

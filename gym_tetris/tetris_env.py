@@ -1,4 +1,4 @@
-"""An OpenAI Gym environment for Tetris."""
+"""A Gymnasium environment for Tetris."""
 import os
 from nes_py import NESEnv
 
@@ -36,7 +36,7 @@ _PIECE_ORIENTATION_TABLE = [
 
 
 class TetrisEnv(NESEnv):
-    """An environment for playing Tetris with OpenAI Gym."""
+    """An environment for playing Tetris with Gymnasium."""
 
     # the legal range of rewards for each step
     reward_range = (-float('inf'), float('inf'))
@@ -47,6 +47,7 @@ class TetrisEnv(NESEnv):
         reward_lines: bool = True,
         penalize_height: bool = True,
         deterministic: bool = False,
+        render_mode=None,
     ) -> None:
         """
         Initialize a new Tetris environment.
@@ -57,12 +58,13 @@ class TetrisEnv(NESEnv):
             reward_lines: whether to reward using the number of lines cleared
             penalize_height: whether to penalize based on height of the board
             deterministic: true to disable RNG in the engine
+            render_mode: the Gymnasium render mode to use, if any
 
         Returns:
             None
 
         """
-        super().__init__(_ROM_PATH)
+        super().__init__(_ROM_PATH, render_mode=render_mode)
         self._b_type = b_type
         self._reward_score = reward_score
         self._current_score = 0
@@ -187,8 +189,10 @@ class TetrisEnv(NESEnv):
         # generate a random number for the Tetris RNG
         seed = 0, 0
         if not self.deterministic:
-            seed = self.np_random.randint(0, 255), self.np_random.randint(0, 255)
-        # seed = self.np_random.randint(0, 255), self.np_random.randint(0, 255)
+            seed = (
+                self.np_random.integers(0, 255),
+                self.np_random.integers(0, 255),
+            )
         # skip garbage screens
         while self.ram[0x00C0] in {0, 1, 2, 3}:
             # seed the random number generator
@@ -205,7 +209,10 @@ class TetrisEnv(NESEnv):
         # skip frames and seed the random number generator
         seed = 0, 0
         if not self.deterministic:
-            seed = self.np_random.randint(0, 255), self.np_random.randint(0, 255)
+            seed = (
+                self.np_random.integers(0, 255),
+                self.np_random.integers(0, 255),
+            )
         for _ in range(14):
             self.ram[0x0017:0x0019] = seed
             self._frame_advance(0)
@@ -236,7 +243,7 @@ class TetrisEnv(NESEnv):
 
         return reward
 
-    def _get_done(self):
+    def _get_terminated(self):
         """Return True if the episode is over, False otherwise."""
         return self._is_game_over or self._did_win_game
 

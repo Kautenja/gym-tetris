@@ -1,9 +1,9 @@
-"""Tetris for OpenAI Gym."""
+"""Tetris for Gymnasium."""
 import argparse
-import gym
+import gymnasium as gym
 from nes_py.wrappers import JoypadSpace
-from nes_py.app.play_human import play_human
-from nes_py.app.play_random import play_random
+from nes_py.play import play_human
+from nes_py.play import play_random
 from ..actions import MOVEMENT, SIMPLE_MOVEMENT
 
 
@@ -12,6 +12,22 @@ _ACTION_SPACES = {
     'simple': SIMPLE_MOVEMENT,
     'standard': MOVEMENT,
 }
+
+
+class FirstResetSeed(gym.Wrapper):
+    """Inject a CLI seed into the first Gymnasium reset call."""
+
+    def __init__(self, env, seed):
+        """Initialize the wrapper with a one-shot seed."""
+        super().__init__(env)
+        self._first_reset_seed = seed
+
+    def reset(self, *, seed=None, options=None):
+        """Reset the environment, applying the CLI seed once."""
+        if self._first_reset_seed is not None and seed is None:
+            seed = self._first_reset_seed
+            self._first_reset_seed = None
+        return self.env.reset(seed=seed, options=options)
 
 
 def _get_args():
@@ -48,7 +64,15 @@ def _get_args():
         default=500,
         help='The number of random steps to take.',
     )
-    return parser.parse_args()
+    parser.add_argument('--render',
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help='render random-mode frames to a graphical window',
+    )
+    args = parser.parse_args()
+    if args.mode == 'human' and not args.render:
+        parser.error('human mode requires graphical rendering')
+    return args
 
 
 def main():
@@ -56,9 +80,10 @@ def main():
     # parse arguments from the command line (argparse validates arguments)
     args = _get_args()
     # build the environment with the given ID
-    env = gym.make(args.env)
+    render_mode = 'human' if args.mode == 'random' and args.render else None
+    env = gym.make(args.env, render_mode=render_mode)
     if args.seed is not None:
-        env.seed(args.seed)
+        env = FirstResetSeed(env, args.seed)
     # wrap the environment with an action space if specified
     if args.actionspace != 'nes':
         # unwrap the actions list by key
@@ -69,7 +94,7 @@ def main():
     if args.mode == 'human':
         play_human(env)
     else:
-        play_random(env, args.steps)
+        play_random(env, args.steps, render=args.render)
 
 
 # explicitly define the outward facing API of this module

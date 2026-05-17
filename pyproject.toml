@@ -4,16 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gym_tetris"
-version = "3.0.4"
-description = "Tetris (NES) for OpenAI Gym"
+version = "4.0.0"
+description = "Tetris (NES) for Gymnasium"
 readme = { file = "README.md", content-type = "text/markdown" }
-requires-python = ">=3.13"
+requires-python = ">=3.13,<3.14"
 license = { text = "Proprietary" }
 authors = [
   { name = "Christian Kauten", email = "kautencreations@gmail.com" },
 ]
 keywords = [
-  "OpenAI-Gym",
+  "Gymnasium",
   "NES",
   "Tetris",
   "Reinforcement-Learning-Environment",
@@ -32,8 +32,8 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
-  "gym>=0.25.2,<0.26",
-  "nes-py>=8.2.1",
+  "gymnasium>=1.0.0",
+  "nes-py>=9.0.0",
 ]
 
 [project.urls]
