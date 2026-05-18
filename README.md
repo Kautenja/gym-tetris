@@ -28,7 +28,8 @@
 
 A [Gymnasium](https://gymnasium.farama.org/) environment for Tetris on The
 Nintendo Entertainment System (NES) based on the
-[nes-py](https://github.com/Kautenja/nes-py) emulator.
+[nes-py](https://github.com/Kautenja/nes-py) emulator. It currently supports
+CPython 3.13 and 3.14 in CI.
 
 ## Installation
 
@@ -38,6 +39,9 @@ The preferred installation of `gym-tetris` is from `pip`:
 pip install gym-tetris
 ```
 
+Python 3.13 or newer is required. The supported CI targets are CPython 3.13
+and 3.14.
+
 ## Usage
 
 ### Python
@@ -46,29 +50,33 @@ You must import `gym_tetris` before trying to make an environment.
 This is because Gymnasium environments are registered at runtime. By default,
 `gym_tetris` environments use the full NES action space of 256
 discrete actions. To constrain this, `gym_tetris.actions` provides
-an action list called `MOVEMENT` (20 discrete actions) for the
+an action list called `MOVEMENT` (12 discrete actions) for the
 `nes_py.wrappers.JoypadSpace` wrapper. There is also
 `SIMPLE_MOVEMENT` with a reduced action space (6 actions). For exact details,
 see [gym_tetris/actions.py](gym_tetris/actions.py).
 
 ```python
 import gymnasium as gym
-from nes_py.wrappers import JoypadSpace
 import gym_tetris
 from gym_tetris.actions import MOVEMENT
+from nes_py.wrappers import JoypadSpace
 
 env = gym.make('TetrisA-v0', render_mode='rgb_array')
 env = JoypadSpace(env, MOVEMENT)
 
-done = True
+observation, info = env.reset(seed=123)
+terminated = False
+truncated = False
+
 for step in range(5000):
-    if done:
-        state, info = env.reset(seed=123)
-    state, reward, terminated, truncated, info = env.step(
-        env.action_space.sample()
+    if terminated or truncated:
+        observation, info = env.reset(seed=123)
+        terminated = False
+        truncated = False
+    observation, reward, terminated, truncated, info = env.step(
+        env.action_space.sample(),
     )
-    done = terminated or truncated
-    env.render()
+    frame = env.render()
 
 env.close()
 ```
@@ -85,13 +93,19 @@ speedup.
 environments using either the keyboard, or uniform random movement.
 
 ```shell
-gym_tetris -e <environment ID> -m <human or random> --seed 123
-gym_tetris -e TetrisA-v0 -m random --no-render --steps 100
+gym_tetris -h
+gym_tetris --env TetrisA-v0 --mode human --actionspace simple
+gym_tetris --env TetrisA-v0 --mode random --steps 100 --render --seed 123
+gym_tetris --env TetrisA-v0 --mode random --steps 100 --no-render --actionspace simple --seed 123
+gym_tetris --env TetrisB-v0 --mode random --steps 100 --render --actionspace standard
 ```
+
+Human mode requires rendering, so `--mode human --no-render` is rejected.
+Use `--seed/-S` to seed only the first environment reset in CLI playback.
 
 ## Environments
 
-There are two game modes define in NES Tetris, namely, A-type and B-type.
+There are two game modes defined in NES Tetris, namely, A-type and B-type.
 A-type is the standard endurance Tetris game and B-type is an arcade style mode
 where the agent must clear a certain number of lines to win. There are three
 potential reward streams: (1) the change in score, (2) the change in number of
@@ -127,10 +141,20 @@ keys:
 ## Publishing
 
 PyPI releases are published by the `Publish to PyPI` GitHub Actions workflow
-through PyPI trusted publishing, not by local `twine` credentials. Configure the
-PyPI project publisher with owner `Kautenja`, repository `gym-tetris`, workflow
-filename `publish.yml`, and environment `pypi`. Then create a GitHub release
-from a tag matching `pyproject.toml`'s version, with or without a leading `v`.
+through PyPI trusted publishing, not by local `twine` credentials. Configure
+the PyPI project publisher with owner `Kautenja`, repository `gym-tetris`,
+workflow filename `publish.yml`, and environment `pypi`.
+
+Releases should follow the current GitHub Actions flow:
+
+1. Create and push a tag that matches `pyproject.toml`'s version, with or
+   without a leading `v`.
+2. Let CI build the tagged distribution artifacts.
+3. Publish a GitHub Release from that tag to trigger the trusted-publishing
+   workflow.
+
+Build distributions locally with `python -m build` only for verification, not
+for authenticated upload.
 
 ## Citation
 

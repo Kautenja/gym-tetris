@@ -1,47 +1,46 @@
 [build-system]
-requires = ["setuptools>=61", "wheel"]
+requires = [
+    "setuptools>=61",
+    "wheel",
+]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "gym_tetris"
 version = "4.0.0"
 description = "Tetris (NES) for Gymnasium"
-readme = { file = "README.md", content-type = "text/markdown" }
+readme = "README.md"
 requires-python = ">=3.13"
-license = { text = "Proprietary" }
+license = "LicenseRef-Proprietary"
+license-files = ["LICENSE"]
 authors = [
-  { name = "Christian Kauten", email = "kautencreations@gmail.com" },
+    {name = "Christian Kauten", email = "kautencreations@gmail.com"},
 ]
-keywords = [
-  "Gymnasium",
-  "NES",
-  "Tetris",
-  "Reinforcement-Learning-Environment",
-]
+keywords = ["Gymnasium", "NES", "Tetris", "Reinforcement-Learning-Environment"]
 classifiers = [
-  "License :: Free For Educational Use",
-  "Development Status :: 5 - Production/Stable",
-  "Intended Audience :: Developers",
-  "Intended Audience :: Science/Research",
-  "Operating System :: MacOS :: MacOS X",
-  "Operating System :: POSIX :: Linux",
-  "Operating System :: Microsoft :: Windows",
-  "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.13",
-  "Programming Language :: Python :: 3.14",
-  "Topic :: Games/Entertainment :: Side-Scrolling/Arcade Games",
-  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Games/Entertainment :: Side-Scrolling/Arcade Games",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
-  "gymnasium>=1.0.0",
-  "nes-py>=9.0.0",
+    "gymnasium>=1.0.0",
+    "nes-py>=9.0.0",
 ]
-
-[project.urls]
-Homepage = "https://github.com/Kautenja/gym-tetris"
 
 [project.scripts]
 gym_tetris = "gym_tetris._app.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Kautenja/gym-tetris"
+Repository = "https://github.com/Kautenja/gym-tetris"
 
 [tool.setuptools.packages.find]
 exclude = ["tests", "*.tests", "*.tests.*"]
