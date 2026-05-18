@@ -24,13 +24,14 @@ class FirstResetSeed(gym.Wrapper):
 
     def reset(self, *, seed=None, options=None):
         """Reset the environment, applying the CLI seed once."""
-        if self._first_reset_seed is not None and seed is None:
-            seed = self._first_reset_seed
+        if self._first_reset_seed is not None:
+            if seed is None:
+                seed = self._first_reset_seed
             self._first_reset_seed = None
         return self.env.reset(seed=seed, options=options)
 
 
-def _get_args():
+def _get_args(argv=None):
     """Parse command line arguments and return them."""
     parser = argparse.ArgumentParser(description=__doc__)
     envs = []
@@ -69,16 +70,16 @@ def _get_args():
         default=True,
         help='render random-mode frames to a graphical window',
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     if args.mode == 'human' and not args.render:
         parser.error('human mode requires graphical rendering')
     return args
 
 
-def main():
+def main(argv=None):
     """The main entry point for the command line interface."""
     # parse arguments from the command line (argparse validates arguments)
-    args = _get_args()
+    args = _get_args(argv)
     # build the environment with the given ID
     render_mode = 'human' if args.mode == 'random' and args.render else None
     env = gym.make(args.env, render_mode=render_mode)
@@ -95,6 +96,10 @@ def main():
         play_human(env)
     else:
         play_random(env, args.steps, render=args.render)
+
+
+if __name__ == '__main__':
+    main()
 
 
 # explicitly define the outward facing API of this module

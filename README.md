@@ -46,7 +46,7 @@ You must import `gym_tetris` before trying to make an environment.
 This is because Gymnasium environments are registered at runtime. By default,
 `gym_tetris` environments use the full NES action space of 256
 discrete actions. To constrain this, `gym_tetris.actions` provides
-an action list called `MOVEMENT` (20 discrete actions) for the
+an action list called `MOVEMENT` (12 discrete actions) for the
 `nes_py.wrappers.JoypadSpace` wrapper. There is also
 `SIMPLE_MOVEMENT` with a reduced action space (6 actions). For exact details,
 see [gym_tetris/actions.py](gym_tetris/actions.py).
@@ -85,8 +85,9 @@ speedup.
 environments using either the keyboard, or uniform random movement.
 
 ```shell
-gym_tetris -e <environment ID> -m <human or random> --seed 123
-gym_tetris -e TetrisA-v0 -m random --no-render --steps 100
+gym_tetris --env TetrisA-v0 --mode human --actionspace simple
+gym_tetris --env TetrisA-v0 --mode random --steps 100 --no-render --seed 123
+gym_tetris --env TetrisB-v0 --mode random --steps 100 --render --actionspace standard
 ```
 
 ## Environments
