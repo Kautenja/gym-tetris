@@ -5,10 +5,7 @@ All notable changes to `gym-tetris` are documented in this file.
 This changelog was reconstructed from local git tags, version metadata, and
 repository history.
 
-## 4.0.0 (upcoming)
-
-Current package metadata in `pyproject.toml` is set to `4.0.0`, but no local
-`4.0.0` tag exists yet.
+## 4.0.0 - 2026-05-18
 
 ### Highlights
 
@@ -22,7 +19,7 @@ Current package metadata in `pyproject.toml` is set to `4.0.0`, but no local
 
 ### Release notes
 
-- Expect this release to be the first Gymnasium-native major version.
+- This is the first Gymnasium-native major version.
 - Downstream users should plan for API updates consistent with Gymnasium's
   `reset()` and `step()` signatures.
 - Release automation now assumes GitHub Actions plus PyPI trusted publishing.
