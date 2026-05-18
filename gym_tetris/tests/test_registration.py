@@ -3,8 +3,12 @@ import warnings
 from unittest import TestCase
 
 import gymnasium as gym
+import gym_tetris
+from gymnasium.envs.registration import registry
+from gymnasium.wrappers import PassiveEnvChecker, TimeLimit
 
-from .. import make
+from .. import _registration, tetris_env
+from .. import TetrisEnv, make
 
 
 REGISTERED_ENVIRONMENTS = {
@@ -59,6 +63,15 @@ REGISTERED_ENVIRONMENTS = {
 }
 
 
+def env_chain(env):
+    """Yield each Gymnasium wrapper and the base environment."""
+    while True:
+        yield env
+        if not hasattr(env, 'env'):
+            break
+        env = env.env
+
+
 def unwrap(env):
     """Return the base environment under Gymnasium API wrappers."""
     return env.unwrapped
@@ -95,7 +108,16 @@ class ShouldRegisterGymnasiumEnvironments(TestCase):
             with self.subTest(env_id=env_id):
                 self.assert_env_configuration(env_id, kwargs)
 
+    def test_registered_ids_are_stable(self):
+        registered_ids = {
+            env_id
+            for env_id in registry
+            if env_id.startswith('TetrisA-') or env_id.startswith('TetrisB-')
+        }
+        self.assertEqual(set(REGISTERED_ENVIRONMENTS), registered_ids)
+
     def test_make_alias_uses_gymnasium_make(self):
+        self.assertIs(gym.make, make)
         with warnings.catch_warnings():
             warnings.filterwarnings(
                 'ignore',
@@ -106,6 +128,47 @@ class ShouldRegisterGymnasiumEnvironments(TestCase):
         try:
             self.assertFalse(unwrap(env)._b_type)
             self.assertTrue(unwrap(env)._reward_score)
+        finally:
+            env.close()
+
+
+class ShouldExposeStablePublicApi(TestCase):
+    def test_package_exports(self):
+        self.assertIs(gym.make, gym_tetris.make)
+        self.assertIs(TetrisEnv, gym_tetris.TetrisEnv)
+        self.assertEqual(['make', 'TetrisEnv'], gym_tetris.__all__)
+
+    def test_module_exports(self):
+        self.assertEqual(['make'], _registration.__all__)
+        self.assertEqual(['TetrisEnv'], tetris_env.__all__)
+
+
+class ShouldDocumentGymnasiumRegistrationPolicy(TestCase):
+    def test_env_checker_remains_enabled(self):
+        env = make_env('TetrisA-v0', render_mode='rgb_array')
+        try:
+            self.assertFalse(registry['TetrisA-v0'].disable_env_checker)
+            self.assertFalse(env.spec.disable_env_checker)
+            self.assertTrue(
+                any(
+                    isinstance(wrapper, PassiveEnvChecker)
+                    for wrapper in env_chain(env)
+                )
+            )
+        finally:
+            env.close()
+
+    def test_no_registration_time_limit_truncation_policy(self):
+        env = make_env('TetrisA-v0', render_mode='rgb_array')
+        try:
+            self.assertIsNone(registry['TetrisA-v0'].max_episode_steps)
+            self.assertIsNone(env.spec.max_episode_steps)
+            self.assertFalse(
+                any(isinstance(wrapper, TimeLimit) for wrapper in env_chain(env))
+            )
+            env.reset(seed=123)
+            _, _, _, truncated, _ = env.step(env.action_space.sample())
+            self.assertFalse(truncated)
         finally:
             env.close()
 

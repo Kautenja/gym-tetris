@@ -2,7 +2,7 @@
 import gymnasium as gym
 
 
-# register for game mode A and B
+# register Gymnasium environments for game mode A and B
 for mode in {'A', 'B'}:
     b_type = mode == 'B'
     # v0: reward score
@@ -55,9 +55,9 @@ for mode in {'A', 'B'}:
     )
 
 
-# create an alias to gym.make for ease of access
+# create an alias to gymnasium.make for ease of access
 make = gym.make
 
 
-# define the outward facing API of this module (none, gym provides the API)
-__all__ = [make.__name__]
+# define the outward facing API of this module
+__all__ = ['make']

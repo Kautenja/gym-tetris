@@ -7,7 +7,7 @@ from nes_py import NESEnv
 _MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-# the path to the Zelda 1 ROM
+# the path to the Tetris ROM
 _ROM_PATH = os.path.join(_MODULE_DIR, '_roms', 'Tetris.nes')
 
 
@@ -260,4 +260,4 @@ class TetrisEnv(NESEnv):
 
 
 # explicitly define the outward facing API of this module
-__all__ = [TetrisEnv.__name__]
+__all__ = ['TetrisEnv']
